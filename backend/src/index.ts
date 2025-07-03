@@ -3,6 +3,7 @@ import express, { Request, Response, NextFunction } from "express";
 import session from "cookie-session";
 import cors from "cors";
 import { appConfig } from "./config/appConfig";
+import connectDatabase from "./config/databaseConfig";
 
 const app = express();
 const BASE_PATH = appConfig.BASE_PATH;
@@ -45,7 +46,8 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(appConfig.PORT, async () => {
-  console.log(
+  console.info(
     `Server listening on port ${appConfig.PORT} in ${appConfig.NODE_ENV}.`
   );
+  await connectDatabase();
 });
