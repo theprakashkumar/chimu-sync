@@ -4,6 +4,7 @@ import session from "cookie-session";
 import cors from "cors";
 import { appConfig } from "./config/appConfig";
 import connectDatabase from "./config/databaseConfig";
+import { errorHandler } from "./middlewares/errorHandlerMiddleware";
 
 const app = express();
 const BASE_PATH = appConfig.BASE_PATH;
@@ -44,6 +45,9 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
     message: "Home",
   });
 });
+
+// Error handling.
+app.use(errorHandler);
 
 app.listen(appConfig.PORT, async () => {
   console.info(
