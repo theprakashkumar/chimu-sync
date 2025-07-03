@@ -5,6 +5,7 @@ import cors from "cors";
 import { appConfig } from "./config/appConfig";
 import connectDatabase from "./config/databaseConfig";
 import { errorHandler } from "./middlewares/errorHandlerMiddleware";
+import { HTTPSTATUS } from "./config/httpConfig";
 
 const app = express();
 const BASE_PATH = appConfig.BASE_PATH;
@@ -41,7 +42,7 @@ app.use(
 );
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({
+  res.status(HTTPSTATUS.OK).json({
     message: "Home",
   });
 });

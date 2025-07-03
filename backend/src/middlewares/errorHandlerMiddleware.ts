@@ -1,5 +1,6 @@
 import { ErrorRequestHandler } from "express";
 import { Request, Response, NextFunction } from "express";
+import { HTTPSTATUS } from "../config/httpConfig";
 
 export const errorHandler: ErrorRequestHandler = (
   error: any,
@@ -8,11 +9,11 @@ export const errorHandler: ErrorRequestHandler = (
   next: NextFunction
 ): any => {
   if (error instanceof SyntaxError) {
-    return res.status(400).json({
+    return res.status(HTTPSTATUS.BAD_REQUEST).json({
       message: "Invalid JSON format. Please check request body",
     });
   }
-  return res.status(500).json({
+  return res.status(HTTPSTATUS.INTERNAL_SERVER_ERROR).json({
     message: "Internal server error",
     error: error?.message || "Unknown error occurred.",
   });
