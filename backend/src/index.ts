@@ -6,9 +6,9 @@ import { appConfig } from "./config/appConfig";
 import connectDatabase from "./config/databaseConfig";
 import { errorHandler } from "./middlewares/errorHandlerMiddleware";
 import { HTTPSTATUS } from "./config/httpConfig";
+import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
 
 const app = express();
-const BASE_PATH = appConfig.BASE_PATH;
 
 // Parses JSON payloads (Content-Type: application/json)
 app.use(express.json());
@@ -40,12 +40,15 @@ app.use(
     credentials: true,
   })
 );
-
-app.get("/", (req: Request, res: Response, next: NextFunction) => {
-  res.status(HTTPSTATUS.OK).json({
-    message: "Home",
-  });
-});
+// asyncHandler wraps the controller in a try catch block, so if anything goes wrong in the controller catch block will run which calls the next function with error and that is taken care by error handler and we don't have to wrap every controller inside the try catch block.
+app.get(
+  "/",
+  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    res.status(HTTPSTATUS.OK).json({
+      message: "Home",
+    });
+  })
+);
 
 // Error handling.
 app.use(errorHandler);
