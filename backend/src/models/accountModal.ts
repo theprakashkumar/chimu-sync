@@ -32,6 +32,9 @@ const accountSchema = new Schema<AccountDocument>(
   },
   {
     timestamps: true,
+    // This section customizes how the Account document is converted to JSON.
+    // The 'toJSON' option allows us to define a 'transform' function that modifies the output.
+    // Here, before sending the object (e.g., in API responses), we remove the 'refreshToken' field for security reasons.
     toJSON: {
       transform(doc, ret) {
         delete ret.refreshToken;
