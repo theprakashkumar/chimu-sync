@@ -7,6 +7,9 @@ import connectDatabase from "./config/databaseConfig";
 import { errorHandler } from "./middlewares/errorHandlerMiddleware";
 import { HTTPSTATUS } from "./config/httpConfig";
 import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
+import "./config/passportConfig";
+import passport from "passport";
+import authRoute from "./routes/authRoute";
 
 const app = express();
 
@@ -34,6 +37,9 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(
   cors({
     origin: appConfig.FRONTEND_ORIGIN,
@@ -49,6 +55,8 @@ app.get(
     });
   })
 );
+
+app.use(`${appConfig.BASE_PATH}/auth`, authRoute);
 
 // Error handling.
 app.use(errorHandler);

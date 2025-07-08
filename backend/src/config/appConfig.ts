@@ -12,6 +12,7 @@ const getAppConfig = () => ({
   GOOGLE_SECRET: getEnv("GOOGLE_SECRET"),
   GOOGLE_CALLBACK_URL: getEnv("GOOGLE_CALLBACK_URL"),
   FRONTEND_ORIGIN: getEnv("FRONTEND_ORIGIN", "3000"),
+  FRONTEND_GOOGLE_CALLBACK_URL: getEnv("FRONTEND_GOOGLE_CALLBACK_URL"),
 });
 
 export const appConfig = getAppConfig();
