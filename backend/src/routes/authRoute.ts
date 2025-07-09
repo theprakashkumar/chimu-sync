@@ -3,6 +3,7 @@ import passport from "passport";
 import { appConfig } from "../config/appConfig";
 import {
   googleLoginCallback,
+  loginController,
   registerUserController,
 } from "../controllers/authController";
 
@@ -11,6 +12,7 @@ const failedUrl = `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`;
 const authRoute = Router();
 
 authRoute.post("/register", registerUserController);
+authRoute.post("/login", loginController);
 
 authRoute.get(
   "/google",
