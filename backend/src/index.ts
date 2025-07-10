@@ -10,6 +10,8 @@ import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
 import "./config/passportConfig";
 import passport from "passport";
 import authRoute from "./routes/authRoute";
+import userRoute from "./routes/userRoute";
+import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
 
 const app = express();
 
@@ -57,6 +59,7 @@ app.get(
 );
 
 app.use(`${appConfig.BASE_PATH}/auth`, authRoute);
+app.use(`${appConfig.BASE_PATH}/user`, isAuthenticated, userRoute);
 
 // Error handling.
 app.use(errorHandler);
