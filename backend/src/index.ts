@@ -12,6 +12,7 @@ import passport from "passport";
 import authRoute from "./routes/authRoute";
 import userRoute from "./routes/userRoute";
 import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
+import workspaceRoute from "./routes/workspaceRoute";
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.get(
 
 app.use(`${appConfig.BASE_PATH}/auth`, authRoute);
 app.use(`${appConfig.BASE_PATH}/user`, isAuthenticated, userRoute);
+app.use(`${appConfig.BASE_PATH}/workspace`, isAuthenticated, workspaceRoute);
 
 // Error handling.
 app.use(errorHandler);
