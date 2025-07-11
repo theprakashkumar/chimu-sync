@@ -65,18 +65,7 @@ export const getWorkspaceByIdService = async (
   if (!workspace) {
     throw new NotFoundException("Workspace not found!");
   }
-  // User should be the member of workspace in order to access the workspace.
-  const member = await MemberModel.findOne({ userId, workspaceId }).populate(
-    "role"
-  );
-  console.log(workspaceId, userId);
-  // If given user is not a member of found workspace.
-  if (!member) {
-    throw new UnauthorizedException(
-      "You are not a member of this workspace",
-      ErrorCodeEnum.ACCESS_UNAUTHORIZED
-    );
-  }
+
   // User is member of workspace. Now get all the members who are also member of workspace.
   const members = await MemberModel.find({
     workspaceId,

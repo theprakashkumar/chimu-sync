@@ -7,8 +7,8 @@ import {
 
 const workspaceRoute = Router();
 
-workspaceRoute.get("/:id", getWorkspaceByIdController);
 workspaceRoute.post("/create/new", createWorkspaceController);
 workspaceRoute.get("/all", getAllWorkspaceUserIsMemberController);
+workspaceRoute.get("/:id", getWorkspaceByIdController);
 
 export default workspaceRoute;

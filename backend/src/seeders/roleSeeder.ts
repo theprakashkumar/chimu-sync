@@ -6,7 +6,7 @@ import RoleModel from "../models/rolePermissionModel";
 import { RolePermissions } from "../utils/rolePermission";
 
 const seedRoles = async () => {
-  console.log("Seeding role started...");
+  console.info("Seeding role started...");
   try {
     // We will run this seeder file independently so we need to connect to database here:
     await connectDatabase();
