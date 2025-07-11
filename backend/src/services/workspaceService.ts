@@ -4,7 +4,8 @@ import MemberModel from "../models/memberModel";
 import RoleModel from "../models/rolePermissionModel";
 import UserModel from "../models/userModel";
 import WorkspaceModel from "../models/workspaceModel";
-import { NotFoundException } from "../utils/appErrors";
+import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
+import { ErrorCodeEnum } from "../enums/errorCodeEnum";
 
 export const createWorkspaceService = async (
   userId: string,
@@ -54,4 +55,39 @@ export const getAllWorkspaceISMemberService = async (userId: string) => {
   const workspace = memberships.map((membership) => membership.workspaceId);
 
   return { workspace };
+};
+
+export const getWorkspaceByIdService = async (
+  workspaceId: string,
+  userId: string
+) => {
+  const workspace = await WorkspaceModel.findById(workspaceId);
+  if (!workspace) {
+    throw new NotFoundException("Workspace not found!");
+  }
+  // User should be the member of workspace in order to access the workspace.
+  const member = await MemberModel.findOne({ userId, workspaceId }).populate(
+    "role"
+  );
+  console.log(workspaceId, userId);
+  // If given user is not a member of found workspace.
+  if (!member) {
+    throw new UnauthorizedException(
+      "You are not a member of this workspace",
+      ErrorCodeEnum.ACCESS_UNAUTHORIZED
+    );
+  }
+  // User is member of workspace. Now get all the members who are also member of workspace.
+  const members = await MemberModel.find({
+    workspaceId,
+  }).populate("role");
+
+  const workspaceWithMembers = {
+    ...workspace.toObject(),
+    members,
+  };
+
+  return {
+    workspace: workspaceWithMembers,
+  };
 };

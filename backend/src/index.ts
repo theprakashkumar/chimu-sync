@@ -68,7 +68,7 @@ app.use(errorHandler);
 
 app.listen(appConfig.PORT, async () => {
   console.info(
-    `Server listening on port ${appConfig.PORT} in ${appConfig.NODE_ENV}.`
+    `Server listening on port ${appConfig.PORT} in ${appConfig.NODE_ENV}.🚀`
   );
   await connectDatabase();
 });

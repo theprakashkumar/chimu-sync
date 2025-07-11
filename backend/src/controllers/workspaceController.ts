@@ -5,6 +5,7 @@ import { HTTPSTATUS } from "../config/httpConfig";
 import {
   createWorkspaceService,
   getAllWorkspaceISMemberService,
+  getWorkspaceByIdService,
 } from "../services/workspaceService";
 
 export const createWorkspaceController = asyncHandler(
@@ -30,6 +31,20 @@ export const getAllWorkspaceUserIsMemberController = asyncHandler(
 
     return res.status(HTTPSTATUS.OK).json({
       message: "User workspace fetched successfully.",
+      workspace,
+    });
+  }
+);
+
+export const getWorkspaceByIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const workspaceId = req.params.id;
+    const userId = req.user?._id;
+
+    const { workspace } = await getWorkspaceByIdService(workspaceId, userId);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Workspace fetched successfully.",
       workspace,
     });
   }
