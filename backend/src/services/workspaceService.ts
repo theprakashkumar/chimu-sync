@@ -6,6 +6,8 @@ import UserModel from "../models/userModel";
 import WorkspaceModel from "../models/workspaceModel";
 import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
 import { ErrorCodeEnum } from "../enums/errorCodeEnum";
+import TaskModel from "../models/taskModel";
+import { TaskStatusEnum } from "../enums/taskEnum";
 
 export const createWorkspaceService = async (
   userId: string,
@@ -94,4 +96,33 @@ export const getWorkspaceMembersService = async (workspaceId: string) => {
     .lean();
 
   return { members, roles };
+};
+
+export const getWorkspaceAnalyticsService = async (workspaceId: string) => {
+  const currentDate = new Date();
+
+  const totalTasks = await TaskModel.countDocuments({
+    workspace: workspaceId,
+  });
+
+  const overdueTasks = await TaskModel.countDocuments({
+    workspace: workspaceId,
+    // lt stands for less than.
+    dueDate: { $lt: currentDate },
+    // ne stands for not equals
+    status: { $ne: TaskStatusEnum.DONE },
+  });
+
+  const completedTasks = await TaskModel.countDocuments({
+    workspace: workspaceId,
+    status: TaskStatusEnum.DONE,
+  });
+
+  const analytics = {
+    totalTasks,
+    overdueTasks,
+    completedTasks,
+  };
+
+  return { analytics };
 };
