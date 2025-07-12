@@ -80,3 +80,18 @@ export const getWorkspaceByIdService = async (
     workspace: workspaceWithMembers,
   };
 };
+
+export const getWorkspaceMembersService = async (workspaceId: string) => {
+  const members = await MemberModel.find({ workspaceId })
+    .populate("userId", "name email profilePicture -password")
+    .populate("role", "name");
+
+  // This code retrieves all roles from the RoleModel collection, but only includes the 'name' and '_id' fields for each role.
+  // It also explicitly excludes the 'permission' field from the results.
+  // The 'lean()' method is used to return plain JavaScript objects instead of Mongoose documents for better performance.
+  const roles = await RoleModel.find({}, { name: 1, _id: 1 })
+    .select("-permission")
+    .lean();
+
+  return { members, roles };
+};

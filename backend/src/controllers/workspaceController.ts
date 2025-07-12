@@ -9,6 +9,8 @@ import {
   getWorkspaceMembersService,
 } from "../services/workspaceService";
 import { getMemberRoleInWorkspace } from "../services/memberService";
+import { Permissions } from "../enums/roleEnum";
+import { roleGuard } from "../utils/roleGuard";
 
 export const createWorkspaceController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -48,6 +50,27 @@ export const getWorkspaceByIdController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Workspace fetched successfully.",
       workspace,
+    });
+  }
+);
+
+export const getWorkspaceMembersController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const workspaceId = req.params.id;
+    const userId = req.user?._id;
+
+    // User should be the member of workspace in order to access the workspace.
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+
+    // Only allow to access workspace if there is permission.
+    roleGuard(role, [Permissions.VIEW_ONLY]);
+
+    const { members, roles } = await getWorkspaceMembersService(workspaceId);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Members fetched successfully.",
+      members,
+      roles,
     });
   }
 );
