@@ -1,8 +1,12 @@
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { Request, Response } from "express";
-import { createWorkspaceSchema } from "../validation/workspaceValidation";
+import {
+  changeRoleSchema,
+  createWorkspaceSchema,
+} from "../validation/workspaceValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
 import {
+  changeMemberRoleService,
   createWorkspaceService,
   getAllWorkspaceISMemberService,
   getWorkspaceAnalyticsService,
@@ -89,6 +93,30 @@ export const getWorkspaceAnalyticsController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Workspace analytics fetched successfully.",
       analytics,
+    });
+  }
+);
+
+export const changeWorkspaceMemberRoleController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const workspaceId = req.params.id;
+    const { memberId, roleId } = changeRoleSchema.parse(req.body);
+
+    const userId = req.user?._id;
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    // Only owner can change role member to admin.
+    // One can change there own role.
+    roleGuard(role, [Permissions.CHANGE_MEMBER_ROLE]);
+
+    const { member } = await changeMemberRoleService(
+      workspaceId,
+      memberId,
+      roleId
+    );
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Member role changed successfully.",
+      member,
     });
   }
 );

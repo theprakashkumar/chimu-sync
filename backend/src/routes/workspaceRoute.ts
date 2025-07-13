@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  changeWorkspaceMemberRoleController,
   createWorkspaceController,
   getAllWorkspaceUserIsMemberController,
   getWorkspaceAnalyticsController,
@@ -10,6 +11,10 @@ import {
 const workspaceRoute = Router();
 
 workspaceRoute.post("/create/new", createWorkspaceController);
+workspaceRoute.put(
+  "/change/member/role/:id",
+  changeWorkspaceMemberRoleController
+);
 workspaceRoute.get("/all", getAllWorkspaceUserIsMemberController);
 workspaceRoute.get("/members/:id", getWorkspaceMembersController);
 // This will give use the task done vs task have not been done.
