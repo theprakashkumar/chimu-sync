@@ -4,8 +4,7 @@ import MemberModel from "../models/memberModel";
 import RoleModel from "../models/rolePermissionModel";
 import UserModel from "../models/userModel";
 import WorkspaceModel from "../models/workspaceModel";
-import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
-import { ErrorCodeEnum } from "../enums/errorCodeEnum";
+import { NotFoundException } from "../utils/appErrors";
 import TaskModel from "../models/taskModel";
 import { TaskStatusEnum } from "../enums/taskEnum";
 
