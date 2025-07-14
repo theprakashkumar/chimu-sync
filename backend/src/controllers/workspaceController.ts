@@ -3,6 +3,8 @@ import { Request, Response } from "express";
 import {
   changeRoleSchema,
   createWorkspaceSchema,
+  updateWorkspaceSchema,
+  workspaceIdSchema,
 } from "../validation/workspaceValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
 import {
@@ -12,6 +14,7 @@ import {
   getWorkspaceAnalyticsService,
   getWorkspaceByIdService,
   getWorkspaceMembersService,
+  updateWorkspaceByIdService,
 } from "../services/workspaceService";
 import { getMemberRoleInWorkspace } from "../services/memberService";
 import { Permissions } from "../enums/roleEnum";
@@ -117,6 +120,29 @@ export const changeWorkspaceMemberRoleController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Member role changed successfully.",
       member,
+    });
+  }
+);
+
+export const updateWorkspaceByIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { name, description } = updateWorkspaceSchema.parse(req.body);
+    const workspaceId = workspaceIdSchema.parse(req.params.id);
+
+    // Check if logged in user has permission to update this workspace.
+    const userId = req.user?._id;
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.EDIT_WORKSPACE]);
+
+    const { workspace } = await updateWorkspaceByIdService(
+      workspaceId,
+      name,
+      description
+    );
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Updated workspace successfully.",
+      workspace,
     });
   }
 );
