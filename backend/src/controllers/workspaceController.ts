@@ -10,6 +10,7 @@ import { HTTPSTATUS } from "../config/httpConfig";
 import {
   changeMemberRoleService,
   createWorkspaceService,
+  deleteWorkspaceByIdService,
   getAllWorkspaceISMemberService,
   getWorkspaceAnalyticsService,
   getWorkspaceByIdService,
@@ -143,6 +144,27 @@ export const updateWorkspaceByIdController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Updated workspace successfully.",
       workspace,
+    });
+  }
+);
+
+export const deleteWorkspaceByIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const workspaceId = workspaceIdSchema.parse(req.params.id);
+
+    // Check if logged in user has permission to update this workspace.
+    const userId = req.user?._id;
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.DELETE_WORKSPACE]);
+
+    const { currentWorkspace } = await deleteWorkspaceByIdService(
+      workspaceId,
+      userId
+    );
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Workspace deleted successfully.",
+      currentWorkspace,
     });
   }
 );

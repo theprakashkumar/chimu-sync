@@ -10,20 +10,20 @@ import {
 
 const failedUrl = `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`;
 
-const authRoute = Router();
+const authRoutes = Router();
 
-authRoute.post("/register", registerUserController);
-authRoute.post("/login", loginController);
-authRoute.post("/logout", logOutController);
+authRoutes.post("/register", registerUserController);
+authRoutes.post("/login", loginController);
+authRoutes.post("/logout", logOutController);
 
-authRoute.get(
+authRoutes.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
   })
 );
 
-authRoute.get(
+authRoutes.get(
   "/google/callback",
   passport.authenticate("google", {
     failureFlash: failedUrl,
@@ -31,4 +31,4 @@ authRoute.get(
   googleLoginCallback
 );
 
-export default authRoute;
+export default authRoutes;

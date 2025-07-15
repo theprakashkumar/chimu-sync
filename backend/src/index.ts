@@ -10,10 +10,11 @@ import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
 import "./config/passportConfig";
 import passport from "passport";
 import authRoute from "./routes/authRoute";
-import userRoute from "./routes/userRoute";
 import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
-import workspaceRoute from "./routes/workspaceRoute";
 import memberRoutes from "./routes/memberRoute";
+import userRoutes from "./routes/userRoute";
+import workspaceRoutes from "./routes/workspaceRoute";
+import projectRouters from "./routes/projectRoute";
 
 const app = express();
 
@@ -61,9 +62,10 @@ app.get(
 );
 
 app.use(`${appConfig.BASE_PATH}/auth`, authRoute);
-app.use(`${appConfig.BASE_PATH}/user`, isAuthenticated, userRoute);
-app.use(`${appConfig.BASE_PATH}/workspace`, isAuthenticated, workspaceRoute);
+app.use(`${appConfig.BASE_PATH}/user`, isAuthenticated, userRoutes);
+app.use(`${appConfig.BASE_PATH}/workspace`, isAuthenticated, workspaceRoutes);
 app.use(`${appConfig.BASE_PATH}/member`, isAuthenticated, memberRoutes);
+app.use(`${appConfig.BASE_PATH}/project`, isAuthenticated, projectRouters);
 
 // Error handling.
 app.use(errorHandler);

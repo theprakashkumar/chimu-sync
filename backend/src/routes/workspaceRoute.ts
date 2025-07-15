@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   changeWorkspaceMemberRoleController,
   createWorkspaceController,
+  deleteWorkspaceByIdController,
   getAllWorkspaceUserIsMemberController,
   getWorkspaceAnalyticsController,
   getWorkspaceByIdController,
@@ -9,18 +10,19 @@ import {
   updateWorkspaceByIdController,
 } from "../controllers/workspaceController";
 
-const workspaceRoute = Router();
+const workspaceRoutes = Router();
 
-workspaceRoute.post("/create/new", createWorkspaceController);
-workspaceRoute.put("/update/:id", updateWorkspaceByIdController);
-workspaceRoute.put(
+workspaceRoutes.post("/create/new", createWorkspaceController);
+workspaceRoutes.put("/update/:id", updateWorkspaceByIdController);
+workspaceRoutes.put(
   "/change/member/role/:id",
   changeWorkspaceMemberRoleController
 );
-workspaceRoute.get("/all", getAllWorkspaceUserIsMemberController);
-workspaceRoute.get("/members/:id", getWorkspaceMembersController);
+workspaceRoutes.delete("/delete/:id", deleteWorkspaceByIdController);
+workspaceRoutes.get("/all", getAllWorkspaceUserIsMemberController);
+workspaceRoutes.get("/members/:id", getWorkspaceMembersController);
 // This will give use the task done vs task have not been done.
-workspaceRoute.get("/analytics/:id", getWorkspaceAnalyticsController);
-workspaceRoute.get("/:id", getWorkspaceByIdController);
+workspaceRoutes.get("/analytics/:id", getWorkspaceAnalyticsController);
+workspaceRoutes.get("/:id", getWorkspaceByIdController);
 
-export default workspaceRoute;
+export default workspaceRoutes;
