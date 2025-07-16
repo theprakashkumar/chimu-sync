@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import {
   createProjectSchema,
   projectIdSchema,
+  updateProjectSchema,
 } from "../validation/projectValidation";
 import { workspaceIdSchema } from "../validation/workspaceValidation";
 import { getMemberRoleInWorkspace } from "../services/memberService";
@@ -13,6 +14,7 @@ import {
   getAllProjectByWorkspaceIdService,
   getProjectAnalyticsService,
   getProjectByIdAndWorkspaceId,
+  updateProjectService,
 } from "../services/projectService";
 import { HTTPSTATUS } from "../config/httpConfig";
 
@@ -103,6 +105,31 @@ export const getProjectAnalyticsController = asyncHandler(
     res.status(HTTPSTATUS.CREATED).json({
       message: "Project analytics fetched successfully.",
       analytics,
+    });
+  }
+);
+
+export const updateProjectController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?._id;
+
+    const projectId = projectIdSchema.parse(req.params.id);
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const body = updateProjectSchema.parse(req.body);
+
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.EDIT_PROJECT]);
+
+    const { project } = await updateProjectService(
+      workspaceId,
+      projectId,
+      body
+    );
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Project updated successfully",
+      project,
     });
   }
 );
