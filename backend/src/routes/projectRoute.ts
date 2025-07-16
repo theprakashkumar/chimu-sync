@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createProjectController,
   getAllProjectByWorkspaceIdController,
+  getProjectAnalyticsController,
   getProjectByIdAndWorkspaceIdController,
 } from "../controllers/projectController";
 
@@ -11,6 +12,10 @@ projectRouters.post("/workspace/:workspaceId/create", createProjectController);
 projectRouters.get(
   "/workspace/:workspaceId/all",
   getAllProjectByWorkspaceIdController
+);
+projectRouters.get(
+  "/:id/workspace/:workspaceId/analytics",
+  getProjectAnalyticsController
 );
 projectRouters.get(
   "/:id/workspace/:workspaceId",

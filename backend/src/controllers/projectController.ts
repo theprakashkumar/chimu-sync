@@ -11,6 +11,7 @@ import { Permissions } from "../enums/roleEnum";
 import {
   createProjectService,
   getAllProjectByWorkspaceIdService,
+  getProjectAnalyticsService,
   getProjectByIdAndWorkspaceId,
 } from "../services/projectService";
 import { HTTPSTATUS } from "../config/httpConfig";
@@ -81,6 +82,27 @@ export const getProjectByIdAndWorkspaceIdController = asyncHandler(
     res.status(HTTPSTATUS.CREATED).json({
       message: "Project fetched successfully.",
       project,
+    });
+  }
+);
+
+export const getProjectAnalyticsController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const projectId = projectIdSchema.parse(req.params.id);
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const userId = req.user?._id;
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.VIEW_ONLY]);
+
+    const { analytics } = await getProjectAnalyticsService(
+      projectId,
+      workspaceId
+    );
+
+    res.status(HTTPSTATUS.CREATED).json({
+      message: "Project analytics fetched successfully.",
+      analytics,
     });
   }
 );
