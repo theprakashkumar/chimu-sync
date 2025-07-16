@@ -5,7 +5,10 @@ import { workspaceIdSchema } from "../validation/workspaceValidation";
 import { getMemberRoleInWorkspace } from "../services/memberService";
 import { roleGuard } from "../utils/roleGuard";
 import { Permissions } from "../enums/roleEnum";
-import { createProjectService } from "../services/projectService";
+import {
+  createProjectService,
+  getAllProjectByWorkspaceIdService,
+} from "../services/projectService";
 import { HTTPSTATUS } from "../config/httpConfig";
 
 export const createProjectController = asyncHandler(
@@ -22,6 +25,38 @@ export const createProjectController = asyncHandler(
     res.status(HTTPSTATUS.CREATED).json({
       message: "Project created successfully.",
       project,
+    });
+  }
+);
+
+export const getAllProjectByWorkspaceIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const userId = req.user?._id;
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.VIEW_ONLY]);
+
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
+    const pageNumber = parseInt(req.query.pageNumber as string) || 1;
+
+    const { projects, totalCount, totalPages, skip } =
+      await getAllProjectByWorkspaceIdService(
+        workspaceId,
+        pageSize,
+        pageNumber
+      );
+
+    res.status(HTTPSTATUS.CREATED).json({
+      message: "Projects fetched successfully.",
+      projects,
+      pagination: {
+        totalCount,
+        totalPages,
+        skip,
+        pageSize,
+        pageNumber,
+      },
     });
   }
 );
