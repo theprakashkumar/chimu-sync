@@ -1,6 +1,9 @@
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { Request, Response } from "express";
-import { createProjectSchema } from "../validation/projectValidation";
+import {
+  createProjectSchema,
+  projectIdSchema,
+} from "../validation/projectValidation";
 import { workspaceIdSchema } from "../validation/workspaceValidation";
 import { getMemberRoleInWorkspace } from "../services/memberService";
 import { roleGuard } from "../utils/roleGuard";
@@ -8,6 +11,7 @@ import { Permissions } from "../enums/roleEnum";
 import {
   createProjectService,
   getAllProjectByWorkspaceIdService,
+  getProjectByIdAndWorkspaceId,
 } from "../services/projectService";
 import { HTTPSTATUS } from "../config/httpConfig";
 
@@ -57,6 +61,26 @@ export const getAllProjectByWorkspaceIdController = asyncHandler(
         pageSize,
         pageNumber,
       },
+    });
+  }
+);
+export const getProjectByIdAndWorkspaceIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const projectId = projectIdSchema.parse(req.params.id);
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const userId = req.user?._id;
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.VIEW_ONLY]);
+
+    const { project } = await getProjectByIdAndWorkspaceId(
+      projectId,
+      workspaceId
+    );
+
+    res.status(HTTPSTATUS.CREATED).json({
+      message: "Project fetched successfully.",
+      project,
     });
   }
 );
