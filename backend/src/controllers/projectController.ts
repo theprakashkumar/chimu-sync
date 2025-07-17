@@ -11,6 +11,7 @@ import { roleGuard } from "../utils/roleGuard";
 import { Permissions } from "../enums/roleEnum";
 import {
   createProjectService,
+  deleteProjectService,
   getAllProjectByWorkspaceIdService,
   getProjectAnalyticsService,
   getProjectByIdAndWorkspaceId,
@@ -130,6 +131,24 @@ export const updateProjectController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Project updated successfully",
       project,
+    });
+  }
+);
+
+export const deleteProjectController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?._id;
+
+    const projectId = projectIdSchema.parse(req.params.id);
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.DELETE_PROJECT]);
+
+    await deleteProjectService(workspaceId, projectId);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Project deleted successfully",
     });
   }
 );

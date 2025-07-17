@@ -228,7 +228,7 @@ export const deleteWorkspaceByIdService = async (
     return {
       currentWorkspace: user.currentWorkspace,
     };
-  } catch(error) {
+  } catch (error) {
     await session.abortTransaction();
     session.endSession();
     throw error;
