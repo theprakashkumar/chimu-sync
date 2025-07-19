@@ -5,6 +5,7 @@ import { getMemberRoleInWorkspace } from "../services/memberService";
 import {
   createTaskService,
   getAllTaskService,
+  getTaskByIdService,
   updateTaskService,
 } from "../services/taskService";
 import { roleGuard } from "../utils/roleGuard";
@@ -99,6 +100,26 @@ export const getAllTaskController = asyncHandler(
     res.status(HTTPSTATUS.OK).json({
       message: "Tasks fetched successfully.",
       ...result,
+    });
+  }
+);
+
+export const getTaskByIdController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?._id;
+
+    const taskId = taskIdSchema.parse(req.params.id);
+    const projectId = projectIdSchema.parse(req.params.projectId);
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.VIEW_ONLY]);
+
+    const task = await getTaskByIdService(workspaceId, projectId, taskId);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Task fetched successfully",
+      task,
     });
   }
 );
