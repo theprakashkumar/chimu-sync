@@ -2,7 +2,11 @@ import { HTTPSTATUS } from "../config/httpConfig";
 import { Permissions } from "../enums/roleEnum";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { getMemberRoleInWorkspace } from "../services/memberService";
-import { createTaskService, updateTaskService } from "../services/taskService";
+import {
+  createTaskService,
+  getAllTaskService,
+  updateTaskService,
+} from "../services/taskService";
 import { roleGuard } from "../utils/roleGuard";
 import { projectIdSchema } from "../validation/projectValidation";
 import {
@@ -58,6 +62,43 @@ export const updateTaskController = asyncHandler(
     res.status(HTTPSTATUS.CREATED).json({
       message: "Task updated successfully.",
       task,
+    });
+  }
+);
+
+export const getAllTaskController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const userId = req.user?._id;
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.VIEW_ONLY]);
+
+    const filters = {
+      projectId: req.query.projectId as string | undefined,
+      status: req.query.status
+        ? (req.query.status as string)?.split(",")
+        : undefined,
+      priority: req.query.priority
+        ? (req.query.priority as string)?.split(",")
+        : undefined,
+      assignedTo: req.query.assignedTo
+        ? (req.query.assignedTo as string)?.split(",")
+        : undefined,
+      keyword: req.query.keyword as string | undefined,
+      dueDate: req.query.dueDate as string | undefined,
+    };
+
+    const pagination = {
+      pageSize: parseInt(req.query.pageSize as string) || 10,
+      pageNumber: parseInt(req.query.pageNumber as string) || 1,
+    };
+
+    const result = await getAllTaskService(workspaceId, filters, pagination);
+
+    res.status(HTTPSTATUS.OK).json({
+      message: "Tasks fetched successfully.",
+      ...result,
     });
   }
 );
