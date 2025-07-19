@@ -4,6 +4,7 @@ import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { getMemberRoleInWorkspace } from "../services/memberService";
 import {
   createTaskService,
+  deleteTaskService,
   getAllTaskService,
   getTaskByIdService,
   updateTaskService,
@@ -120,6 +121,24 @@ export const getTaskByIdController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Task fetched successfully",
       task,
+    });
+  }
+);
+
+export const deleteTaskController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = req.user?._id;
+
+    const taskId = taskIdSchema.parse(req.params.id);
+    const workspaceId = workspaceIdSchema.parse(req.params.workspaceId);
+
+    const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
+    roleGuard(role, [Permissions.DELETE_TASK]);
+
+    await deleteTaskService(workspaceId, taskId);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Task deleted successfully",
     });
   }
 );
