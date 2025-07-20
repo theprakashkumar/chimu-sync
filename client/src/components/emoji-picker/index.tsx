@@ -1,7 +1,7 @@
 // EmojiPickerComponent.tsx
 import React from "react";
-import Picker from "@emoji-mart/react";
-import data from "@emoji-mart/data";
+// import Picker from "@emoji-mart/react";
+// import data from "@emoji-mart/data";
 import { customEmojis } from "./custom-emojis";
 
 interface EmojiPickerComponentProps {
@@ -19,7 +19,7 @@ const EmojiPickerComponent: React.FC<EmojiPickerComponentProps> = ({
 
   return (
     <div className="relative w-full !max-w-8">
-      <Picker
+      {/* <Picker
         data={data}
         custom={customEmojis}
         categories={[
@@ -50,7 +50,7 @@ const EmojiPickerComponent: React.FC<EmojiPickerComponentProps> = ({
         //emojiButtonSize={30}
         emojiButtonColors={["rgba(102, 51, 153, .2)"]}
         className=" h-[40px]"
-      />
+      /> */}
     </div>
   );
 };
