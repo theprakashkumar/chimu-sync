@@ -3,6 +3,8 @@ import {
   CurrentUserResponseType,
   LoginResponseType,
   loginType,
+  registerType,
+  UserType,
 } from "@/types/api.type";
 
 export const loginMutationFn = async (
@@ -12,7 +14,12 @@ export const loginMutationFn = async (
   return response.data;
 };
 
-export const registerMutationFn = async () => {};
+export const registerMutationFn = async (
+  data: registerType
+): Promise<UserType> => {
+  const response = await API.post("/auth/register", data);
+  return response.data;
+};
 
 export const logoutMutationFn = async () => {};
 
