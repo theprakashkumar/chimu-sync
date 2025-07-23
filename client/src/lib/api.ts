@@ -22,7 +22,9 @@ export const registerMutationFn = async (
   return response.data;
 };
 
-export const logoutMutationFn = async () => {};
+export const logoutMutationFn = async () => {
+  return await API.post("/auth/logout");
+};
 
 export const getCurrentUserQueryFn =
   async (): Promise<CurrentUserResponseType> => {
