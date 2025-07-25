@@ -6,6 +6,7 @@ import {
   loginType,
   registerType,
   UserType,
+  WorkspaceByIdResponseType,
 } from "@/types/api.type";
 
 export const loginMutationFn = async (
@@ -35,7 +36,12 @@ export const getCurrentUserQueryFn =
 //********* WORKSPACE ****************
 //************* */
 
-export const createWorkspaceMutationFn = async () => {};
+export const createWorkspaceMutationFn = async (
+  workspaceId: string
+): Promise<WorkspaceByIdResponseType> => {
+  const response = await API.get(`/workspace/${workspaceId}`);
+  return response.data;
+};
 
 export const editWorkspaceMutationFn = async () => {};
 
