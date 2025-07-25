@@ -1,7 +1,6 @@
 // This file sets up a pre-configured Axios HTTP client for making API requests in the application.
 
 // Import the Axios library for HTTP requests.
-import { CustomError } from "@/types/errorType";
 import axios from "axios";
 
 // Get the base URL for the API from environment variables.
@@ -32,23 +31,14 @@ API.interceptors.response.use(
   },
   async (error) => {
     const { data, status } = error.response;
-
-    if (data?.errorCode === "ACCESS_UNAUTHORIZED") {
-      window.location.href = "/";
-      return;
-    }
     if (data === "Unauthorized" && status === 401) {
       // Redirect to login if unauthorized.
       window.location.href = "/";
     }
-
-    const customError: CustomError = {
-      ...error,
-      errorCode: data?.errorCode || "UNKNOWN_ERROR",
-    };
-
     // Reject with the error data for further handling.
-    return Promise.reject(customError);
+    return Promise.reject({
+      ...data,
+    });
   }
 );
 

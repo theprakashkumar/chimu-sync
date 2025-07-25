@@ -36,7 +36,7 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 const Asidebar = () => {
   const { open } = useSidebar();
   const workspaceId = useWorkspaceId();
-  const { user, authLoading } = useAuthContext();
+  const { user, isLoading } = useAuthContext();
 
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -69,7 +69,7 @@ const Asidebar = () => {
         <SidebarFooter className="dark:bg-background">
           <SidebarMenu>
             <SidebarMenuItem>
-              {authLoading ? (
+              {isLoading ? (
                 <Loader
                   size="24px"
                   className="place-self-center self-center animate-spin"

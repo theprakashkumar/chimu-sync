@@ -2,20 +2,15 @@
 import { createContext, useContext, useEffect } from "react";
 // import useWorkspaceId from "@/hooks/use-workspace-id";
 import useAuth from "@/hooks/api/use-auth";
-import { UserType, WorkspaceType } from "@/types/api.type";
-import useWorkspaceId from "@/hooks/use-workspace-id";
-import useGetWorkspace from "@/hooks/api/useGetWorkspace";
+import { UserType } from "@/types/api.type";
 
 // Define the context shape
 type AuthContextType = {
   user?: UserType;
-  workspace?: WorkspaceType;
   error: any;
-  authLoading: boolean;
-  workspaceLoading: boolean;
-  authFetch: boolean;
+  isLoading: boolean;
+  isFetching: boolean;
   refetchAuth: () => void;
-  refetchWorkspace: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,8 +18,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const workspaceId = useWorkspaceId();
-
   const {
     data: authData,
     error: authError,
@@ -32,30 +25,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isFetching: authFetch,
     refetch: refetchAuth,
   } = useAuth();
+
   const user = authData?.user;
 
-  const {
-    data: workspaceData,
-    isLoading: workspaceLoading,
-    error: workspaceError,
-    refetch: refetchWorkspace,
-  } = useGetWorkspace(workspaceId);
+  // const workspaceId = useWorkspaceId();
 
-  const workspace = workspaceData?.workspace;
-  // Checking if user can access of the workspace.
   useEffect(() => {});
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        workspace,
-        authLoading,
-        authFetch,
+        error: authError,
+        isLoading: authLoading,
+        isFetching: authFetch,
         refetchAuth: refetchAuth,
-        workspaceLoading,
-        refetchWorkspace,
-        error: authError || workspaceError,
       }}
     >
       {children}
