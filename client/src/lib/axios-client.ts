@@ -36,13 +36,11 @@ API.interceptors.response.use(
     // If any of these error occurred then redirect to login page.
     if (data === "ACCESS_UNAUTHORIZED") {
       window.localStorage.href = "/";
-      return;
     }
 
     if (data === "Unauthorized" && status === 401) {
       // Redirect to login if unauthorized.
       window.location.href = "/";
-      return;
     }
 
     // Reject with the error data for further handling.

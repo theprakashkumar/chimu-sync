@@ -1,7 +1,10 @@
 import API from "./axios-client";
 import {
   AllWorkspaceResponseType,
+  CreateWorkspaceResponseType,
+  CreateWorkspaceType,
   CurrentUserResponseType,
+  EditWorkspaceType,
   LoginResponseType,
   loginType,
   registerType,
@@ -36,20 +39,35 @@ export const getCurrentUserQueryFn =
 //********* WORKSPACE ****************
 //************* */
 
-export const createWorkspaceMutationFn = async () => {};
+export const createWorkspaceMutationFn = async (
+  data: CreateWorkspaceType
+): Promise<CreateWorkspaceResponseType> => {
+  const response = await API.post("workspace/create/new", data);
+  return response.data;
+};
 
-export const editWorkspaceMutationFn = async () => {};
+export const editWorkspaceMutationFn = async ({
+  workspaceId,
+  data,
+}: {
+  workspaceId: string;
+  data: { name: string; description: string };
+}): Promise<EditWorkspaceType> => {
+  const response = await API.put(`/workspace/update/${workspaceId}`, data);
+
+  return response.data;
+};
 
 export const getWorkspaceByIdQueryFn = async (
-  workspadId: string
+  workspaceId: string
 ): Promise<WorkspaceByIdResponseType> => {
-  const response = await API.get(`/workspace/${workspadId}`);
+  const response = await API.get(`/workspace/${workspaceId}`);
   return response.data;
 };
 
 export const getAllWorkspacesUserIsMemberQueryFn =
   async (): Promise<AllWorkspaceResponseType> => {
-    const response = await API.get(`/workspace/all`);
+    const response = await API.get("/workspace/all");
     return response.data;
   };
 
