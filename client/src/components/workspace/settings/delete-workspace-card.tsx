@@ -1,13 +1,46 @@
 import { ConfirmDialog } from "@/components/resuable/confirm-dialog";
 import { Button } from "@/components/ui/button";
+import { useAuthContext } from "@/context/auth-provider";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import { toast } from "@/hooks/use-toast";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { deleteWorkspaceMutationFn } from "@/lib/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const DeleteWorkspaceCard = () => {
+  const { workspace } = useAuthContext();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const workspaceId = useWorkspaceId();
   const { open, onOpenDialog, onCloseDialog } = useConfirmDialog();
 
-  const isPending = false;
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteWorkspaceMutationFn,
+  });
 
-  const handleConfirm = () => {};
+  const handleConfirm = () => {
+    if (isPending) return;
+
+    mutate(workspaceId, {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({
+          queryKey: ["userWorkspace"],
+        });
+        navigate(`/workspace/${data.currentWorkspace}`);
+        // To close the dialog.
+        setTimeout(() => onCloseDialog(), 100);
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
+  };
   return (
     <>
       <div className="w-full">
@@ -33,7 +66,9 @@ const DeleteWorkspaceCard = () => {
             className="shrink-0 flex place-self-end h-[40px]"
             variant="destructive"
             onClick={onOpenDialog}
+            disabled={isPending}
           >
+            {isPending && <Loader className="animate-spin" />}
             Delete Workspace
           </Button>
         </div>
@@ -44,7 +79,7 @@ const DeleteWorkspaceCard = () => {
         isLoading={isPending}
         onClose={onCloseDialog}
         onConfirm={handleConfirm}
-        title={`Delete  Test co Workspace`}
+        title={`Delete ${workspace?.name} Workspace`}
         description={`Are you sure you want to delete? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"

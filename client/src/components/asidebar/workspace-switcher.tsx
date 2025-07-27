@@ -66,6 +66,8 @@ export function WorkspaceSwitcher() {
     navigate(`/workspace/${workspace._id}`);
   };
 
+  console.log("some", workspaces);
+
   return (
     <>
       <SidebarGroupLabel className="w-full justify-between pr-0">
@@ -118,6 +120,7 @@ export function WorkspaceSwitcher() {
                 Workspaces
               </DropdownMenuLabel>
               {isPending ? <Loader className="w-5 h-5 animate-spin" /> : null}
+
               {workspaces?.map((workspace) => (
                 <DropdownMenuItem
                   key={workspace._id}
