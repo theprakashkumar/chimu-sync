@@ -1,34 +1,36 @@
+import useWorkspaceId from "@/hooks/use-workspace-id";
 import AnalyticsCard from "./common/analytics-card";
+import { useQuery } from "@tanstack/react-query";
+import { getWorkspaceAnalyticsQueryFn } from "@/lib/api";
 
 const WorkspaceAnalytics = () => {
-  const workspaceList = [
-    {
-      id: "total-task",
-      title: "Total Task",
-      value: 20,
-    },
-    {
-      id: "overdue-task",
-      title: "Overdue Task",
-      value: 0,
-    },
-    {
-      id: "completed-task",
-      title: "Completed Task",
-      value: 4,
-    },
-  ];
+  const workspaceId = useWorkspaceId();
+  const { data, isPending } = useQuery({
+    queryKey: ["workspace-analytics", workspaceId],
+    queryFn: () => getWorkspaceAnalyticsQueryFn(workspaceId),
+    staleTime: 0,
+    enabled: !!workspaceId,
+  });
+
+  const ananlytics = data?.analytics;
 
   return (
     <div className="grid gap-4 md:gap-5 lg:grid-cols-2 xl:grid-cols-3">
-      {workspaceList?.map((v) => (
-        <AnalyticsCard
-          key={v.id}
-          isLoading={false}
-          title={v.title}
-          value={v.value}
-        />
-      ))}
+      <AnalyticsCard
+        isLoading={isPending}
+        title={"Total Task"}
+        value={ananlytics?.totalTasks || 0}
+      />
+      <AnalyticsCard
+        isLoading={isPending}
+        title={"Overdue Task"}
+        value={ananlytics?.overdueTasks || 0}
+      />
+      <AnalyticsCard
+        isLoading={isPending}
+        title={"Completed Task"}
+        value={ananlytics?.completedTasks || 0}
+      />
     </div>
   );
 };
