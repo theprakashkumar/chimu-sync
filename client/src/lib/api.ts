@@ -37,8 +37,7 @@ export const getCurrentUserQueryFn =
     return response.data;
   };
 
-//********* WORKSPACE ****************
-//************* */
+// WORKSPACE
 
 export const createWorkspaceMutationFn = async (
   data: CreateWorkspaceType
@@ -88,12 +87,19 @@ export const deleteWorkspaceMutationFn = async (
   return response.data;
 };
 
-//*******MEMBER ****************
+// MEMBER
 
-export const invitedUserJoinWorkspaceMutationFn = async () => {};
+export const invitedUserJoinWorkspaceMutationFn = async (
+  inviteCode: string
+): Promise<{
+  message: string;
+  workspaceId: string;
+}> => {
+  const response = await API.post(`/member/workspace/${inviteCode}/join`);
+  return response.data;
+};
 
-//********* */
-//********* PROJECTS
+//PROJECTS
 export const createProjectMutationFn = async () => {};
 
 export const editProjectMutationFn = async () => {};
@@ -106,8 +112,7 @@ export const getProjectAnalyticsQueryFn = async () => {};
 
 export const deleteProjectMutationFn = async () => {};
 
-//*******TASKS ********************************
-//************************* */
+//TASKS
 
 export const createTaskMutationFn = async () => {};
 
