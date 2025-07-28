@@ -146,11 +146,9 @@ export const changeMemberRoleService = async (
   if (!member) {
     throw new Error("Member not found in the workspace.");
   }
-
   member.role = role;
 
   await role.save();
-
   return { member };
 };
 
