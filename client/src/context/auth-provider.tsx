@@ -5,6 +5,9 @@ import useAuth from "@/hooks/api/use-auth";
 import { UserType, WorkspaceType } from "@/types/api.type";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import useGetWorkspace from "@/hooks/api/use-get-workspace";
+import usePermissions from "@/hooks/use-permissions";
+
+import { PermissionType } from "@/constant";
 
 // Define the context shape
 type AuthContextType = {
@@ -14,6 +17,7 @@ type AuthContextType = {
   authLoading: boolean;
   workspaceLoading: boolean;
   authFetch: boolean;
+  hasPermission: (permission: PermissionType) => boolean;
   refetchAuth: () => void;
   refetchWorkspace: () => void;
 };
@@ -42,7 +46,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   } = useGetWorkspace(workspaceId);
 
   const workspace = workspaceData?.workspace;
+
+  const permissions = usePermissions(user, workspace);
+  const hasPermission = (permission: PermissionType): boolean => {
+    return permissions.includes(permission);
+  };
+
   // Checking if user can access of the workspace.
+  // For now check in the axios interceptor.
   // useEffect(() => {});
 
   return (
@@ -55,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         refetchAuth: refetchAuth,
         workspaceLoading,
         refetchWorkspace,
+        hasPermission,
         error: authError || workspaceError,
       }}
     >
