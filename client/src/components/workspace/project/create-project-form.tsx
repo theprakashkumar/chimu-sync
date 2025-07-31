@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/popover";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createProjectMutationFn } from "@/lib/api";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { toast } from "@/hooks/use-toast";
@@ -31,6 +31,7 @@ export default function CreateProjectForm({
 }: {
   onClose: () => void;
 }) {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
 
@@ -73,6 +74,9 @@ export default function CreateProjectForm({
           title: "Success",
           description: "Project created successfully!",
           variant: "destructive",
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["allProject", workspaceId],
         });
         navigate(`/workspace/${workspaceId}/project/${project._id}`);
         setTimeout(() => onClose(), 500);
