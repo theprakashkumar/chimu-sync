@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import EmojiPicker from "emoji-picker-react";
 import { z } from "zod";
 import {
   Form,
@@ -12,15 +13,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "../../ui/textarea";
-import EmojiPickerComponent from "@/components/emoji-picker";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { createProjectMutationFn } from "@/lib/api";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { toast } from "@/hooks/use-toast";
+import { Loader } from "lucide-react";
 
-export default function CreateProjectForm() {
+export default function CreateProjectForm({
+  onClose,
+}: {
+  onClose: () => void;
+}) {
+  const navigate = useNavigate();
+  const workspaceId = useWorkspaceId();
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["project", "new-project"],
+    mutationFn: createProjectMutationFn,
+  });
+
   const [emoji, setEmoji] = useState("📊");
 
   const formSchema = z.object({
@@ -38,12 +56,35 @@ export default function CreateProjectForm() {
     },
   });
 
-  const handleEmojiSelection = (emoji: string) => {
-    setEmoji(emoji);
+  const handleEmojiSelection = (selectedEmoji: { emoji: string }) => {
+    setEmoji(selectedEmoji.emoji);
   };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    if (isPending) return;
+    const payload = {
+      workspaceId,
+      data: { emoji, ...values },
+    };
+    mutate(payload, {
+      onSuccess: (data) => {
+        const project = data.project;
+        toast({
+          title: "Success",
+          description: "Project created successfully!",
+          variant: "destructive",
+        });
+        navigate(`/workspace/${workspaceId}/project/${project._id}`);
+        setTimeout(() => onClose(), 500);
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "success",
+        });
+      },
+    });
   };
 
   return (
@@ -76,7 +117,10 @@ export default function CreateProjectForm() {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="start" className=" !p-0">
-                  <EmojiPickerComponent onSelectEmoji={handleEmojiSelection} />
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiSelection}
+                    skinTonesDisabled={true}
+                  />
                 </PopoverContent>
               </Popover>
             </div>
@@ -127,9 +171,11 @@ export default function CreateProjectForm() {
             </div>
 
             <Button
+              disabled={isPending}
               className="flex place-self-end  h-[40px] text-white font-semibold"
               type="submit"
             >
+              {isPending && <Loader className="animate-spin" />}
               Create
             </Button>
           </form>
