@@ -4,6 +4,8 @@ import CreateTaskDialog from "../task/create-task-dialog";
 import EditProjectDialog from "./edit-project-dialog";
 import useProjectId from "@/hooks/use-project-id";
 import useGetProject from "@/hooks/api/use-get-project";
+import PermissionsGuard from "@/components/resuable/permission-guard";
+import { Permissions } from "@/constant";
 
 const ProjectHeader = () => {
   const projectId = useProjectId();
@@ -36,7 +38,9 @@ const ProjectHeader = () => {
         <h2 className="flex items-center gap-3 text-xl font-medium truncate tracking-tight">
           {renderContent()}
         </h2>
-        <EditProjectDialog project={project} />
+        <PermissionsGuard requiredPermission={Permissions.EDIT_PROJECT}>
+          <EditProjectDialog project={project} />
+        </PermissionsGuard>
       </div>
       <CreateTaskDialog projectId={projectId} />
     </div>
