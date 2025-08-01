@@ -36,7 +36,7 @@ const ProjectHeader = () => {
         <h2 className="flex items-center gap-3 text-xl font-medium truncate tracking-tight">
           {renderContent()}
         </h2>
-        <EditProjectDialog project={{} as any} />
+        <EditProjectDialog project={project} />
       </div>
       <CreateTaskDialog projectId={projectId} />
     </div>

@@ -18,16 +18,29 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "../../ui/textarea";
-import EmojiPickerComponent from "@/components/emoji-picker";
+import EmojiPicker from "emoji-picker-react";
 import { ProjectType } from "@/types/api.type";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { editProjectMutationFn } from "@/lib/api";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import useProjectId from "@/hooks/use-project-id";
+import { toast } from "@/hooks/use-toast";
+import { Loader } from "lucide-react";
 
 export default function EditProjectForm(props: {
   project?: ProjectType;
   onClose: () => void;
 }) {
-  const { onClose } = props;
+  const queryClient = useQueryClient();
+  const workspaceId = useWorkspaceId();
+  const projectId = useProjectId();
 
-  const [emoji, setEmoji] = useState("📊");
+  const { mutate, isPending } = useMutation({
+    mutationFn: editProjectMutationFn,
+  });
+
+  const { onClose } = props;
+  const [emoji, setEmoji] = useState(props.project?.emoji || "");
 
   const formSchema = z.object({
     name: z.string().trim().min(1, {
@@ -39,18 +52,43 @@ export default function EditProjectForm(props: {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: props.project?.name || "",
+      description: props.project?.description || "",
     },
   });
 
-  const handleEmojiSelection = (emoji: string) => {
-    setEmoji(emoji);
+  const handleEmojiSelection = (selectedEmoji: { emoji: string }) => {
+    setEmoji(selectedEmoji.emoji);
   };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    onClose();
+    if (isPending) return;
+    const payload = { projectId, workspaceId, data: { emoji, ...values } };
+    mutate(payload, {
+      onSuccess: (data) => {
+        // Invalidate single project
+        queryClient.invalidateQueries({
+          queryKey: ["project", projectId],
+        });
+        // Invalidate all project for a workspace
+        queryClient.invalidateQueries({
+          queryKey: ["allProject", workspaceId],
+        });
+        toast({
+          title: "Success",
+          description: data.message,
+          variant: "success",
+        });
+        setTimeout(() => onClose(), 100);
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
   };
 
   return (
@@ -83,7 +121,10 @@ export default function EditProjectForm(props: {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent align="start" className=" !p-0">
-                  <EmojiPickerComponent onSelectEmoji={handleEmojiSelection} />
+                  <EmojiPicker
+                    onEmojiClick={handleEmojiSelection}
+                    skinTonesDisabled={true}
+                  />
                 </PopoverContent>
               </Popover>
             </div>
@@ -130,10 +171,12 @@ export default function EditProjectForm(props: {
             </div>
 
             <Button
+              disabled={isPending}
               className="flex place-self-end  h-[40px] text-white font-semibold"
               type="submit"
             >
-              Create
+              {isPending && <Loader className="animate-spin" />}
+              Update Project
             </Button>
           </form>
         </Form>

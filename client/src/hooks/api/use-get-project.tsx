@@ -11,7 +11,7 @@ const useGetProject = ({
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["project", projectId],
     queryFn: () => getProjectByIdQueryFn({ workspaceId, projectId }),
-    staleTime: Infinity,
+    staleTime: 0,
     placeholderData: keepPreviousData,
     enabled: !!projectId || !!workspaceId,
   });

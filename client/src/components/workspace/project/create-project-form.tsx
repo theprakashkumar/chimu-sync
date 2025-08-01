@@ -77,6 +77,7 @@ export default function CreateProjectForm({
         });
         queryClient.invalidateQueries({
           queryKey: ["allProject", workspaceId],
+          exact: false,
         });
         navigate(`/workspace/${workspaceId}/project/${project._id}`);
         setTimeout(() => onClose(), 500);
