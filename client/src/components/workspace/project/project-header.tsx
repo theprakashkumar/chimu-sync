@@ -1,22 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useParams } from "react-router-dom";
+import useWorkspaceId from "@/hooks/use-workspace-id";
 import CreateTaskDialog from "../task/create-task-dialog";
 import EditProjectDialog from "./edit-project-dialog";
+import useProjectId from "@/hooks/use-project-id";
+import useGetProject from "@/hooks/api/use-get-project";
 
 const ProjectHeader = () => {
-  const param = useParams();
-  const projectId = param.projectId as string;
+  const projectId = useProjectId();
+  const workspaceId = useWorkspaceId();
 
-  const isPending = false;
-  const isError = false;
+  const { data, isLoading, isError } = useGetProject({
+    workspaceId,
+    projectId,
+  });
+
+  const project = data?.project;
 
   // Fallback if no project data is found
-  const projectEmoji = "📊";
-  const projectName = "Untitled project";
+  const projectEmoji = project?.emoji || "📊";
+  const projectName = project?.name || "Untitled project";
 
   const renderContent = () => {
-    if (isPending) return <span>Loading...</span>;
-    if (isError) return <span>Error occured</span>;
+    if (isLoading) return <span>Loading...</span>;
+    if (isError) return <span>Error occurred</span>;
     return (
       <>
         <span>{projectEmoji}</span>

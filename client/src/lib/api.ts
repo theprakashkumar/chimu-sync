@@ -13,6 +13,7 @@ import {
   EditWorkspaceType,
   LoginResponseType,
   loginType,
+  ProjectByIdPayloadType,
   ProjectResponseType,
   registerType,
   UserType,
@@ -145,7 +146,16 @@ export const getProjectsInWorkspaceQueryFn = async ({
   return response.data;
 };
 
-export const getProjectByIdQueryFn = async () => {};
+export const getProjectByIdQueryFn = async ({
+  projectId,
+  workspaceId,
+}: ProjectByIdPayloadType): Promise<ProjectResponseType> => {
+  const response = await API.get(
+    `/project/${projectId}/workspace/${workspaceId}`
+  );
+
+  return response.data;
+};
 
 export const getProjectAnalyticsQueryFn = async () => {};
 
