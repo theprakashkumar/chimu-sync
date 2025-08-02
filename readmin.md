@@ -7,3 +7,4 @@ Walk Again:
 Dialog Hooks
 Permission
 Routing
+Toast
