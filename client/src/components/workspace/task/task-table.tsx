@@ -1,13 +1,21 @@
 import { FC, useState } from "react";
 import { getColumns } from "./table/columns";
 import { DataTable } from "./table/table";
-import { useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { DataTableFacetedFilter } from "./table/table-faceted-filter";
 import { priorities, statuses } from "./table/data";
 import useTaskTableFilter from "@/hooks/use-task-table-filter";
+import { useQuery } from "@tanstack/react-query";
+import useProjectId from "@/hooks/use-project-id";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { getAllTasksQueryFn } from "@/lib/api";
+import { TaskType } from "@/types/api.type";
+import useGetProjects from "@/hooks/api/use-get-projects";
+import useGetWorkspaceMember from "@/hooks/api/use-get-workspace-members";
+import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Filters = ReturnType<typeof useTaskTableFilter>[0];
 type SetFilters = ReturnType<typeof useTaskTableFilter>[1];
@@ -20,8 +28,8 @@ interface DataTableFilterToolbarProps {
 }
 
 const TaskTable = () => {
-  const param = useParams();
-  const projectId = param.projectId as string;
+  const workspaceId = useWorkspaceId();
+  const projectId = useProjectId();
 
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -29,7 +37,30 @@ const TaskTable = () => {
   const [filters, setFilters] = useTaskTableFilter();
   const columns = getColumns(projectId);
 
-  const totalCount = 0;
+  const { data, isLoading } = useQuery({
+    queryKey: [
+      "all-tasks",
+      workspaceId,
+      pageSize,
+      pageNumber,
+      filters,
+      projectId,
+    ],
+    queryFn: () =>
+      getAllTasksQueryFn({
+        workspaceId,
+        keyword: filters.keyword,
+        projectId: projectId || filters.projectId,
+        assignedTo: filters.assigneeId,
+        priority: filters.priority,
+        status: filters.status,
+        pageNumber,
+        pageSize,
+      }),
+    staleTime: 0,
+  });
+  const tasks: TaskType[] = data?.tasks || [];
+  const totalCount = data?.pagination.totalCount || 0;
 
   const handlePageChange = (page: number) => {
     setPageNumber(page);
@@ -43,8 +74,8 @@ const TaskTable = () => {
   return (
     <div className="w-full relative">
       <DataTable
-        isLoading={false}
-        data={[]}
+        isLoading={isLoading}
+        data={tasks}
         columns={columns}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
@@ -55,7 +86,7 @@ const TaskTable = () => {
         }}
         filtersToolbar={
           <DataTableFilterToolbar
-            isLoading={false}
+            isLoading={isLoading}
             projectId={projectId}
             filters={filters}
             setFilters={setFilters}
@@ -72,13 +103,46 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({
   filters,
   setFilters,
 }) => {
-  //const workspaceId = useWorkspaceId();
+  const workspaceId = useWorkspaceId();
+
+  const { data } = useGetProjects({
+    workspaceId,
+  });
+
+  const { data: membersData } = useGetWorkspaceMember(workspaceId);
+  const projects = data?.projects || [];
+  const members = membersData?.members || [];
 
   //Workspace Projects
-  //const projectOptions = [];
+  const projectOptions = projects?.map((project) => {
+    return {
+      label: (
+        <div className="flex items-center gap-1">
+          <span>{project.emoji}</span>
+          <span>{project.name}</span>
+        </div>
+      ),
+      value: project._id,
+    };
+  });
 
-  // Workspace Memebers
-  //const assignees = []
+  const assigneesOptions = members.map((member) => {
+    const name = member.userId?.name || "Unknown";
+    const initials = getAvatarFallbackText(name);
+    const avatarColor = getAvatarColor(name);
+    return {
+      label: (
+        <div className="flex items-center space-x-2">
+          <Avatar className="h-7 w-7">
+            <AvatarImage src={member.userId?.profilePicture || ""} alt={name} />
+            <AvatarFallback className={avatarColor}>{initials}</AvatarFallback>
+          </Avatar>
+          <span>{name}</span>
+        </div>
+      ),
+      value: member.userId._id,
+    };
+  });
 
   const handleFilterChange = (key: keyof Filters, values: string[]) => {
     setFilters({
@@ -123,7 +187,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({
       <DataTableFacetedFilter
         title="Assigned To"
         multiSelect={true}
-        options={[]}
+        options={assigneesOptions}
         disabled={isLoading}
         selectedValues={filters.assigneeId?.split(",") || []}
         onFilterChange={(values) => handleFilterChange("assigneeId", values)}
@@ -133,7 +197,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({
         <DataTableFacetedFilter
           title="Projects"
           multiSelect={false}
-          options={[]}
+          options={projectOptions}
           disabled={isLoading}
           selectedValues={filters.projectId?.split(",") || []}
           onFilterChange={(values) => handleFilterChange("projectId", values)}
