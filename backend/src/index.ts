@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
-import session from "cookie-session";
+// import session from "cookie-session";
 import cors from "cors";
 import { appConfig } from "./config/appConfig";
 import connectDatabase from "./config/databaseConfig";
@@ -10,12 +10,13 @@ import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
 import "./config/passportConfig";
 import passport from "passport";
 import authRoute from "./routes/authRoute";
-import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
+// import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
 import memberRoutes from "./routes/memberRoute";
 import userRoutes from "./routes/userRoute";
 import workspaceRoutes from "./routes/workspaceRoute";
 import projectRouters from "./routes/projectRoute";
 import taskRouters from "./routes/taskRoute";
+import { passportAuthenticateJWT } from "./config/passportConfig";
 
 const app = express();
 
@@ -32,19 +33,19 @@ app.use(express.urlencoded({ extended: true }));
 // - 'secure': Ensures cookies are only sent over HTTPS in production environments.
 // - 'httpOnly': Prevents JavaScript from accessing the cookie, enhancing security.
 // - 'sameSite': Limits the cookie to same-site requests (lax mode) to help prevent CSRF attacks.
-app.use(
-  session({
-    name: "session",
-    keys: [appConfig.SESSION_SECRET],
-    maxAge: 24 * 60 * 60 * 1000,
-    secure: appConfig.NODE_ENV === "production",
-    httpOnly: true,
-    sameSite: "lax",
-  })
-);
+// app.use(
+//   session({
+//     name: "session",
+//     keys: [appConfig.SESSION_SECRET],
+//     maxAge: 24 * 60 * 60 * 1000,
+//     secure: appConfig.NODE_ENV === "production",
+//     httpOnly: true,
+//     sameSite: "lax",
+//   })
+// );
 
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.use(
   cors({
@@ -63,11 +64,19 @@ app.get(
 );
 
 app.use(`${appConfig.BASE_PATH}/auth`, authRoute);
-app.use(`${appConfig.BASE_PATH}/user`, isAuthenticated, userRoutes);
-app.use(`${appConfig.BASE_PATH}/workspace`, isAuthenticated, workspaceRoutes);
-app.use(`${appConfig.BASE_PATH}/member`, isAuthenticated, memberRoutes);
-app.use(`${appConfig.BASE_PATH}/project`, isAuthenticated, projectRouters);
-app.use(`${appConfig.BASE_PATH}/task`, isAuthenticated, taskRouters);
+app.use(`${appConfig.BASE_PATH}/user`, passportAuthenticateJWT, userRoutes);
+app.use(
+  `${appConfig.BASE_PATH}/workspace`,
+  passportAuthenticateJWT,
+  workspaceRoutes
+);
+app.use(`${appConfig.BASE_PATH}/member`, passportAuthenticateJWT, memberRoutes);
+app.use(
+  `${appConfig.BASE_PATH}/project`,
+  passportAuthenticateJWT,
+  projectRouters
+);
+app.use(`${appConfig.BASE_PATH}/task`, passportAuthenticateJWT, taskRouters);
 
 // Error handling.
 app.use(errorHandler);
