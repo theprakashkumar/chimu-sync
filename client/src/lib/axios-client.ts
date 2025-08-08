@@ -1,6 +1,7 @@
 // This file sets up a pre-configured Axios HTTP client for making API requests in the application.
 
 // Import the Axios library for HTTP requests.
+import { useStore } from "@/store/store";
 import { CustomError } from "@/types/custom.error.type";
 import axios from "axios";
 
@@ -20,6 +21,14 @@ const options = {
 // Create an Axios instance with the above options.
 const API = axios.create(options);
 
+API.interceptors.request.use((config) => {
+  const accessToken = useStore.getState().accessToken;
+  if (accessToken) {
+    config.headers["Authorization"] = "Bearer " + accessToken;
+  }
+  return config;
+});
+
 // Set up a response interceptor:
 // - If the response is successful, just return it.
 // - If there is an error and the response indicates "Unauthorized" (HTTP 401),
@@ -31,17 +40,17 @@ API.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const { data, status } = error.response;
+    const { data } = error.response;
 
     // If any of these error occurred then redirect to login page.
-    if (data === "ACCESS_UNAUTHORIZED") {
-      window.localStorage.href = "/";
-    }
+    // if (data === "ACCESS_UNAUTHORIZED" && status === 401) {
+    //   window.location.href = "/";
+    // }
 
-    if (data === "Unauthorized" && status === 401) {
-      // Redirect to login if unauthorized.
-      window.location.href = "/";
-    }
+    // if (data === "Unauthorized" && status === 401) {
+    //   // Redirect to login if unauthorized.
+    //   window.location.href = "/";
+    // }
 
     // Reject with the error data for further handling.
     const customError: CustomError = {
@@ -50,7 +59,7 @@ API.interceptors.response.use(
     };
 
     return Promise.reject({
-      ...customError,
+      customError,
     });
   }
 );

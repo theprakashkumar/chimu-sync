@@ -25,6 +25,7 @@ import { useMutation } from "@tanstack/react-query";
 import { loginMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
+import { useStore } from "@/store/store";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -33,6 +34,8 @@ const SignIn = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: loginMutationFn,
   });
+
+  const { setAccessToken } = useStore();
 
   const formSchema = z.object({
     email: z.string().trim().email("Invalid email address").min(1, {
@@ -56,6 +59,8 @@ const SignIn = () => {
 
     mutate(values, {
       onSuccess: (data) => {
+        const accessToken = data.access_token;
+        setAccessToken(accessToken);
         const user = data.user;
         const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
         navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
