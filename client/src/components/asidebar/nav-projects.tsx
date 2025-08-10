@@ -48,6 +48,7 @@ export function NavProjects() {
   const { context, open, onOpenDialog, onCloseDialog } = useConfirmDialog();
 
   const [pageNumber, setPageNumber] = useState(1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pageSize, setPageSize] = useState(5);
 
   const { mutate, isPending: deletePending } = useMutation({
