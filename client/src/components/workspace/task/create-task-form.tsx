@@ -107,20 +107,20 @@ export default function CreateTaskForm(props: {
     status: z.enum(
       Object.values(TaskStatusEnum) as [keyof typeof TaskStatusEnum],
       {
-        required_error: "Status is required",
+        message: "Status is required",
       }
     ),
     priority: z.enum(
       Object.values(TaskPriorityEnum) as [keyof typeof TaskPriorityEnum],
       {
-        required_error: "Priority is required",
+        message: "Priority is required",
       }
     ),
     assignedTo: z.string().trim().min(1, {
       message: "AssignedTo is required",
     }),
     dueDate: z.date({
-      required_error: "A date of birth is required.",
+      message: "A date of birth is required.",
     }),
   });
 
