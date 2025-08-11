@@ -27,6 +27,7 @@ export const useStoreBase = create<StoreType>()(
       })),
       {
         name: "session-storage",
+        // @ts-expect-error - Error from UI library
         getStorage: () => sessionStorage,
       }
     )

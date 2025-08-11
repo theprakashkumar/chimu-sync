@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const {
     data: workspaceData,
     isLoading: workspaceLoading,
-    error: workspaceError,
+    isError: workspaceError,
     refetch: refetchWorkspace,
   } = useGetWorkspace(workspaceId);
 
