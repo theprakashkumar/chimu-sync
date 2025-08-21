@@ -122,7 +122,6 @@ const SignIn = () => {
                                   {...field}
                                 />
                               </FormControl>
-
                               <FormMessage />
                             </FormItem>
                           )}
@@ -138,12 +137,6 @@ const SignIn = () => {
                                 <FormLabel className="dark:text-[#f1f7feb5] text-sm">
                                   Password
                                 </FormLabel>
-                                <a
-                                  href="#"
-                                  className="ml-auto text-sm underline-offset-4 hover:underline"
-                                >
-                                  Forgot your password?
-                                </a>
                               </div>
                               <FormControl>
                                 <Input
@@ -152,7 +145,6 @@ const SignIn = () => {
                                   {...field}
                                 />
                               </FormControl>
-
                               <FormMessage />
                             </FormItem>
                           )}
@@ -163,7 +155,7 @@ const SignIn = () => {
                         type="submit"
                         className="w-full"
                       >
-                        {isPending && <Loader className="animated-spin" />}
+                        {isPending && <Loader className="animate-spin" />}
                         Login
                       </Button>
                     </div>
