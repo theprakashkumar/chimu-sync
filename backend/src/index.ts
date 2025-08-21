@@ -47,12 +47,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 // app.use(passport.session());
 
-app.use(
-  cors({
-    origin: appConfig.FRONTEND_ORIGIN,
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: appConfig.FRONTEND_ORIGIN,
+//     credentials: true,
+//   })
+// );
+app.use(require("cors")({ origin: "*", credentials: false }));
 // asyncHandler wraps the controller in a try catch block, so if anything goes wrong in the controller catch block will run which calls the next function with error and that is taken care by error handler and we don't have to wrap every controller inside the try catch block.
 app.get(
   "/",
