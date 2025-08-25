@@ -38,7 +38,6 @@ const AllMembers = () => {
 
   const handleSelect = (roleId: string, memberId: string) => {
     if (!roleId || !memberId || isLoading) return;
-    console.log(roleId, memberId);
     const payload = {
       workspaceId,
       data: {

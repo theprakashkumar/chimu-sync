@@ -59,7 +59,7 @@ export function WorkspaceSwitcher() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workspaceId, workspaceId, navigate]);
+  }, [workspaceId, workspaces, navigate]);
 
   const onSelect = (workspace: WorkspaceType) => {
     setActiveWorkspace(workspace);
