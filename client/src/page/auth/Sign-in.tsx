@@ -33,6 +33,7 @@ const SignIn = () => {
   const returnUrl = searchParams.get("returnUrl");
   const { mutate, isPending } = useMutation({
     mutationFn: loginMutationFn,
+    retry: 2,
   });
 
   const { setAccessToken } = useStore();
