@@ -49,7 +49,8 @@ app.use(passport.initialize());
 
 app.use(
   cors({
-    origin: appConfig.FRONTEND_ORIGIN,
+    // ! Todo: Only allow the origin from the environment variable.
+    origin: true,
     credentials: true,
   })
 );
