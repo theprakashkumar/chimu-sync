@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express, { Request, Response, NextFunction } from "express";
+import express, { Response } from "express";
 // import session from "cookie-session";
 import cors from "cors";
 import { appConfig } from "./config/appConfig";
@@ -59,10 +59,10 @@ app.use(
   })
 );
 
-// asyncHandler wraps the controller in a try catch block, so if anything goes wrong in the controller catch block will run which calls the next function with error and that is taken care by error handler and we don't have to wrap every controller inside the try catch block.
+// ? `asyncHandler` wraps the controller in a try catch block, so if anything goes wrong in the controller catch block will run which calls the next function with error and that is taken care by error handler and we don't have to wrap every controller inside the try catch block.
 app.get(
   "/",
-  asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  asyncHandler(async (_, res: Response) => {
     res.status(HTTPSTATUS.OK).json({
       message: "Home",
     });

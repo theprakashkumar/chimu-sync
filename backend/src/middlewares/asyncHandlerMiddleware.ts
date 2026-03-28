@@ -13,6 +13,7 @@ export const asyncHandler = (
     try {
       await controller(req, res, next);
     } catch (error) {
+      // ? Pass the error to the next middleware which will be handled by the `errorHandler` middleware in our case.
       next(error);
     }
   };
