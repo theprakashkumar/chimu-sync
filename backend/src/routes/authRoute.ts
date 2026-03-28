@@ -23,7 +23,6 @@ authRoutes.get(
     session: false,
   })
 );
-
 authRoutes.get(
   "/google/callback",
   passport.authenticate("google", {

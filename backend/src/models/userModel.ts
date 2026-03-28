@@ -29,11 +29,11 @@ const userSchema = new Schema<UserDocument>(
       trim: true,
       lowercase: true,
     },
-    // The 'select: true' option means the password field will be included in query results by default.
+    // The 'select: false' option means the password field will be excluded in query results by default.
     // In Mongoose, 'select' controls whether a field is returned in queries.
     // If set to false, the field is excluded unless explicitly requested.
-    // Here, 'select: true' is actually the default, so this line is equivalent to just: password: { type: String }
-    password: { type: String, select: true },
+    // 'select: true' is actually the default.
+    password: { type: String, select: false },
     profilePicture: {
       type: String,
       default: null,
