@@ -84,7 +84,7 @@ app.use(
 );
 app.use(`${appConfig.BASE_PATH}/task`, passportAuthenticateJWT, taskRouters);
 
-// Error handling.
+// ? Error handling, catches all the errors that may occur in the application and sends the response to the client.
 app.use(errorHandler);
 
 app.listen(appConfig.PORT, async () => {
