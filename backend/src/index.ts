@@ -17,6 +17,7 @@ import workspaceRoutes from "./routes/workspaceRoute";
 import projectRouters from "./routes/projectRoute";
 import taskRouters from "./routes/taskRoute";
 import { passportAuthenticateJWT } from "./config/passportConfig";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -24,6 +25,8 @@ const app = express();
 app.use(express.json());
 // - express.urlencoded({ extended: true }) parses URL-encoded payloads (from HTML forms)
 app.use(express.urlencoded({ extended: true }));
+// ? Express middleware, it reads the Cookie header on each request, parses it, and attaches the result to req.cookies as a plain object
+app.use(cookieParser())
 
 // Cookie-based session is a way to store session data on the client side using cookies.
 // The session middleware below configures how session cookies are created and managed:
@@ -49,8 +52,9 @@ app.use(passport.initialize());
 
 app.use(
   cors({
-    // ! Todo: Only allow the origin from the environment variable.
-    origin: true,
+    // ? Only allow the origin from the environment variable.
+    origin: appConfig.FRONTEND_ORIGIN,
+    // ? This is used to allow the cookies to be sent to the client.
     credentials: true,
   })
 );
