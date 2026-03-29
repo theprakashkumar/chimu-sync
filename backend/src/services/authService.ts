@@ -11,6 +11,10 @@ import {
 } from "../utils/appErrors";
 import MemberModel from "../models/memberModel";
 import { ProviderEnum } from "../enums/accountProviderEnum";
+import { ErrorCodeEnum } from "../enums/errorCodeEnum";
+import verificationCodeModel from "../models/verificationModel";
+import { VerificationEnum } from "../enums/verificationCodeEnum";
+import { fortyFiveMinutesFromNow } from "../utils/dateTime";
 
 export const loginOrCreateAccountService = async (data: {
   provider: string;
@@ -93,14 +97,16 @@ export const registerUserService = async (body: {
   password: string;
 }) => {
   const { email, name, password } = body;
+
+  const existingUser = await UserModel.exists({ email });
+  if (existingUser) {
+    throw new BadRequestException("Email already exists!", ErrorCodeEnum.AUTH_EMAIL_ALREADY_EXISTS);
+  }
+
   const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
-    const existingUser = await UserModel.findOne({ email }).session(session);
-    if (existingUser) {
-      throw new BadRequestException("Email already exists!");
-    }
     // Create user.
     const user = new UserModel({
       email,
@@ -115,39 +121,50 @@ export const registerUserService = async (body: {
       providerId: email,
     });
     await account.save({ session });
-    // Create workspace.
-    const workspace = new WorkspaceModel({
-      name: "My Workspace",
-      description: `Workspace created for ${user.name}`,
-      owner: user._id,
-    });
-    await workspace.save({ session });
-    // Find the rules for owners and create new member for above create workspace with new user, new workspace and owner role.
-    const ownerRole = await RoleModel.findOne({
-      name: Roles.OWNER,
-    }).session(session);
 
-    if (!ownerRole) {
-      throw new NotFoundException("Owner role not found!");
-    }
-
-    const member = new MemberModel({
+    // Create a verification code
+    const verificationCode = new verificationCodeModel({
       userId: user._id,
-      workspaceId: workspace._id,
-      role: ownerRole._id,
-      joinedAt: new Date(),
-    });
+      type: VerificationEnum.EMAIL_VERIFICATION,
+      expiryAt: fortyFiveMinutesFromNow()
+    })
 
-    await member.save({ session });
+    // Send verification code
 
-    // Set the current workspace for new user as newly created workspace.
-    user.currentWorkspace = workspace._id as mongoose.Types.ObjectId;
-    await user.save({ session });
+    // // Create workspace.
+    // const workspace = new WorkspaceModel({
+    //   name: "My Workspace",
+    //   description: `Workspace created for ${user.name}`,
+    //   owner: user._id,
+    // });
+    // await workspace.save({ session });
+    // // Find the rules for owners and create new member for above create workspace with new user, new workspace and owner role.
+    // const ownerRole = await RoleModel.findOne({
+    //   name: Roles.OWNER,
+    // }).session(session);
+
+    // if (!ownerRole) {
+    //   throw new NotFoundException("Owner role not found!");
+    // }
+
+    // const member = new MemberModel({
+    //   userId: user._id,
+    //   workspaceId: workspace._id,
+    //   role: ownerRole._id,
+    //   joinedAt: new Date(),
+    // });
+
+    // await member.save({ session });
+
+    // // Set the current workspace for new user as newly created workspace.
+    // user.currentWorkspace = workspace._id as mongoose.Types.ObjectId;
+    // await user.save({ session });
 
     await session.commitTransaction();
     session.endSession();
 
-    return { userId: user._id, workspaceId: workspace._id };
+    // return { userId: user._id, workspaceId: workspace._id };
+    return { user };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -183,5 +200,5 @@ export const verifyUserService = async ({
     throw new UnauthorizedException("Invalid email or password.");
   }
 
-  return user.omitPassword();
+  return user;
 };

@@ -31,11 +31,11 @@ export const googleLoginCallback = asyncHandler(
 export const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
     const body = registerSchema.parse({ ...req.body });
-
-    await registerUserService(body);
+    const { user } = await registerUserService(body);
 
     return res.status(HTTPSTATUS.CREATED).json({
       message: "User created successfully",
+      data: user
     });
   }
 );
@@ -92,7 +92,7 @@ export const logOutController = asyncHandler(
       }
     });
 
-    req.session = null;
+    // req.session = null;
     return res
       .status(HTTPSTATUS.OK)
       .json({ message: "Logged out successfully" });
