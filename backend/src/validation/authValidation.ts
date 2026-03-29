@@ -20,8 +20,12 @@ export const registerSchema = z.object({
   path: ["confirmPassword"]
 });
 
-export const login = z.object({
+export type registerInput = z.infer<typeof registerSchema>
+
+export const loginSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   userAgent: z.string().optional(),
 });
+
+export type LoginInput = z.infer<typeof loginSchema>;

@@ -1,11 +1,39 @@
 import { appConfig } from "../config/appConfig";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { NextFunction, Request, Response } from "express";
-import { registerSchema } from "../validation/authValidation";
+import { loginSchema, registerSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { registerUserService } from "../services/authService";
-import passport from "passport";
-import { signJwtToken } from "../utils/jwt";
+import { loginUserService, registerUserService } from "../services/authService";
+
+export const registerUserController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const body = registerSchema.parse({ ...req.body });
+    const { user } = await registerUserService(body);
+
+    return res.status(HTTPSTATUS.CREATED).json({
+      message: "User created successfully",
+      data: user
+    });
+  }
+);
+
+export const loginController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userAgent = req.header("user-agent");
+
+    const body = loginSchema.parse({
+      ...req.body,
+      userAgent
+    })
+
+    const { user, accessToken, refreshToken, mfaRequired } = await loginUserService(body)
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "User login successfully!",
+      data: user
+    })
+  }
+);
 
 export const googleLoginCallback = asyncHandler(
   async (req: Request, res: Response) => {
@@ -25,59 +53,6 @@ export const googleLoginCallback = asyncHandler(
     return res.redirect(
       `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=success&access_token=${jwt}&current_workspace=${currentWorkspace}`
     );
-  }
-);
-
-export const registerUserController = asyncHandler(
-  async (req: Request, res: Response) => {
-    const body = registerSchema.parse({ ...req.body });
-    const { user } = await registerUserService(body);
-
-    return res.status(HTTPSTATUS.CREATED).json({
-      message: "User created successfully",
-      data: user
-    });
-  }
-);
-
-export const loginController = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate(
-      "local",
-      (
-        err: Error | null,
-        user: Express.User | false,
-        info: { message: string } | undefined
-      ) => {
-        if (err) {
-          return next(err);
-        }
-
-        if (!user) {
-          return res.status(HTTPSTATUS.UNAUTHORIZED).json({
-            message: info?.message || "Invalid email or password",
-          });
-        }
-
-        // req.logIn(user, (err) => {
-        //   if (err) {
-        //     return next(err);
-        //   }
-
-        //   return res.status(HTTPSTATUS.OK).json({
-        //     message: "Logged in successfully",
-        //     user,
-        //   });
-        // });
-
-        const access_token = signJwtToken({ userId: user._id });
-        return res.status(HTTPSTATUS.OK).json({
-          message: "Logged in successfully",
-          access_token,
-          user,
-        });
-      }
-    )(req, res, next);
   }
 );
 

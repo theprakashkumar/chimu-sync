@@ -44,8 +44,8 @@ const userSchema = new Schema<UserDocument>(
       trim: true,
       lowercase: true,
     },
-    // The 'select: false' option means the password field will be excluded in query results by default unless we specifically ask to include the password. 
-    password: { type: String, select: false },
+    // ? The 'select: false' option means the password field will be excluded in query results by default unless we specifically ask to include the password. But we need password to verify if the password sent by the user is correct so to get the password we set select as `true` here and while sending to client we strip away the password. 
+    password: { type: String, select: true },
     profilePicture: {
       type: String,
       default: null,
