@@ -4,6 +4,7 @@ import { HTTPSTATUS } from "../config/httpConfig";
 import { AppError } from "../utils/appErrors";
 import { ZodError } from "zod";
 import { ErrorCodeEnum } from "../enums/errorCodeEnum";
+import { clearAuthenticationCookie, REFRESH_PATH } from "../utils/cookie";
 
 /**
  * Express error handling middleware.
@@ -46,6 +47,11 @@ export const errorHandler: ErrorRequestHandler = (
   res: Response,
   next: NextFunction
 ): any => {
+  // If path is for refresh token then clear cookies. 
+  if (req.path === REFRESH_PATH) {
+    clearAuthenticationCookie(res);
+  }
+
   // ? Error handling for JSON syntax error.
   if (error instanceof SyntaxError) {
     return res.status(HTTPSTATUS.BAD_REQUEST).json({

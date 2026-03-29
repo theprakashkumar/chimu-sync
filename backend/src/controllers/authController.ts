@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { loginSchema, registerSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { loginUserService, registerUserService } from "../services/authService";
+import { setAuthenticationCookies } from "../utils/cookie";
 
 export const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -28,10 +29,14 @@ export const loginController = asyncHandler(
 
     const { user, accessToken, refreshToken, mfaRequired } = await loginUserService(body)
 
-    return res.status(HTTPSTATUS.OK).json({
-      message: "User login successfully!",
-      data: user
+    return setAuthenticationCookies({
+      res, accessToken, refreshToken
     })
+      .status(HTTPSTATUS.OK)
+      .json({
+        message: "User login successfully!",
+        data: user
+      })
   }
 );
 
