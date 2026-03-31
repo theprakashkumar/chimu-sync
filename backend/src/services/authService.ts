@@ -17,10 +17,9 @@ import { VerificationEnum } from "../enums/verificationCodeEnum";
 import { fortyFiveMinutesFromNow } from "../utils/dateTime";
 import { LoginInput, registerInput } from "../validation/authValidation";
 import SessionModel from "../models/sessionModel";
-import jwt, { SignOptions } from "jsonwebtoken";
-import { appConfig } from "../config/appConfig";
+import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken } from "../utils/jwt";
 
-export const registerUserService = async (registerData: registerInput) => {
+const registerUserService = async (registerData: registerInput) => {
   const { email, name, password } = registerData;
 
   const existingUser = await UserModel.exists({ email });
@@ -97,7 +96,7 @@ export const registerUserService = async (registerData: registerInput) => {
   }
 };
 
-export const loginUserService = async (loginData: LoginInput) => {
+const loginUserService = async (loginData: LoginInput) => {
   const { email, password, userAgent } = loginData;
 
   const user = await UserModel.findOne({ email });
@@ -118,22 +117,18 @@ export const loginUserService = async (loginData: LoginInput) => {
     userAgent,
   })
 
-  const accessToken = jwt.sign(
+  if (!session) {
+    throw new BadRequestException("Invalid email or password!")
+  }
+
+  const accessToken = signJwtToken(
     { userId: user._id, sessionId: session._id },
-    appConfig.JWT_SECRET,
-    {
-      audience: ["user"],
-      expiresIn: appConfig.JWT_EXPIRES_IN as SignOptions['expiresIn'],
-    }
+    accessTokenSignOptions
   )
 
-  const refreshToken = jwt.sign(
+  const refreshToken = signJwtToken(
     { sessionId: session._id },
-    appConfig.JWT_REFRESH_SECRET,
-    {
-      audience: ["user"],
-      expiresIn: appConfig.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'],
-    }
+    refreshTokenSignOptions
   )
 
   return {
@@ -144,7 +139,9 @@ export const loginUserService = async (loginData: LoginInput) => {
   }
 }
 
-export const loginOrCreateAccountService = async (data: {
+const refreshTokenService = async (refreshToken: string) => { }
+
+const loginOrCreateAccountService = async (data: {
   provider: string;
   displayName: string;
   providerId: string;
@@ -219,7 +216,7 @@ export const loginOrCreateAccountService = async (data: {
   }
 };
 
-export const verifyUserService = async ({
+const verifyUserService = async ({
   email,
   password,
   provider = ProviderEnum.EMAIL,
@@ -249,3 +246,5 @@ export const verifyUserService = async ({
 
   return user;
 };
+
+export { registerUserService, loginUserService, refreshTokenService, loginOrCreateAccountService, verifyUserService }

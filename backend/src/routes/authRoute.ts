@@ -5,6 +5,7 @@ import {
   googleLoginCallback,
   loginController,
   logOutController,
+  refreshTokenController,
   registerUserController,
 } from "../controllers/authController";
 
@@ -14,6 +15,7 @@ const authRoutes = Router();
 
 authRoutes.post("/register", registerUserController);
 authRoutes.post("/login", loginController);
+authRoutes.get("/refresh", refreshTokenController)
 authRoutes.post("/logout", logOutController);
 
 authRoutes.get(

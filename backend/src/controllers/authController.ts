@@ -3,10 +3,11 @@ import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { NextFunction, Request, Response } from "express";
 import { loginSchema, registerSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { loginUserService, registerUserService } from "../services/authService";
+import { loginUserService, refreshTokenService, registerUserService } from "../services/authService";
 import { setAuthenticationCookies } from "../utils/cookie";
+import { UnauthorizedException } from "../utils/appErrors";
 
-export const registerUserController = asyncHandler(
+const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
     const body = registerSchema.parse({ ...req.body });
     const { user } = await registerUserService(body);
@@ -18,7 +19,7 @@ export const registerUserController = asyncHandler(
   }
 );
 
-export const loginController = asyncHandler(
+const loginController = asyncHandler(
   async (req: Request, res: Response) => {
     const userAgent = req.header("user-agent");
 
@@ -40,7 +41,18 @@ export const loginController = asyncHandler(
   }
 );
 
-export const googleLoginCallback = asyncHandler(
+const refreshTokenController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const refreshToken: string | undefined = req.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new UnauthorizedException("User not authorized!");
+    }
+
+    await refreshTokenService(refreshToken);
+  }
+)
+
+const googleLoginCallback = asyncHandler(
   async (req: Request, res: Response) => {
     const jwt = req.jwt;
     const currentWorkspace = req.user?.currentWorkspace;
@@ -61,7 +73,7 @@ export const googleLoginCallback = asyncHandler(
   }
 );
 
-export const logOutController = asyncHandler(
+const logOutController = asyncHandler(
   async (req: Request, res: Response) => {
     req.logout((err) => {
       if (err) {
@@ -78,3 +90,5 @@ export const logOutController = asyncHandler(
       .json({ message: "Logged out successfully" });
   }
 );
+
+export { registerUserController, loginController, refreshTokenController, googleLoginCallback, logOutController }

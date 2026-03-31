@@ -8,14 +8,15 @@ import {
   StrategyOptions,
 } from "passport-jwt";
 import { appConfig } from "./appConfig";
-import { NotFoundException } from "../utils/appErrors";
+import { BadRequestException, NotFoundException } from "../utils/appErrors";
 import { ProviderEnum } from "../enums/accountProviderEnum";
 import {
   loginOrCreateAccountService,
   verifyUserService,
 } from "../services/authService";
-import { signJwtToken } from "../utils/jwt";
+import { accessTokenSignOptions, signJwtToken } from "../utils/jwt";
 import UserModel from "../models/userModel";
+import SessionModel from "../models/sessionModel";
 
 passport.use(
   new GoogleStrategy(
@@ -40,7 +41,14 @@ passport.use(
           email: email,
         });
 
-        const jwt = signJwtToken({ userId: user._id });
+        const session = new SessionModel({
+          userId: user._id,
+          userAgent: req.get("user-agent") ?? undefined,
+        });
+        await session.save();
+
+        const jwt = signJwtToken({ userId: user._id, sessionId: session._id },
+          accessTokenSignOptions);
         req.jwt = jwt;
         done(null, user);
       } catch (error) {
