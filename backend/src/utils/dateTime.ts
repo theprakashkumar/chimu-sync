@@ -8,8 +8,7 @@ const fortyFiveMinutesFromNow = (): Date => {
   return now;
 }
 
-export const calculateExpirationDate = (expiresIn: string = "15m"): Date => {
-  console.log(expiresIn)
+const calculateExpirationDate = (expiresIn: string = "15m"): Date => {
   const match = expiresIn.match(/^(\d+)([mhd])$/);
   if (!match) throw new Error("Invalid format, use like '15m', '1h' or '3d'");
 
@@ -29,4 +28,6 @@ export const calculateExpirationDate = (expiresIn: string = "15m"): Date => {
   }
 }
 
-export { thirtyDaysFromNow, fortyFiveMinutesFromNow }
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+export { thirtyDaysFromNow, fortyFiveMinutesFromNow, calculateExpirationDate, ONE_DAY_MS }

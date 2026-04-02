@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { loginSchema, registerSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { loginUserService, refreshTokenService, registerUserService } from "../services/authService";
-import { setAuthenticationCookies } from "../utils/cookie";
+import { getAccessTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
 import { UnauthorizedException } from "../utils/appErrors";
 
 const registerUserController = asyncHandler(
@@ -48,7 +48,16 @@ const refreshTokenController = asyncHandler(
       throw new UnauthorizedException("User not authorized!");
     }
 
-    await refreshTokenService(refreshToken);
+    const { accessToken, newRefreshToken } = await refreshTokenService(refreshToken);
+    // If new refresh token the add it to cookie.
+    if (newRefreshToken) {
+      res.cookie("refreshToken", newRefreshToken, getAccessTokenCookieOptions())
+    }
+
+    return res
+      .status(HTTPSTATUS.OK)
+      .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
+      .json({ message: "Refresh access token successfully!" })
   }
 )
 

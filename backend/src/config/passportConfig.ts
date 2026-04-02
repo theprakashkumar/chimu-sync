@@ -8,7 +8,7 @@ import {
   StrategyOptions,
 } from "passport-jwt";
 import { appConfig } from "./appConfig";
-import { BadRequestException, NotFoundException } from "../utils/appErrors";
+import { NotFoundException } from "../utils/appErrors";
 import { ProviderEnum } from "../enums/accountProviderEnum";
 import {
   loginOrCreateAccountService,

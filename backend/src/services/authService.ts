@@ -14,10 +14,11 @@ import { ProviderEnum } from "../enums/accountProviderEnum";
 import { ErrorCodeEnum } from "../enums/errorCodeEnum";
 import verificationCodeModel from "../models/verificationModel";
 import { VerificationEnum } from "../enums/verificationCodeEnum";
-import { fortyFiveMinutesFromNow } from "../utils/dateTime";
+import { calculateExpirationDate, fortyFiveMinutesFromNow, ONE_DAY_MS } from "../utils/dateTime";
 import { LoginInput, registerInput } from "../validation/authValidation";
 import SessionModel from "../models/sessionModel";
-import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken } from "../utils/jwt";
+import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
+import { appConfig } from "../config/appConfig";
 
 const registerUserService = async (registerData: registerInput) => {
   const { email, name, password } = registerData;
@@ -116,6 +117,7 @@ const loginUserService = async (loginData: LoginInput) => {
     userId: user._id,
     userAgent,
   })
+  await session.save();
 
   if (!session) {
     throw new BadRequestException("Invalid email or password!")
@@ -139,7 +141,51 @@ const loginUserService = async (loginData: LoginInput) => {
   }
 }
 
-const refreshTokenService = async (refreshToken: string) => { }
+const refreshTokenService = async (refreshToken: string) => {
+  const { payload } = verifyJwtToken(refreshToken, { secret: refreshTokenSignOptions.secret });
+
+  if (!payload) {
+    throw new UnauthorizedException("Invalid refresh token!");
+  }
+  // Type narrowing.
+  if (typeof payload !== "object" || payload === null) {
+    throw new UnauthorizedException("Invalid refresh token!");
+  }
+  if (!("sessionId" in payload)) {
+    throw new UnauthorizedException("Invalid refresh token!");
+  }
+
+  const session = await SessionModel.findById(payload.sessionId);
+  if (!session) {
+    throw new UnauthorizedException("Session does not exits!")
+  }
+
+  const now = Date.now();
+  if (session.expiredAt.getTime() <= now) {
+    throw new UnauthorizedException("Session Expired!");
+  }
+  // If session is expiring in less than one day.
+  const sessionRequireRefresh = session.expiredAt.getTime() - now <= ONE_DAY_MS;
+  if (sessionRequireRefresh) {
+    session.expiredAt = calculateExpirationDate(appConfig.JWT_REFRESH_EXPIRES_IN);
+    await session.save();
+  }
+
+  const newRefreshToken = sessionRequireRefresh
+    ? signJwtToken(
+      {
+        sessionId: session._id
+      },
+      refreshTokenSignOptions)
+    : undefined
+
+  const accessToken = signJwtToken({
+    userId: session.userId,
+    sessionId: session._id,
+  });
+
+  return { accessToken, newRefreshToken }
+}
 
 const loginOrCreateAccountService = async (data: {
   provider: string;
