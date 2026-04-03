@@ -1,9 +1,9 @@
 import { appConfig } from "../config/appConfig";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { Request, Response } from "express";
-import { loginSchema, registerSchema, verificationEmailSchema } from "../validation/authValidation";
+import { emailSchema, loginSchema, registerSchema, verificationEmailSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { loginUserService, refreshTokenService, registerUserService, verifyEmailService } from "../services/authService";
+import { forgotPassword, loginUserService, refreshTokenService, registerUserService, verifyEmailService } from "../services/authService";
 import { getAccessTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
 import { UnauthorizedException } from "../utils/appErrors";
 
@@ -68,6 +68,18 @@ const verifyEmailController = asyncHandler(
 
     return res.status(HTTPSTATUS.OK).json({
       message: "Email verified successfully!"
+    });
+  }
+);
+
+const forgotPasswordController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const email = emailSchema.parse(req.body.email);
+
+    await forgotPassword(email);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Email sent successfully!"
     })
   }
 );
@@ -116,6 +128,7 @@ export {
   loginController,
   refreshTokenController,
   verifyEmailController,
+  forgotPasswordController,
   googleLoginCallback,
   logOutController
 };

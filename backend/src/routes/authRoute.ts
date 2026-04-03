@@ -2,6 +2,7 @@ import { Router } from "express";
 import passport from "passport";
 import { appConfig } from "../config/appConfig";
 import {
+  forgotPasswordController,
   googleLoginCallback,
   loginController,
   logOutController,
@@ -18,6 +19,7 @@ authRoutes.post("/register", registerUserController);
 authRoutes.post("/login", loginController);
 authRoutes.get("/refresh", refreshTokenController);
 authRoutes.post("/verify/email", verifyEmailController);
+authRoutes.post("/password/forgot", forgotPasswordController); // Send verification code to email.
 authRoutes.post("/logout", logOutController);
 
 authRoutes.get(

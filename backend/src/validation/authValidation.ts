@@ -1,6 +1,6 @@
 import { date, z } from "zod";
 
-const emailSchema = z
+export const emailSchema = z
   .string()
   .trim()
   .email("Invalid email address!")

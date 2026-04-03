@@ -6,6 +6,7 @@ import RoleModel from "../models/rolePermissionModel";
 import { Roles } from "../enums/roleEnum";
 import {
   BadRequestException,
+  HttpException,
   NotFoundException,
   UnauthorizedException,
 } from "../utils/appErrors";
@@ -14,11 +15,13 @@ import { ProviderEnum } from "../enums/accountProviderEnum";
 import { ErrorCodeEnum } from "../enums/errorCodeEnum";
 import verificationCodeModel from "../models/verificationModel";
 import { VerificationEnum } from "../enums/verificationCodeEnum";
-import { calculateExpirationDate, fortyFiveMinutesFromNow, ONE_DAY_MS } from "../utils/dateTime";
+import { calculateExpirationDate, fortyFiveMinutesFromNow, ONE_DAY_MS, threeMinutesAgo } from "../utils/dateTime";
 import { LoginInput, registerInput } from "../validation/authValidation";
 import SessionModel from "../models/sessionModel";
 import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
 import { appConfig } from "../config/appConfig";
+import { HTTPSTATUS } from "../config/httpConfig";
+import { getEnv } from "../utils/getEnv";
 
 const registerUserService = async (registerData: registerInput) => {
   const { email, name, password } = registerData;
@@ -112,7 +115,7 @@ const loginUserService = async (loginData: LoginInput) => {
     throw new BadRequestException("Invalid email or password!")
   }
 
-  // Check if user have enabled 2FA.
+  // ! Check if user have enabled 2FA.
 
   const session = new SessionModel({
     userId: user._id,
@@ -220,6 +223,45 @@ const verifyEmailService = async (code: string) => {
   return {
     user: updatedUser
   }
+}
+
+const forgotPassword = async (email: string) => {
+  const user = await UserModel.findOne({ email });
+  if (!user) {
+    throw new NotFoundException("User not found!");
+  }
+  // Only allow to send 2 emails in 3 minutes.
+  const timeAgo = threeMinutesAgo();
+  const allowedAttempts = 2;
+  const attemptsCount = await verificationCodeModel.countDocuments({
+    userId: user._id,
+    type: VerificationEnum.PASSWORD_RESET,
+    createdAt: { $gt: timeAgo }
+  });
+
+  if (attemptsCount >= allowedAttempts) {
+    throw new HttpException(
+      "Too many tries!",
+      HTTPSTATUS.TOO_MANY_REQUESTS,
+      ErrorCodeEnum.AUTH_TOO_MANY_ATTEMPTS
+    )
+  }
+  // Create new verification code.
+  const verificationCode = new verificationCodeModel({
+    userId: user._id,
+    type: VerificationEnum.PASSWORD_RESET,
+    expiryAt: fortyFiveMinutesFromNow()
+  });
+  await verificationCode.save();
+
+  const resetLink = `${getEnv('FRONTEND_ORIGIN')}/reset-password?code=${verificationCode.code}&exp=${verificationCode.expiryAt.getTime()}`;
+
+  // ! Send email with verification URL.
+
+  return {
+    url: resetLink,
+    email: email
+  };
 }
 
 const loginOrCreateAccountService = async (data: {
@@ -333,6 +375,7 @@ export {
   loginUserService,
   refreshTokenService,
   verifyEmailService,
+  forgotPassword,
   loginOrCreateAccountService,
   verifyUserService
 }
