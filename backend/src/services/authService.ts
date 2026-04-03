@@ -52,7 +52,8 @@ const registerUserService = async (registerData: registerInput) => {
       userId: user._id,
       type: VerificationEnum.EMAIL_VERIFICATION,
       expiryAt: fortyFiveMinutesFromNow()
-    })
+    });
+    await verificationCode.save({ session });
 
     // Send verification code
 
@@ -187,6 +188,40 @@ const refreshTokenService = async (refreshToken: string) => {
   return { accessToken, newRefreshToken }
 }
 
+const verifyEmailService = async (code: string) => {
+  const validCode = await verificationCodeModel.findOne({
+    code,
+    type: VerificationEnum.EMAIL_VERIFICATION,
+    expiryAt: { $gt: new Date() }
+  })
+
+  if (!validCode) {
+    throw new BadRequestException("Invalid verification code!");
+  }
+
+  const updatedUser = await UserModel.findByIdAndUpdate(validCode.userId,
+    {
+      isEmailVerified: true
+    },
+    // MongoDB to return updated user.
+    { new: true }
+  )
+
+  if (!updatedUser) {
+    throw new BadRequestException(
+      "Unable to verify email address",
+      ErrorCodeEnum.VALIDATION_ERROR
+    )
+  }
+
+  // Delete the verification code after successful verification.
+  await verificationCodeModel.findByIdAndDelete(validCode._id);
+
+  return {
+    user: updatedUser
+  }
+}
+
 const loginOrCreateAccountService = async (data: {
   provider: string;
   displayName: string;
@@ -293,4 +328,11 @@ const verifyUserService = async ({
   return user;
 };
 
-export { registerUserService, loginUserService, refreshTokenService, loginOrCreateAccountService, verifyUserService }
+export {
+  registerUserService,
+  loginUserService,
+  refreshTokenService,
+  verifyEmailService,
+  loginOrCreateAccountService,
+  verifyUserService
+}

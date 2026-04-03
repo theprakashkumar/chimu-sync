@@ -50,6 +50,10 @@ const userSchema = new Schema<UserDocument>(
       type: String,
       default: null,
     },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
     userPreference: { type: userPreferenceSchema, default: {} },
     currentWorkspace: {
       type: mongoose.Schema.Types.ObjectId,

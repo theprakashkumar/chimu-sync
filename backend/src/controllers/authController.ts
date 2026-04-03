@@ -1,9 +1,9 @@
 import { appConfig } from "../config/appConfig";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
-import { NextFunction, Request, Response } from "express";
-import { loginSchema, registerSchema } from "../validation/authValidation";
+import { Request, Response } from "express";
+import { loginSchema, registerSchema, verificationEmailSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { loginUserService, refreshTokenService, registerUserService } from "../services/authService";
+import { loginUserService, refreshTokenService, registerUserService, verifyEmailService } from "../services/authService";
 import { getAccessTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
 import { UnauthorizedException } from "../utils/appErrors";
 
@@ -61,6 +61,17 @@ const refreshTokenController = asyncHandler(
   }
 )
 
+const verifyEmailController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { code } = verificationEmailSchema.parse(req.body);
+    await verifyEmailService(code);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Email verified successfully!"
+    })
+  }
+);
+
 const googleLoginCallback = asyncHandler(
   async (req: Request, res: Response) => {
     const jwt = req.jwt;
@@ -100,4 +111,11 @@ const logOutController = asyncHandler(
   }
 );
 
-export { registerUserController, loginController, refreshTokenController, googleLoginCallback, logOutController }
+export {
+  registerUserController,
+  loginController,
+  refreshTokenController,
+  verifyEmailController,
+  googleLoginCallback,
+  logOutController
+};
