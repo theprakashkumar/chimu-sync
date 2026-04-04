@@ -26,7 +26,8 @@ app.use(express.json());
 // - express.urlencoded({ extended: true }) parses URL-encoded payloads (from HTML forms)
 app.use(express.urlencoded({ extended: true }));
 // ? Express middleware, it reads the Cookie header on each request, parses it, and attaches the result to req.cookies as a plain object
-app.use(cookieParser())
+app.use(cookieParser());
+app.use(passport.initialize());
 
 // Cookie-based session is a way to store session data on the client side using cookies.
 // The session middleware below configures how session cookies are created and managed:
@@ -47,7 +48,7 @@ app.use(cookieParser())
 //   })
 // );
 
-app.use(passport.initialize());
+
 // app.use(passport.session());
 
 app.use(
