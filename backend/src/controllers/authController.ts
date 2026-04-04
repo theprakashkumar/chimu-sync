@@ -1,10 +1,10 @@
 import { appConfig } from "../config/appConfig";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { Request, Response } from "express";
-import { emailSchema, loginSchema, registerSchema, verificationEmailSchema } from "../validation/authValidation";
+import { emailSchema, loginSchema, registerSchema, resetPasswordSchema, verificationEmailSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { forgotPassword, loginUserService, refreshTokenService, registerUserService, verifyEmailService } from "../services/authService";
-import { getAccessTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
+import { forgotPasswordService, loginUserService, refreshTokenService, registerUserService, resetPasswordService, verifyEmailService } from "../services/authService";
+import { clearAuthenticationCookie, getAccessTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
 import { UnauthorizedException } from "../utils/appErrors";
 
 const registerUserController = asyncHandler(
@@ -76,10 +76,23 @@ const forgotPasswordController = asyncHandler(
   async (req: Request, res: Response) => {
     const email = emailSchema.parse(req.body.email);
 
-    await forgotPassword(email);
+    await forgotPasswordService(email);
+
+    // Clear all the cookies.
+    return clearAuthenticationCookie(res).status(HTTPSTATUS.OK).json({
+      message: "Email sent successfully!"
+    })
+  }
+);
+
+const resetPasswordController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { password, verificationCode } = resetPasswordSchema.parse(req.body);
+
+    await resetPasswordService({ password, verificationCode });
 
     return res.status(HTTPSTATUS.OK).json({
-      message: "Email sent successfully!"
+      message: "Reset password successfully!"
     })
   }
 );
@@ -129,6 +142,7 @@ export {
   refreshTokenController,
   verifyEmailController,
   forgotPasswordController,
+  resetPasswordController,
   googleLoginCallback,
   logOutController
 };

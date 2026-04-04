@@ -16,12 +16,13 @@ import { ErrorCodeEnum } from "../enums/errorCodeEnum";
 import verificationCodeModel from "../models/verificationModel";
 import { VerificationEnum } from "../enums/verificationCodeEnum";
 import { calculateExpirationDate, fortyFiveMinutesFromNow, ONE_DAY_MS, threeMinutesAgo } from "../utils/dateTime";
-import { LoginInput, registerInput } from "../validation/authValidation";
+import { LoginInput, registerInput, resetPasswordInput } from "../validation/authValidation";
 import SessionModel from "../models/sessionModel";
 import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
 import { appConfig } from "../config/appConfig";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { getEnv } from "../utils/getEnv";
+import { hashValue } from "../utils/bcrypt";
 
 const registerUserService = async (registerData: registerInput) => {
   const { email, name, password } = registerData;
@@ -31,6 +32,7 @@ const registerUserService = async (registerData: registerInput) => {
     throw new BadRequestException("Email already exists!", ErrorCodeEnum.AUTH_EMAIL_ALREADY_EXISTS);
   }
 
+  const hashedPassword = await hashValue(password);
   const session = await mongoose.startSession();
 
   try {
@@ -39,7 +41,7 @@ const registerUserService = async (registerData: registerInput) => {
     const user = new UserModel({
       email,
       name,
-      password,
+      password: hashedPassword,
     });
     await user.save({ session });
     // Create an account.
@@ -115,7 +117,7 @@ const loginUserService = async (loginData: LoginInput) => {
     throw new BadRequestException("Invalid email or password!")
   }
 
-  // ! Check if user have enabled 2FA.
+  // TODO: Check if user have enabled 2FA.
 
   const session = new SessionModel({
     userId: user._id,
@@ -225,7 +227,7 @@ const verifyEmailService = async (code: string) => {
   }
 }
 
-const forgotPassword = async (email: string) => {
+const forgotPasswordService = async (email: string) => {
   const user = await UserModel.findOne({ email });
   if (!user) {
     throw new NotFoundException("User not found!");
@@ -256,12 +258,42 @@ const forgotPassword = async (email: string) => {
 
   const resetLink = `${getEnv('FRONTEND_ORIGIN')}/reset-password?code=${verificationCode.code}&exp=${verificationCode.expiryAt.getTime()}`;
 
-  // ! Send email with verification URL.
+  // TODO: Send email with verification URL.
 
   return {
     url: resetLink,
     email: email
   };
+}
+
+const resetPasswordService = async ({ password, verificationCode }: resetPasswordInput) => {
+  const validCode = await verificationCodeModel.findOne({
+    code: verificationCode,
+    type: VerificationEnum.PASSWORD_RESET,
+    expiryAt: { $gt: new Date() }
+  });
+
+  // TODO: Also verify old password.
+
+  if (!validCode) {
+    throw new NotFoundException("Invalid or expired verification code!")
+  }
+
+  const hashedPassword = await hashValue(password);
+
+  const updatedUser = await UserModel.findByIdAndUpdate(validCode.userId, {
+    password: hashedPassword
+  });
+  if (!updatedUser) {
+    throw new BadRequestException("Failed to update the password!");
+  };
+  // Delete code and all the active session.
+  await validCode.deleteOne();
+  await SessionModel.deleteMany({
+    userId: updatedUser._id
+  });
+
+  return updatedUser;
 }
 
 const loginOrCreateAccountService = async (data: {
@@ -375,7 +407,8 @@ export {
   loginUserService,
   refreshTokenService,
   verifyEmailService,
-  forgotPassword,
+  forgotPasswordService,
+  resetPasswordService,
   loginOrCreateAccountService,
   verifyUserService
 }

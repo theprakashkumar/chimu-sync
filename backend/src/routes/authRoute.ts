@@ -8,6 +8,7 @@ import {
   logOutController,
   refreshTokenController,
   registerUserController,
+  resetPasswordController,
   verifyEmailController,
 } from "../controllers/authController";
 
@@ -20,6 +21,7 @@ authRoutes.post("/login", loginController);
 authRoutes.get("/refresh", refreshTokenController);
 authRoutes.post("/verify/email", verifyEmailController);
 authRoutes.post("/password/forgot", forgotPasswordController); // Send verification code to email.
+authRoutes.post("/password/reset", resetPasswordController);
 authRoutes.post("/logout", logOutController);
 
 authRoutes.get(
