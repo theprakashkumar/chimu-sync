@@ -111,7 +111,6 @@ const loginUserService = async (loginData: LoginInput) => {
     throw new BadRequestException("Invalid email or password!", ErrorCodeEnum.AUTH_USER_NOT_FOUND)
   }
 
-
   const isPasswordValid = await user.comparePassword(password);
   if (!isPasswordValid) {
     throw new BadRequestException("Invalid email or password!")
@@ -296,6 +295,16 @@ const resetPasswordService = async ({ password, verificationCode }: resetPasswor
   return updatedUser;
 }
 
+const logoutService = async (sessionId: string) => {
+  const session = await SessionModel.findByIdAndDelete(sessionId);
+
+  if (!session) {
+    throw new BadRequestException("Session is invalid!");
+  }
+
+  return true;
+}
+
 const loginOrCreateAccountService = async (data: {
   provider: string;
   displayName: string;
@@ -409,6 +418,7 @@ export {
   verifyEmailService,
   forgotPasswordService,
   resetPasswordService,
+  logoutService,
   loginOrCreateAccountService,
   verifyUserService
 }

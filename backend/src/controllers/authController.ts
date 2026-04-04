@@ -3,9 +3,9 @@ import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { Request, Response } from "express";
 import { emailSchema, loginSchema, registerSchema, resetPasswordSchema, verificationEmailSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { forgotPasswordService, loginUserService, refreshTokenService, registerUserService, resetPasswordService, verifyEmailService } from "../services/authService";
+import { forgotPasswordService, loginUserService, logoutService, refreshTokenService, registerUserService, resetPasswordService, verifyEmailService } from "../services/authService";
 import { clearAuthenticationCookie, getAccessTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
-import { UnauthorizedException } from "../utils/appErrors";
+import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
 
 const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -97,6 +97,21 @@ const resetPasswordController = asyncHandler(
   }
 );
 
+const logOutController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const sessionId = req.sessionId;
+    if (!sessionId) {
+      throw new NotFoundException("Session is invalid!")
+    }
+
+    await logoutService(sessionId);
+
+    return clearAuthenticationCookie(res)
+      .status(HTTPSTATUS.OK)
+      .json({ message: "Logged out successfully" });
+  }
+);
+
 const googleLoginCallback = asyncHandler(
   async (req: Request, res: Response) => {
     const jwt = req.jwt;
@@ -118,23 +133,7 @@ const googleLoginCallback = asyncHandler(
   }
 );
 
-const logOutController = asyncHandler(
-  async (req: Request, res: Response) => {
-    req.logout((err) => {
-      if (err) {
-        console.error("Logout error:", err);
-        return res
-          .status(HTTPSTATUS.INTERNAL_SERVER_ERROR)
-          .json({ error: "Failed to log out" });
-      }
-    });
 
-    // req.session = null;
-    return res
-      .status(HTTPSTATUS.OK)
-      .json({ message: "Logged out successfully" });
-  }
-);
 
 export {
   registerUserController,
@@ -143,6 +142,6 @@ export {
   verifyEmailController,
   forgotPasswordController,
   resetPasswordController,
-  googleLoginCallback,
-  logOutController
+  logOutController,
+  googleLoginCallback
 };

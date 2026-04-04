@@ -12,9 +12,9 @@ interface JwtPayload {
 const options: StrategyOptionsWithRequest = {
   jwtFromRequest: ExtractJwt.fromExtractors([
     (req) => {
-      const accessToken = req.cookie.accessToken;
+      const accessToken = req.cookies.accessToken;
       if (!accessToken) {
-        throw new UnauthorizedException()
+        throw new UnauthorizedException("User is unauthorized!")
       }
       return accessToken
     }

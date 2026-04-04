@@ -11,6 +11,7 @@ import {
   resetPasswordController,
   verifyEmailController,
 } from "../controllers/authController";
+import { authenticatedJwt } from "../config/passportStrategy";
 
 const failedUrl = `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`;
 
@@ -22,7 +23,7 @@ authRoutes.get("/refresh", refreshTokenController);
 authRoutes.post("/verify/email", verifyEmailController);
 authRoutes.post("/password/forgot", forgotPasswordController); // Send verification code to email.
 authRoutes.post("/password/reset", resetPasswordController);
-authRoutes.post("/logout", logOutController);
+authRoutes.post("/logout", authenticatedJwt, logOutController);
 
 authRoutes.get(
   "/google",

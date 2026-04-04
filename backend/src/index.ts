@@ -16,8 +16,9 @@ import userRoutes from "./routes/userRoute";
 import workspaceRoutes from "./routes/workspaceRoute";
 import projectRouters from "./routes/projectRoute";
 import taskRouters from "./routes/taskRoute";
-import { passportAuthenticateJWT } from "./config/passportConfig";
 import cookieParser from "cookie-parser";
+import { authenticatedJwt } from "./config/passportStrategy";
+import "./middlewares/passport";
 
 const app = express();
 
@@ -71,19 +72,19 @@ app.get(
 );
 
 app.use(`${appConfig.BASE_PATH}/auth`, authRoute);
-app.use(`${appConfig.BASE_PATH}/user`, passportAuthenticateJWT, userRoutes);
+app.use(`${appConfig.BASE_PATH}/user`, authenticatedJwt, userRoutes);
 app.use(
   `${appConfig.BASE_PATH}/workspace`,
-  passportAuthenticateJWT,
+  authenticatedJwt,
   workspaceRoutes
 );
-app.use(`${appConfig.BASE_PATH}/member`, passportAuthenticateJWT, memberRoutes);
+app.use(`${appConfig.BASE_PATH}/member`, authenticatedJwt, memberRoutes);
 app.use(
   `${appConfig.BASE_PATH}/project`,
-  passportAuthenticateJWT,
+  authenticatedJwt,
   projectRouters
 );
-app.use(`${appConfig.BASE_PATH}/task`, passportAuthenticateJWT, taskRouters);
+app.use(`${appConfig.BASE_PATH}/task`, authenticatedJwt, taskRouters);
 
 // ? Error handling, catches all the errors that may occur in the application and sends the response to the client.
 app.use(errorHandler);
