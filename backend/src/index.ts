@@ -9,7 +9,7 @@ import { HTTPSTATUS } from "./config/httpConfig";
 import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
 import "./config/passportConfig";
 import passport from "passport";
-import authRoute from "./routes/authRoute";
+import authRoutes from "./routes/authRoute";
 // import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
 import memberRoutes from "./routes/memberRoute";
 import userRoutes from "./routes/userRoute";
@@ -20,6 +20,7 @@ import cookieParser from "cookie-parser";
 import { authenticatedJwt } from "./config/passportStrategy";
 import "./middlewares/passport";
 import sessionRoute from "./routes/sessionRoute";
+import mfaRoutes from "./routes/mfaRoute";
 
 const app = express();
 
@@ -72,7 +73,8 @@ app.get(
   })
 );
 
-app.use(`${appConfig.BASE_PATH}/auth`, authRoute);
+app.use(`${appConfig.BASE_PATH}/auth`, authRoutes);
+app.use(`${appConfig.BASE_PATH}/mfa`, mfaRoutes);
 app.use(`${appConfig.BASE_PATH}/user`, authenticatedJwt, userRoutes);
 app.use(
   `${appConfig.BASE_PATH}/workspace`,
