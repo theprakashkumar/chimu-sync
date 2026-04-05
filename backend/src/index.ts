@@ -19,6 +19,7 @@ import taskRouters from "./routes/taskRoute";
 import cookieParser from "cookie-parser";
 import { authenticatedJwt } from "./config/passportStrategy";
 import "./middlewares/passport";
+import sessionRoute from "./routes/sessionRoute";
 
 const app = express();
 
@@ -78,6 +79,7 @@ app.use(
   authenticatedJwt,
   workspaceRoutes
 );
+app.use(`${appConfig.BASE_PATH}/session`, authenticatedJwt, sessionRoute);
 app.use(`${appConfig.BASE_PATH}/member`, authenticatedJwt, memberRoutes);
 app.use(
   `${appConfig.BASE_PATH}/project`,
