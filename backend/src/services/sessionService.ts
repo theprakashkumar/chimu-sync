@@ -34,4 +34,17 @@ const getCurrentSessionService = async (sessionId: string) => {
   return user;
 }
 
-export { getAllSessionService, getCurrentSessionService }
+const deleteSessionService = async (sessionId: string, userId: string) => {
+  const deletedSession = await SessionModel.findByIdAndDelete({
+    _id: sessionId,
+    userId
+  });
+
+  if (!deletedSession) {
+    throw new NotFoundException("Session not found!");
+  }
+
+  return deletedSession;
+};
+
+export { getAllSessionService, getCurrentSessionService, deleteSessionService }
