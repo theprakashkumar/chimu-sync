@@ -1,4 +1,5 @@
 import SessionModel from "../models/sessionModel"
+import { NotFoundException } from "../utils/appErrors";
 
 const getAllSessionService = async (userId: string) => {
   const sessions = await SessionModel.find({
@@ -18,7 +19,19 @@ const getAllSessionService = async (userId: string) => {
     }
   );
 
-  return { sessions };
+  return sessions;
 }
 
-export { getAllSessionService }
+const getCurrentSessionService = async (sessionId: string) => {
+  const session = await SessionModel.findById(sessionId)
+    .populate("userId")
+    .select("-expiresAt");
+
+  if (!session) {
+    throw new NotFoundException("Session not found!");
+  }
+  const { userId: user } = session
+  return user;
+}
+
+export { getAllSessionService, getCurrentSessionService }
