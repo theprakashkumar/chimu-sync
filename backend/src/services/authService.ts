@@ -116,7 +116,14 @@ const loginUserService = async (loginData: LoginInput) => {
     throw new BadRequestException("Invalid email or password!")
   }
 
-  // TODO: Check if user have enabled 2FA.
+  if (user.userPreference.enable2FA) {
+    return {
+      user,
+      accessToken: "",
+      refreshToken: "",
+      mfaRequired: true
+    }
+  }
 
   const session = new SessionModel({
     userId: user._id,

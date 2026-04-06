@@ -30,6 +30,16 @@ const loginController = asyncHandler(
 
     const { user, accessToken, refreshToken, mfaRequired } = await loginUserService(body)
 
+    if (mfaRequired) {
+      return res.status(HTTPSTATUS.OK).json({
+        message: "Verify MFA to login!",
+        data: {
+          user,
+          mfaRequired
+        }
+      })
+    }
+
     return setAuthenticationCookies({
       res, accessToken, refreshToken
     })
