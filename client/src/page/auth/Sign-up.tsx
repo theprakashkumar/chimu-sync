@@ -80,7 +80,7 @@ const SignUp = () => {
           className="flex items-center gap-2 self-center font-medium"
         >
           <Logo />
-          Chimu Sync.
+          Chimu Sync
         </Link>
         <div className="flex flex-col gap-6">
           <Card>

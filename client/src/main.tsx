@@ -15,5 +15,5 @@ createRoot(document.getElementById("root")!).render(
       </NuqsAdapter>
       <Toaster />
     </QueryProvider>
-  </StrictMode>
+  </StrictMode>,
 );
