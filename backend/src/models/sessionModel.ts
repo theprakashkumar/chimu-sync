@@ -15,6 +15,8 @@ const sessionSchema = new Schema<SessionDocument>({
   createdAt: { type: Date, default: Date.now }
 });
 
+sessionSchema.index({ expiredAt: 1 }, { expireAfterSeconds: 0 });
+
 const SessionModel = mongoose.model<SessionDocument>("Session", sessionSchema);
 
 export default SessionModel;
