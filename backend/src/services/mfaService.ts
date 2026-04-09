@@ -18,11 +18,11 @@ const generateMFASetupService = async (req: Request) => {
     }
   }
 
-  let secretKey = user.userPreference.towFactorSecret;
+  let secretKey = user.userPreference.twoFactorSecret;
   if (!secretKey) {
     const secret = speakeasy.generateSecret({ name: "ChimuSync" });
     secretKey = secret.base32;
-    user.userPreference.towFactorSecret = secretKey;
+    user.userPreference.twoFactorSecret = secretKey;
     await user.save();
   }
 
@@ -94,7 +94,7 @@ const revokeMFAService = async (req: Request) => {
     }
   }
 
-  user.userPreference.towFactorSecret = undefined;
+  user.userPreference.twoFactorSecret = undefined;
   user.userPreference.enable2FA = false;
   await user.save();
 
@@ -114,12 +114,12 @@ const verifyMFAForLoginService = async (code: string, email: string, userAgent?:
     throw new NotFoundException("User not found!");
   }
 
-  if (!user.userPreference.enable2FA && !user.userPreference.towFactorSecret) {
+  if (!user.userPreference.enable2FA && !user.userPreference.twoFactorSecret) {
     throw new UnauthorizedException("MFA not enabled!");
   }
 
   const isValid = speakeasy.totp.verify({
-    secret: user.userPreference.towFactorSecret!,
+    secret: user.userPreference.twoFactorSecret!,
     encoding: "base32",
     token: code
   })

@@ -4,7 +4,7 @@ import { compareValue, hashValue } from "../utils/bcrypt";
 interface UserPreferences {
   enable2FA: boolean;
   emailNotification: boolean;
-  towFactorSecret?: string;
+  twoFactorSecret?: string;
 }
 
 export interface UserDocument extends Document {
@@ -27,7 +27,7 @@ export interface UserDocument extends Document {
 const userPreferenceSchema = new Schema<UserPreferences>({
   enable2FA: { type: Boolean, default: false },
   emailNotification: { type: Boolean, default: true },
-  towFactorSecret: { type: String, required: false }
+  twoFactorSecret: { type: String, required: false }
 })
 
 const userSchema = new Schema<UserDocument>(
@@ -83,7 +83,7 @@ userSchema.pre("save", async function (next) {
 userSchema.set("toJSON", {
   transform: function (doc, ret) {
     delete ret.password;
-    delete ret.userPreference.towFactorSecret;
+    delete ret.userPreference.twoFactorSecret;
     return ret;
   }
 })

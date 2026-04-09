@@ -262,7 +262,7 @@ const forgotPasswordService = async (email: string) => {
   });
   await verificationCode.save();
 
-  const resetLink = `${getEnv('FRONTEND_ORIGIN')}/reset-password?code=${verificationCode.code}}`;
+  const resetLink = `${getEnv('FRONTEND_ORIGIN')}/reset-password?code=${verificationCode.code}`;
 
   // TODO: Send email with verification URL.
 
