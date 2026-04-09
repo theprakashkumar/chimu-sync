@@ -1,10 +1,9 @@
-import { appConfig } from "../config/appConfig";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { Request, Response } from "express";
 import { emailSchema, loginSchema, registerSchema, resetPasswordSchema, verificationEmailSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { forgotPasswordService, loginUserService, logoutService, refreshTokenService, registerUserService, resetPasswordService, verifyEmailService } from "../services/authService";
-import { clearAuthenticationCookie, getAccessTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
+import { clearAuthenticationCookie, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
 import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
 
 const registerUserController = asyncHandler(
@@ -61,7 +60,7 @@ const refreshTokenController = asyncHandler(
     const { accessToken, newRefreshToken } = await refreshTokenService(refreshToken);
     // If new refresh token the add it to cookie.
     if (newRefreshToken) {
-      res.cookie("refreshToken", newRefreshToken, getAccessTokenCookieOptions())
+      res.cookie("refreshToken", newRefreshToken, getRefreshTokenCookieOptions())
     }
 
     return res

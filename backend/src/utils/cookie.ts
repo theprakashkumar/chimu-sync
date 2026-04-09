@@ -52,4 +52,10 @@ const clearAuthenticationCookie = (res: Response): Response => {
   })
 }
 
-export { REFRESH_PATH, getAccessTokenCookieOptions, setAuthenticationCookies, clearAuthenticationCookie };
+export {
+  REFRESH_PATH,
+  getAccessTokenCookieOptions,
+  getRefreshTokenCookieOptions,
+  setAuthenticationCookies,
+  clearAuthenticationCookie
+};

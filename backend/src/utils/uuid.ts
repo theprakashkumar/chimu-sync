@@ -9,7 +9,7 @@ const generateTaskCode = () => {
 }
 
 const generateVerificationCode = () => {
-  return uuidv4().replace(/-g/, "").substring(0, 25);
+  return uuidv4().replace(/-/g, "").substring(0, 25);
 }
 
 export { generateInviteCode, generateTaskCode, generateVerificationCode }
