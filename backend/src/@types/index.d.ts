@@ -6,7 +6,6 @@ declare global {
       _id: any;
     }
     interface Request {
-      jwt?: string;
       sessionId?: string,
       user?: User;
     }

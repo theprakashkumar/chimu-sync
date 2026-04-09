@@ -9,7 +9,7 @@ const getAllSessionService = async (userId: string) => {
     _id: 1,
     userId: 1,
     userAgent: 1,
-    createAte: 1,
+    createdAt: 1,
     expiredAt: 1
   },
     {
