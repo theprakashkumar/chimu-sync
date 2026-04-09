@@ -1,15 +1,12 @@
 import "dotenv/config";
 import express, { Response } from "express";
-// import session from "cookie-session";
 import cors from "cors";
 import { appConfig } from "./config/appConfig";
 import connectDatabase from "./config/databaseConfig";
 import { errorHandler } from "./middlewares/errorHandlerMiddleware";
 import { HTTPSTATUS } from "./config/httpConfig";
 import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
-import passport from "passport";
 import authRoutes from "./routes/authRoute";
-// import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
 import memberRoutes from "./routes/memberRoute";
 import userRoutes from "./routes/userRoute";
 import workspaceRoutes from "./routes/workspaceRoute";
@@ -28,29 +25,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // ? Express middleware, it reads the Cookie header on each request, parses it, and attaches the result to req.cookies as a plain object
 app.use(cookieParser());
-app.use(passport.initialize());
-
-// Cookie-based session is a way to store session data on the client side using cookies.
-// The session middleware below configures how session cookies are created and managed:
-// - 'name': Sets the name of the cookie that holds the session data ("session").
-// - 'keys': Uses SESSION_SECRET to sign and verify the cookie, ensuring its integrity.
-// - 'maxAge': Sets the cookie to expire after 24 hours.
-// - 'secure': Ensures cookies are only sent over HTTPS in production environments.
-// - 'httpOnly': Prevents JavaScript from accessing the cookie, enhancing security.
-// - 'sameSite': Limits the cookie to same-site requests (lax mode) to help prevent CSRF attacks.
-// app.use(
-//   session({
-//     name: "session",
-//     keys: [appConfig.SESSION_SECRET],
-//     maxAge: 24 * 60 * 60 * 1000,
-//     secure: appConfig.NODE_ENV === "production",
-//     httpOnly: true,
-//     sameSite: "lax",
-//   })
-// );
-
-
-// app.use(passport.session());
 
 app.use(
   cors({

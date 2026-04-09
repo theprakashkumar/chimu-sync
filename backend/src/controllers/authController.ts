@@ -122,29 +122,6 @@ const logOutController = asyncHandler(
   }
 );
 
-const googleLoginCallback = asyncHandler(
-  async (req: Request, res: Response) => {
-    const jwt = req.jwt;
-    const currentWorkspace = req.user?.currentWorkspace;
-
-    if (!jwt) {
-      return res.redirect(
-        `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`
-      );
-    }
-
-    // return res.redirect(
-    //   `${appConfig.FRONTEND_ORIGIN}/workspace/${currentWorkspace}`
-    // );
-
-    return res.redirect(
-      `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=success&access_token=${jwt}&current_workspace=${currentWorkspace}`
-    );
-  }
-);
-
-
-
 export {
   registerUserController,
   loginController,
@@ -153,5 +130,4 @@ export {
   forgotPasswordController,
   resetPasswordController,
   logOutController,
-  googleLoginCallback
 };

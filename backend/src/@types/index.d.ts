@@ -7,7 +7,8 @@ declare global {
     }
     interface Request {
       jwt?: string;
-      sessionId?: string
+      sessionId?: string,
+      user?: User;
     }
   }
 }
