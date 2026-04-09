@@ -24,25 +24,29 @@ import {
   WorkspaceByIdResponseType,
 } from "@/types/api.type";
 
-export const loginMutationFn = async (
+const loginMutationFn = async (
   data: loginType
 ): Promise<LoginResponseType> => {
   const response = await API.post("/auth/login", data);
   return response.data;
 };
 
-export const registerMutationFn = async (
+const refreshTokenMutationFn = async (): Promise<void> => {
+  await API.post('/auth/refresh');
+}
+
+const registerMutationFn = async (
   data: registerType
 ): Promise<UserType> => {
   const response = await API.post("/auth/register", data);
   return response.data;
 };
 
-export const logoutMutationFn = async () => {
+const logoutMutationFn = async () => {
   return await API.post("/auth/logout");
 };
 
-export const getCurrentUserQueryFn =
+const getCurrentUserQueryFn =
   async (): Promise<CurrentUserResponseType> => {
     const response = await API.get(`/user/current`);
     return response.data;
@@ -50,14 +54,14 @@ export const getCurrentUserQueryFn =
 
 // WORKSPACE
 
-export const createWorkspaceMutationFn = async (
+const createWorkspaceMutationFn = async (
   data: CreateWorkspaceType
 ): Promise<CreateWorkspaceResponseType> => {
   const response = await API.post("workspace/create/new", data);
   return response.data;
 };
 
-export const editWorkspaceMutationFn = async ({
+const editWorkspaceMutationFn = async ({
   workspaceId,
   data,
 }: {
@@ -65,38 +69,37 @@ export const editWorkspaceMutationFn = async ({
   data: { name: string; description: string };
 }): Promise<EditWorkspaceType> => {
   const response = await API.put(`/workspace/update/${workspaceId}`, data);
-
   return response.data;
 };
 
-export const getWorkspaceByIdQueryFn = async (
+const getWorkspaceByIdQueryFn = async (
   workspaceId: string
 ): Promise<WorkspaceByIdResponseType> => {
   const response = await API.get(`/workspace/${workspaceId}`);
   return response.data;
 };
 
-export const getAllWorkspacesUserIsMemberQueryFn =
+const getAllWorkspacesUserIsMemberQueryFn =
   async (): Promise<AllWorkspaceResponseType> => {
     const response = await API.get("/workspace/all");
     return response.data;
   };
 
-export const getMembersInWorkspaceQueryFn = async (
+const getMembersInWorkspaceQueryFn = async (
   workspaceId: string
 ): Promise<AllMembersInWorkspaceResponseType> => {
   const response = await API.get(`/workspace/members/${workspaceId}`);
   return response.data;
 };
 
-export const getWorkspaceAnalyticsQueryFn = async (
+const getWorkspaceAnalyticsQueryFn = async (
   workspaceId: string
 ): Promise<AnalyticsResponseType> => {
   const response = await API.get(`workspace/analytics/${workspaceId}`);
   return response.data;
 };
 
-export const changeWorkspaceMemberRoleMutationFn = async ({
+const changeWorkspaceMemberRoleMutationFn = async ({
   workspaceId,
   data,
 }: ChangeWorkspaceMemberRoleType) => {
@@ -107,7 +110,7 @@ export const changeWorkspaceMemberRoleMutationFn = async ({
   return response.data;
 };
 
-export const deleteWorkspaceMutationFn = async (
+const deleteWorkspaceMutationFn = async (
   workspaceId: string
 ): Promise<{ message: string; currentWorkspace: string }> => {
   const response = await API.delete(`workspace/delete/${workspaceId}`);
@@ -115,7 +118,7 @@ export const deleteWorkspaceMutationFn = async (
 };
 
 // MEMBER
-export const invitedUserJoinWorkspaceMutationFn = async (
+const invitedUserJoinWorkspaceMutationFn = async (
   inviteCode: string
 ): Promise<{
   message: string;
@@ -126,7 +129,7 @@ export const invitedUserJoinWorkspaceMutationFn = async (
 };
 
 //PROJECTS
-export const createProjectMutationFn = async ({
+const createProjectMutationFn = async ({
   workspaceId,
   data,
 }: CreateProjectPayloadType): Promise<ProjectResponseType> => {
@@ -137,7 +140,7 @@ export const createProjectMutationFn = async ({
   return response.data;
 };
 
-export const editProjectMutationFn = async ({
+const editProjectMutationFn = async ({
   projectId,
   workspaceId,
   data,
@@ -149,7 +152,7 @@ export const editProjectMutationFn = async ({
   return response.data;
 };
 
-export const getProjectsInWorkspaceQueryFn = async ({
+const getProjectsInWorkspaceQueryFn = async ({
   workspaceId,
   pageSize = 10,
   pageNumber = 1,
@@ -160,7 +163,7 @@ export const getProjectsInWorkspaceQueryFn = async ({
   return response.data;
 };
 
-export const getProjectByIdQueryFn = async ({
+const getProjectByIdQueryFn = async ({
   projectId,
   workspaceId,
 }: ProjectByIdPayloadType): Promise<ProjectResponseType> => {
@@ -171,7 +174,7 @@ export const getProjectByIdQueryFn = async ({
   return response.data;
 };
 
-export const getProjectAnalyticsQueryFn = async ({
+const getProjectAnalyticsQueryFn = async ({
   workspaceId,
   projectId,
 }: ProjectByIdPayloadType): Promise<AnalyticsResponseType> => {
@@ -181,7 +184,7 @@ export const getProjectAnalyticsQueryFn = async ({
   return response.data;
 };
 
-export const deleteProjectMutationFn = async ({
+const deleteProjectMutationFn = async ({
   workspaceId,
   projectId,
 }: ProjectByIdPayloadType): Promise<{ message: string }> => {
@@ -193,7 +196,7 @@ export const deleteProjectMutationFn = async ({
 
 //TASKS
 
-export const createTaskMutationFn = async ({
+const createTaskMutationFn = async ({
   workspaceId,
   projectId,
   data,
@@ -206,7 +209,7 @@ export const createTaskMutationFn = async ({
   return response.data;
 };
 
-export const getAllTasksQueryFn = async ({
+const getAllTasksQueryFn = async ({
   workspaceId,
   keyword,
   projectId,
@@ -236,4 +239,30 @@ export const getAllTasksQueryFn = async ({
   return response.data;
 };
 
-export const deleteTaskMutationFn = async () => { };
+const deleteTaskMutationFn = async () => { };
+
+export {
+  loginMutationFn,
+  refreshTokenMutationFn,
+  registerMutationFn,
+  logoutMutationFn,
+  getCurrentUserQueryFn,
+  createWorkspaceMutationFn,
+  editWorkspaceMutationFn,
+  getWorkspaceByIdQueryFn,
+  getAllWorkspacesUserIsMemberQueryFn,
+  getMembersInWorkspaceQueryFn,
+  getWorkspaceAnalyticsQueryFn,
+  changeWorkspaceMemberRoleMutationFn,
+  deleteWorkspaceMutationFn,
+  invitedUserJoinWorkspaceMutationFn,
+  createProjectMutationFn,
+  editProjectMutationFn,
+  getProjectsInWorkspaceQueryFn,
+  getProjectByIdQueryFn,
+  getProjectAnalyticsQueryFn,
+  deleteProjectMutationFn,
+  createTaskMutationFn,
+  getAllTasksQueryFn,
+  deleteTaskMutationFn,
+};
