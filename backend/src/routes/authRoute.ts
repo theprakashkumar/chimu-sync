@@ -11,7 +11,7 @@ import {
   resetPasswordController,
   verifyEmailController,
 } from "../controllers/authController";
-import { authenticatedJwt } from "../config/passportStrategy";
+import { authenticatedJwt } from "../middlewares/authenticateJwtMiddleware";
 
 const failedUrl = `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`;
 

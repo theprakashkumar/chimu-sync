@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { authenticatedJwt } from "../config/passportStrategy";
+import { authenticatedJwt } from "../middlewares/authenticateJwtMiddleware";
 import { generateMFASetupController, revokeMFAController, verifyMFAForLoginController, verifyMFASetupController } from "../controllers/mfaController";
 
 const mfaRoutes = Router()

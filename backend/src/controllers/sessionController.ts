@@ -11,8 +11,6 @@ const getAllSessionController = asyncHandler(
     const sessionId = req.sessionId;
     const sessions = await getAllSessionService(userId);
 
-    console.log()
-
     const modifiedSession = sessions.map((session) => ({
       ...session.toObject(),
       ...(session.id === sessionId ? { isCurrent: true } : { isCurrent: false })

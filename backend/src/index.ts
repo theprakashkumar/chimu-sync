@@ -7,7 +7,6 @@ import connectDatabase from "./config/databaseConfig";
 import { errorHandler } from "./middlewares/errorHandlerMiddleware";
 import { HTTPSTATUS } from "./config/httpConfig";
 import { asyncHandler } from "./middlewares/asyncHandlerMiddleware";
-import "./config/passportConfig";
 import passport from "passport";
 import authRoutes from "./routes/authRoute";
 // import isAuthenticated from "./middlewares/isAuthenticatedMiddleware";
@@ -17,8 +16,7 @@ import workspaceRoutes from "./routes/workspaceRoute";
 import projectRouters from "./routes/projectRoute";
 import taskRouters from "./routes/taskRoute";
 import cookieParser from "cookie-parser";
-import { authenticatedJwt } from "./config/passportStrategy";
-import "./middlewares/passport";
+import { authenticatedJwt } from "./middlewares/authenticateJwtMiddleware";
 import sessionRoute from "./routes/sessionRoute";
 import mfaRoutes from "./routes/mfaRoute";
 
