@@ -4,7 +4,11 @@ import {
   TaskStatusEnumType,
 } from "@/constant";
 
-export type loginType = { email: string; password: string };
+export type loginType = {
+  email: string;
+  password: string
+};
+
 export type LoginResponseType = {
   message: string;
   access_token: string;
@@ -18,6 +22,7 @@ export type registerType = {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 // USER TYPE
