@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -28,7 +28,6 @@ import { ArrowRight, Loader, MailCheckIcon } from "lucide-react";
 import { useState } from "react";
 
 const SignUp = () => {
-  const navigate = useNavigate();
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const { mutate, isPending } = useMutation({
@@ -70,7 +69,7 @@ const SignUp = () => {
 
     mutate(values, {
       onSuccess: () => {
-        navigate("/");
+        setIsSubmitted(true);
       },
       onError: (error) => {
         console.error(error);
