@@ -37,14 +37,13 @@ const registerUserService = async (registerData: registerInput) => {
 
   try {
     session.startTransaction();
-    // Create user.
     const user = new UserModel({
       email,
       name,
       password: hashedPassword,
     });
     await user.save({ session });
-    // Create an account.
+
     const account = new AccountModel({
       userId: user._id,
       provider: ProviderEnum.EMAIL,
@@ -52,7 +51,6 @@ const registerUserService = async (registerData: registerInput) => {
     });
     await account.save({ session });
 
-    // Create a verification code
     const verificationCode = new verificationCodeModel({
       userId: user._id,
       type: VerificationEnum.EMAIL_VERIFICATION,
@@ -60,42 +58,41 @@ const registerUserService = async (registerData: registerInput) => {
     });
     await verificationCode.save({ session });
 
-    // Send verification code
+    // Send verification url
 
-    // // Create workspace.
-    // const workspace = new WorkspaceModel({
-    //   name: "My Workspace",
-    //   description: `Workspace created for ${user.name}`,
-    //   owner: user._id,
-    // });
-    // await workspace.save({ session });
-    // // Find the rules for owners and create new member for above create workspace with new user, new workspace and owner role.
-    // const ownerRole = await RoleModel.findOne({
-    //   name: Roles.OWNER,
-    // }).session(session);
+    // Create workspace.
+    const workspace = new WorkspaceModel({
+      name: "My Workspace",
+      description: `Workspace created for ${user.name}`,
+      owner: user._id,
+    });
+    await workspace.save({ session });
+    // Find the rules for owners and create new member for above create workspace with new user, new workspace and owner role.
+    const ownerRole = await RoleModel.findOne({
+      name: Roles.OWNER,
+    }).session(session);
 
-    // if (!ownerRole) {
-    //   throw new NotFoundException("Owner role not found!");
-    // }
+    if (!ownerRole) {
+      throw new NotFoundException("Owner role not found!");
+    }
 
-    // const member = new MemberModel({
-    //   userId: user._id,
-    //   workspaceId: workspace._id,
-    //   role: ownerRole._id,
-    //   joinedAt: new Date(),
-    // });
+    const member = new MemberModel({
+      userId: user._id,
+      workspaceId: workspace._id,
+      role: ownerRole._id,
+      joinedAt: new Date(),
+    });
 
-    // await member.save({ session });
+    await member.save({ session });
 
-    // // Set the current workspace for new user as newly created workspace.
-    // user.currentWorkspace = workspace._id as mongoose.Types.ObjectId;
-    // await user.save({ session });
+    // Set the current workspace for new user as newly created workspace.
+    user.currentWorkspace = workspace._id as mongoose.Types.ObjectId;
+    await user.save({ session });
 
     await session.commitTransaction();
     session.endSession();
 
-    // return { userId: user._id, workspaceId: workspace._id };
-    return { user };
+    return { user, workspaceId: workspace._id };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
