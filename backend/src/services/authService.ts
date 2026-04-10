@@ -32,7 +32,6 @@ const registerUserService = async (registerData: registerInput) => {
     throw new BadRequestException("Email already exists!", ErrorCodeEnum.AUTH_EMAIL_ALREADY_EXISTS);
   }
 
-  const hashedPassword = await hashValue(password);
   const session = await mongoose.startSession();
 
   try {
@@ -40,7 +39,7 @@ const registerUserService = async (registerData: registerInput) => {
     const user = new UserModel({
       email,
       name,
-      password: hashedPassword,
+      password: password,
     });
     await user.save({ session });
 
