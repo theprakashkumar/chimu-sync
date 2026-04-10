@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,18 +25,13 @@ import { useMutation } from "@tanstack/react-query";
 import { loginMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
-import { useStore } from "@/store/store";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const returnUrl = searchParams.get("returnUrl");
   const { mutate, isPending } = useMutation({
     mutationFn: loginMutationFn,
     retry: 2,
   });
-
-  const { setAccessToken } = useStore();
 
   const formSchema = z.object({
     email: z.string().trim().email("Invalid email address").min(1, {
@@ -59,12 +54,12 @@ const SignIn = () => {
     if (isPending) return;
 
     mutate(values, {
-      onSuccess: (data) => {
-        const accessToken = data.access_token;
-        setAccessToken(accessToken);
-        const user = data.user;
-        const decodedUrl = returnUrl ? decodeURIComponent(returnUrl) : null;
-        navigate(decodedUrl || `/workspace/${user.currentWorkspace}`);
+      onSuccess: (response) => {
+        if (response.data.mfaRequired) {
+          navigate(`/verify-mfa?email=${values.email}`);
+          return;
+        }
+        navigate(`/workspace/${response.data.currentWorkspace}`);
       },
       onError: (error) => {
         toast({
@@ -79,13 +74,10 @@ const SignIn = () => {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
-        <Link
-          to="/"
-          className="flex items-center gap-2 self-center font-medium"
-        >
-          <Logo />
+        <span className="flex items-center gap-2 self-center font-medium">
+          <Logo url="/" />
           Chimu Sync
-        </Link>
+        </span>
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader className="text-center">
@@ -160,14 +152,25 @@ const SignIn = () => {
                         Login
                       </Button>
                     </div>
-                    <div className="text-center text-sm">
-                      Don&apos;t have an account?{" "}
-                      <Link
-                        to="/sign-up"
-                        className="underline underline-offset-4"
-                      >
-                        Sign up
-                      </Link>
+                    <div className="flex flex-col text-center text-sm">
+                      <span>
+                        Don&apos;t have an account?{" "}
+                        <Link
+                          to="/sign-up"
+                          className="underline underline-offset-4"
+                        >
+                          Sign up
+                        </Link>
+                      </span>
+                      <span>
+                        Forgot password?{" "}
+                        <Link
+                          to={`/forgot-password?email=${form.getValues().email}`}
+                          className="underline underline-offset-4"
+                        >
+                          Reset
+                        </Link>
+                      </span>
                     </div>
                   </div>
                 </form>

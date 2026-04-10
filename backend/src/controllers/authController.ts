@@ -45,7 +45,10 @@ const loginController = asyncHandler(
       .status(HTTPSTATUS.OK)
       .json({
         message: "User login successfully!",
-        data: user
+        data: {
+          user,
+          mfaRequired
+        }
       })
   }
 );

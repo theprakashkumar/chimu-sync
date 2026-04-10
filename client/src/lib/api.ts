@@ -15,6 +15,7 @@ import {
   CurrentUserResponseType,
   EditProjectPayloadType,
   EditWorkspaceType,
+  forgotPasswordType,
   LoginResponseType,
   loginType,
   ProjectByIdPayloadType,
@@ -45,6 +46,10 @@ const registerMutationFn = async (
 const logoutMutationFn = async () => {
   return await API.post("/auth/logout");
 };
+
+const forgotPasswordMutationFn = async (data: forgotPasswordType) => {
+  return API.post('/auth/password/forgot', data);
+}
 
 const getCurrentUserQueryFn =
   async (): Promise<CurrentUserResponseType> => {
@@ -246,6 +251,7 @@ export {
   refreshTokenMutationFn,
   registerMutationFn,
   logoutMutationFn,
+  forgotPasswordMutationFn,
   getCurrentUserQueryFn,
   createWorkspaceMutationFn,
   editWorkspaceMutationFn,

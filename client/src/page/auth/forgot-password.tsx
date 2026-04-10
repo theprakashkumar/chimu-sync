@@ -1,0 +1,137 @@
+import { useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRight, Loader, MailCheckIcon } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Logo from "@/components/logo";
+import { Card } from "@/components/ui/card";
+import { useMutation } from "@tanstack/react-query";
+import { forgotPasswordMutationFn } from "@/lib/api";
+import { Link, useSearchParams } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
+
+const ForgotPassword = () => {
+  const [params] = useSearchParams();
+  const email = params.get("email");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const formSchema = z.object({
+    email: z.string().trim().email().min(1, {
+      message: "Email is required",
+    }),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: email || "",
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: forgotPasswordMutationFn,
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    mutate(values, {
+      onSuccess: () => {
+        setIsSubmitted(true);
+      },
+      onError: (error) => {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      },
+    });
+  };
+
+  return (
+    <main className="min-h-svh h-full max-w-full flex items-center justify-center ">
+      <div className="flex w-full max-w-sm flex-col gap-6">
+        <span className="flex items-center gap-2 self-center font-medium">
+          <Logo url="/" />
+          Chimu Sync
+        </span>
+        <Card>
+          {!isSubmitted ? (
+            <div className="w-full h-full p-5 rounded-md">
+              <h1
+                className="text-xl tracking-[-0.16px] dark:text-[#fcfdffef] font-bold mb-6
+      sm:text-left w-fit ml-auto mr-auto"
+              >
+                Forgot password
+              </h1>
+              <p className="mb-6 text-center sm:text-left text-base dark:text-[#f1f7feb5] font-normal">
+                Include the email address associated with your account and we’ll
+                send you an email with instructions to reset your password.
+              </p>
+              <Form {...form}>
+                <form
+                  className="flex flex-col gap-6"
+                  onSubmit={form.handleSubmit(onSubmit)}
+                >
+                  <div className="mb-0">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="dark:text-[#f1f7feb5] text-sm">
+                            Email
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="john@example.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <Button
+                    className="w-full text-[15px] h-[40px] text-white font-semibold"
+                    disabled={isPending}
+                  >
+                    {isPending && <Loader className="animate-spin" />}
+                    Send reset instructions
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          ) : (
+            <div className="w-full h-60 flex flex-col gap-2 items-center justify-center rounded-md">
+              <div className="size-[48px]">
+                <MailCheckIcon size="48px" className="animate-bounce" />
+              </div>
+              <h2 className="text-xl tracking-[-0.16px] dark:text-[#fcfdffef] font-bold">
+                Check your email
+              </h2>
+              <p className="mb-2 text-center text-sm text-muted-foreground dark:text-[#f1f7feb5] font-normal">
+                We just sent a password reset link to {form.getValues().email}.
+              </p>
+              <Link to="/">
+                <Button className="h-[40px]">
+                  Go to login
+                  <ArrowRight />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </Card>
+      </div>
+    </main>
+  );
+};
+
+export default ForgotPassword;

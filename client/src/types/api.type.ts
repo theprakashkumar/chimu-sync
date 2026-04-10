@@ -4,29 +4,35 @@ import {
   TaskStatusEnumType,
 } from "@/constant";
 
-export type loginType = {
+
+interface loginType {
   email: string;
-  password: string
+  password: string;
 };
 
-export type LoginResponseType = {
+interface LoginResponseType {
   message: string;
-  access_token: string;
-  user: {
-    _id: string;
+  data: {
+    mfaRequired: boolean;
+    email: string;
+    name: string;
+    profilePicture: string;
     currentWorkspace: string;
   };
 };
 
-export type registerType = {
+interface registerType {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
 };
 
-// USER TYPE
-export type UserType = {
+interface forgotPasswordType {
+  email: string
+}
+
+type UserType = {
   _id: string;
   name: string;
   email: string;
@@ -43,14 +49,14 @@ export type UserType = {
   };
 };
 
-export type CurrentUserResponseType = {
+type CurrentUserResponseType = {
   message: string;
   user: UserType;
 };
 
 //******** */ WORKSPACE TYPES ****************
 // ******************************************
-export type WorkspaceType = {
+type WorkspaceType = {
   _id: string;
   name: string;
   description?: string;
@@ -58,12 +64,12 @@ export type WorkspaceType = {
   inviteCode: string;
 };
 
-export type CreateWorkspaceType = {
+type CreateWorkspaceType = {
   name: string;
   description: string;
 };
 
-export type EditWorkspaceType = {
+type EditWorkspaceType = {
   workspaceId: string;
   data: {
     name: string;
@@ -71,17 +77,17 @@ export type EditWorkspaceType = {
   };
 };
 
-export type CreateWorkspaceResponseType = {
+type CreateWorkspaceResponseType = {
   message: string;
   workspace: WorkspaceType;
 };
 
-export type AllWorkspaceResponseType = {
+type AllWorkspaceResponseType = {
   message: string;
   workspace: WorkspaceType[];
 };
 
-export type WorkspaceWithMembersType = WorkspaceType & {
+type WorkspaceWithMembersType = WorkspaceType & {
   members: {
     _id: string;
     userId: string;
@@ -96,12 +102,12 @@ export type WorkspaceWithMembersType = WorkspaceType & {
   }[];
 };
 
-export type WorkspaceByIdResponseType = {
+type WorkspaceByIdResponseType = {
   message: string;
   workspace: WorkspaceWithMembersType;
 };
 
-export type ChangeWorkspaceMemberRoleType = {
+type ChangeWorkspaceMemberRoleType = {
   workspaceId: string;
   data: {
     roleId: string;
@@ -109,7 +115,7 @@ export type ChangeWorkspaceMemberRoleType = {
   };
 };
 
-export type AllMembersInWorkspaceResponseType = {
+type AllMembersInWorkspaceResponseType = {
   message: string;
   members: {
     _id: string;
@@ -130,7 +136,7 @@ export type AllMembersInWorkspaceResponseType = {
   roles: RoleType[];
 };
 
-export type AnalyticsResponseType = {
+type AnalyticsResponseType = {
   message: string;
   analytics: {
     totalTasks: number;
@@ -139,7 +145,7 @@ export type AnalyticsResponseType = {
   };
 };
 
-export type PaginationType = {
+type PaginationType = {
   totalCount: number;
   pageSize: number;
   pageNumber: number;
@@ -148,7 +154,7 @@ export type PaginationType = {
   limit: number;
 };
 
-export type RoleType = {
+type RoleType = {
   _id: string;
   name: string;
 };
@@ -156,7 +162,7 @@ export type RoleType = {
 
 //******** */ PROJECT TYPES ****************
 //****************************************** */
-export type ProjectType = {
+type ProjectType = {
   _id: string;
   name: string;
   emoji: string;
@@ -171,7 +177,7 @@ export type ProjectType = {
   updatedAt: string;
 };
 
-export type CreateProjectPayloadType = {
+type CreateProjectPayloadType = {
   workspaceId: string;
   data: {
     emoji: string;
@@ -180,12 +186,12 @@ export type CreateProjectPayloadType = {
   };
 };
 
-export type ProjectResponseType = {
+type ProjectResponseType = {
   message: "Project created successfully";
   project: ProjectType;
 };
 
-export type EditProjectPayloadType = {
+type EditProjectPayloadType = {
   workspaceId: string;
   projectId: string;
   data: {
@@ -196,7 +202,7 @@ export type EditProjectPayloadType = {
 };
 
 //ALL PROJECTS IN WORKSPACE TYPE
-export type AllProjectPayloadType = {
+type AllProjectPayloadType = {
   workspaceId: string;
   pageNumber?: number;
   pageSize?: number;
@@ -204,14 +210,14 @@ export type AllProjectPayloadType = {
   skip?: boolean;
 };
 
-export type AllProjectResponseType = {
+type AllProjectResponseType = {
   message: string;
   projects: ProjectType[];
   pagination: PaginationType;
 };
 
 // SINGLE PROJECT IN WORKSPACE TYPE
-export type ProjectByIdPayloadType = {
+type ProjectByIdPayloadType = {
   workspaceId: string;
   projectId: string;
 };
@@ -219,7 +225,7 @@ export type ProjectByIdPayloadType = {
 //********** */ TASK TYPES ************************
 //************************************************* */
 
-export type CreateTaskPayloadType = {
+type CreateTaskPayloadType = {
   workspaceId: string;
   projectId: string;
   data: {
@@ -232,7 +238,7 @@ export type CreateTaskPayloadType = {
   };
 };
 
-export type TaskType = {
+type TaskType = {
   _id: string;
   title: string;
   description?: string;
@@ -255,7 +261,7 @@ export type TaskType = {
   updatedAt?: string;
 };
 
-export type AllTaskPayloadType = {
+type AllTaskPayloadType = {
   workspaceId: string;
   projectId?: string | null;
   keyword?: string | null;
@@ -267,8 +273,40 @@ export type AllTaskPayloadType = {
   pageSize?: number | null;
 };
 
-export type AllTaskResponseType = {
+type AllTaskResponseType = {
   message: string;
   tasks: TaskType[];
   pagination: PaginationType;
+};
+
+export type {
+  loginType,
+  LoginResponseType,
+  registerType,
+  forgotPasswordType,
+  UserType,
+  CurrentUserResponseType,
+  WorkspaceType,
+  CreateWorkspaceType,
+  EditWorkspaceType,
+  CreateWorkspaceResponseType,
+  AllWorkspaceResponseType,
+  WorkspaceWithMembersType,
+  WorkspaceByIdResponseType,
+  ChangeWorkspaceMemberRoleType,
+  AllMembersInWorkspaceResponseType,
+  AnalyticsResponseType,
+  PaginationType,
+  RoleType,
+  ProjectType,
+  CreateProjectPayloadType,
+  ProjectResponseType,
+  EditProjectPayloadType,
+  AllProjectPayloadType,
+  AllProjectResponseType,
+  ProjectByIdPayloadType,
+  CreateTaskPayloadType,
+  TaskType,
+  AllTaskPayloadType,
+  AllTaskResponseType,
 };
