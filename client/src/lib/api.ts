@@ -23,6 +23,7 @@ import {
   registerType,
   resetPasswordType,
   UserType,
+  verifyEmail,
   WorkspaceByIdResponseType,
 } from "@/types/api.type";
 
@@ -43,6 +44,10 @@ const registerMutationFn = async (
   const response = await API.post("/auth/register", data);
   return response.data;
 };
+
+const verifyEmailMutationFn = async (data: verifyEmail) => {
+  return API.post("/auth/verify/email", data);
+}
 
 const logoutMutationFn = async () => {
   return await API.post("/auth/logout");
@@ -255,6 +260,7 @@ export {
   loginMutationFn,
   refreshTokenMutationFn,
   registerMutationFn,
+  verifyEmailMutationFn,
   logoutMutationFn,
   forgotPasswordMutationFn,
   resetPasswordMutationFn,

@@ -10,6 +10,7 @@ import Tasks from "@/page/workspace/Tasks";
 import { AUTH_ROUTES, BASE_ROUTE, PROTECTED_ROUTES } from "./routePaths";
 import InviteUser from "@/page/invite/InviteUser";
 import ResetPassword from "@/page/auth/reset-password";
+import VerifyEmail from "@/page/auth/verify-email";
 
 const authenticationRoutePaths = [
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
@@ -17,6 +18,7 @@ const authenticationRoutePaths = [
   { path: AUTH_ROUTES.FORGOT_PASSWORD, element: <ForgotPassword /> },
   { path: AUTH_ROUTES.RESET_PASSWORD, element: <ResetPassword /> },
   { path: AUTH_ROUTES.GOOGLE_OAUTH_CALLBACK, element: <GoogleOAuth /> },
+  { path: PROTECTED_ROUTES.VERIFY_EMAIL, element: <VerifyEmail /> },
 ];
 
 const protectedRoutePaths = [

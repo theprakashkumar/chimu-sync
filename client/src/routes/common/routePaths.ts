@@ -7,6 +7,7 @@ const AUTH_ROUTES = {
 };
 
 const PROTECTED_ROUTES = {
+  VERIFY_EMAIL: "verify-email",
   WORKSPACE: "/workspace/:workspaceId",
   TASKS: "/workspace/:workspaceId/tasks",
   MEMBERS: "/workspace/:workspaceId/members",

@@ -28,6 +28,10 @@ interface registerType {
   confirmPassword: string;
 };
 
+interface verifyEmail {
+  code: string;
+}
+
 interface forgotPasswordType {
   email: string;
 }
@@ -288,6 +292,7 @@ export type {
   loginType,
   LoginResponseType,
   registerType,
+  verifyEmail,
   forgotPasswordType,
   resetPasswordType,
   UserType,
