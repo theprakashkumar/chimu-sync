@@ -1,5 +1,4 @@
 // Pre-configured Axios HTTP client for making API requests in the application.
-import { useStore } from "@/store/store";
 import { CustomError } from "@/types/custom.error.type";
 import axios from "axios";
 import { refreshTokenMutationFn } from "./api";
@@ -15,14 +14,6 @@ const options = {
 };
 
 const API = axios.create(options);
-
-API.interceptors.request.use((config) => {
-  const accessToken = useStore.getState().accessToken;
-  if (accessToken) {
-    config.headers["Authorization"] = "Bearer " + accessToken;
-  }
-  return config;
-});
 
 // Set up a response interceptor:
 // - If the response is successful, just return it.
