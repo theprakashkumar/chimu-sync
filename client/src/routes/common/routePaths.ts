@@ -8,6 +8,7 @@ const AUTH_ROUTES = {
 };
 
 const PROTECTED_ROUTES = {
+  ACCOUNT: "/account",
   WORKSPACE: "/workspace/:workspaceId",
   TASKS: "/workspace/:workspaceId/tasks",
   MEMBERS: "/workspace/:workspaceId/members",

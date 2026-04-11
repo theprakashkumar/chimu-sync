@@ -11,6 +11,7 @@ import { AUTH_ROUTES, BASE_ROUTE, PROTECTED_ROUTES } from "./routePaths";
 import InviteUser from "@/page/invite/InviteUser";
 import ResetPassword from "@/page/auth/reset-password";
 import VerifyEmail from "@/page/auth/verify-email";
+import Account from "@/page/auth/account";
 
 const authenticationRoutePaths = [
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
@@ -21,7 +22,7 @@ const authenticationRoutePaths = [
   { path: AUTH_ROUTES.VERIFY_EMAIL, element: <VerifyEmail /> },
 ];
 
-const protectedRoutePaths = [
+const workspaceProtectedRoutePaths = [
   { path: PROTECTED_ROUTES.WORKSPACE, element: <WorkspaceDashboard /> },
   { path: PROTECTED_ROUTES.TASKS, element: <Tasks /> },
   { path: PROTECTED_ROUTES.MEMBERS, element: <Members /> },
@@ -29,8 +30,17 @@ const protectedRoutePaths = [
   { path: PROTECTED_ROUTES.PROJECT_DETAILS, element: <ProjectDetails /> },
 ];
 
+const standaloneProtectedRoutePaths = [
+  { path: PROTECTED_ROUTES.ACCOUNT, element: <Account /> },
+];
+
 const baseRoutePaths = [
   { path: BASE_ROUTE.INVITE_URL, element: <InviteUser /> },
 ];
 
-export { authenticationRoutePaths, protectedRoutePaths, baseRoutePaths };
+export {
+  authenticationRoutePaths,
+  workspaceProtectedRoutePaths,
+  standaloneProtectedRoutePaths,
+  baseRoutePaths,
+};

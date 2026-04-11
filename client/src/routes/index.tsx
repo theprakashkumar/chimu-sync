@@ -4,7 +4,8 @@ import AuthRoute from "./auth.route";
 import {
   authenticationRoutePaths,
   baseRoutePaths,
-  protectedRoutePaths,
+  standaloneProtectedRoutePaths,
+  workspaceProtectedRoutePaths,
 } from "./common/routes";
 import AppLayout from "@/layout/app.layout";
 import BaseLayout from "@/layout/base.layout";
@@ -35,7 +36,16 @@ const AppRoutes = () => {
         {/* Protected Route */}
         <Route path="/" element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
-            {protectedRoutePaths.map((route) => (
+            {workspaceProtectedRoutePaths.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+          </Route>
+          <Route element={<BaseLayout />}>
+            {standaloneProtectedRoutePaths.map((route) => (
               <Route
                 key={route.path}
                 path={route.path}
