@@ -10,7 +10,7 @@ import AppLayout from "@/layout/app.layout";
 import BaseLayout from "@/layout/base.layout";
 import NotFound from "@/page/errors/NotFound";
 
-function AppRoutes() {
+const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -49,6 +49,6 @@ function AppRoutes() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default AppRoutes;

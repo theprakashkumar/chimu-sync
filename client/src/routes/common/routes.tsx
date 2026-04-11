@@ -18,7 +18,7 @@ const authenticationRoutePaths = [
   { path: AUTH_ROUTES.FORGOT_PASSWORD, element: <ForgotPassword /> },
   { path: AUTH_ROUTES.RESET_PASSWORD, element: <ResetPassword /> },
   { path: AUTH_ROUTES.GOOGLE_OAUTH_CALLBACK, element: <GoogleOAuth /> },
-  { path: PROTECTED_ROUTES.VERIFY_EMAIL, element: <VerifyEmail /> },
+  { path: AUTH_ROUTES.VERIFY_EMAIL, element: <VerifyEmail /> },
 ];
 
 const protectedRoutePaths = [

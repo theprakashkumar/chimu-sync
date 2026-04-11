@@ -4,10 +4,10 @@ const AUTH_ROUTES = {
   FORGOT_PASSWORD: "/forgot-password",
   RESET_PASSWORD: "/reset-password",
   GOOGLE_OAUTH_CALLBACK: "/google/oauth/callback",
+  VERIFY_EMAIL: "verify-email",
 };
 
 const PROTECTED_ROUTES = {
-  VERIFY_EMAIL: "verify-email",
   WORKSPACE: "/workspace/:workspaceId",
   TASKS: "/workspace/:workspaceId/tasks",
   MEMBERS: "/workspace/:workspaceId/members",
