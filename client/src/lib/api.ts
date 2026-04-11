@@ -21,6 +21,7 @@ import {
   ProjectByIdPayloadType,
   ProjectResponseType,
   registerType,
+  resetPasswordType,
   UserType,
   WorkspaceByIdResponseType,
 } from "@/types/api.type";
@@ -49,6 +50,10 @@ const logoutMutationFn = async () => {
 
 const forgotPasswordMutationFn = async (data: forgotPasswordType) => {
   return API.post('/auth/password/forgot', data);
+}
+
+const resetPasswordMutationFn = async (data: resetPasswordType) => {
+  return API.post('/auth/password/reset', data);
 }
 
 const getCurrentUserQueryFn =
@@ -252,6 +257,7 @@ export {
   registerMutationFn,
   logoutMutationFn,
   forgotPasswordMutationFn,
+  resetPasswordMutationFn,
   getCurrentUserQueryFn,
   createWorkspaceMutationFn,
   editWorkspaceMutationFn,

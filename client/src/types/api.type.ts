@@ -29,7 +29,12 @@ interface registerType {
 };
 
 interface forgotPasswordType {
-  email: string
+  email: string;
+}
+
+interface resetPasswordType {
+  password: string;
+  verificationCode: string;
 }
 
 type UserType = {
@@ -284,6 +289,7 @@ export type {
   LoginResponseType,
   registerType,
   forgotPasswordType,
+  resetPasswordType,
   UserType,
   CurrentUserResponseType,
   WorkspaceType,
