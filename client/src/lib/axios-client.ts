@@ -26,16 +26,18 @@ API.interceptors.response.use(
     return response;
   },
   async (error) => {
+    const originalRequest = error.config;
     const { data, status } = error.response;
 
-    // If any of these error occurred then redirect to login page.
-    // if (data === "ACCESS_UNAUTHORIZED" && status === 401) {
-    //   window.location.href = "/";
-    // }
-
-    if (data === "Unauthorized" && status === 401) {
-      // Call refresh token endpoint
-      await refreshTokenMutationFn();
+    if (data === "Unauthorized" && status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        await refreshTokenMutationFn();
+        return API(originalRequest);
+      } catch {
+        window.location.href = "/";
+        return Promise.reject(error);
+      }
     }
 
     // Reject with the error data for further handling.
