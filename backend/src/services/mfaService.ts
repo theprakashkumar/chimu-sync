@@ -36,8 +36,10 @@ const generateMFASetupService = async (req: Request) => {
   const qrImageUrl = await qrcode.toDataURL(url);
 
   return {
-    secret: secretKey,
-    qrCode: qrImageUrl,
+    data: {
+      secret: secretKey,
+      qrCode: qrImageUrl,
+    },
     message: "Scan the QR code or use the setup key!"
   }
 };

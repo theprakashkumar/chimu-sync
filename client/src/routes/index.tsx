@@ -10,6 +10,7 @@ import {
 import AppLayout from "@/layout/app.layout";
 import BaseLayout from "@/layout/base.layout";
 import NotFound from "@/page/errors/NotFound";
+import WorkplaceLayout from "@/layout/workplace.layout";
 
 const AppRoutes = () => {
   return (
@@ -35,7 +36,7 @@ const AppRoutes = () => {
 
         {/* Protected Route */}
         <Route path="/" element={<ProtectedRoute />}>
-          <Route element={<AppLayout />}>
+          <Route element={<WorkplaceLayout />}>
             {workspaceProtectedRoutePaths.map((route) => (
               <Route
                 key={route.path}
@@ -44,7 +45,7 @@ const AppRoutes = () => {
               />
             ))}
           </Route>
-          <Route element={<BaseLayout />}>
+          <Route element={<AppLayout />}>
             {standaloneProtectedRoutePaths.map((route) => (
               <Route
                 key={route.path}

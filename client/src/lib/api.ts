@@ -18,12 +18,14 @@ import {
   forgotPasswordType,
   LoginResponseType,
   loginType,
+  MFASetupType,
   ProjectByIdPayloadType,
   ProjectResponseType,
   registerType,
   resetPasswordType,
   UserType,
   verifyEmail,
+  VerifyMFAType,
   WorkspaceByIdResponseType,
 } from "@/types/api.type";
 
@@ -46,7 +48,7 @@ const registerMutationFn = async (
 };
 
 const verifyEmailMutationFn = async (data: verifyEmail) => {
-  return API.post("/auth/verify/email", data);
+  return await API.post("/auth/verify/email", data);
 }
 
 const logoutMutationFn = async () => {
@@ -54,11 +56,15 @@ const logoutMutationFn = async () => {
 };
 
 const forgotPasswordMutationFn = async (data: forgotPasswordType) => {
-  return API.post('/auth/password/forgot', data);
+  return await API.post('/auth/password/forgot', data);
 }
 
 const resetPasswordMutationFn = async (data: resetPasswordType) => {
-  return API.post('/auth/password/reset', data);
+  return await API.post('/auth/password/reset', data);
+}
+
+const getUserSessionQueryFn = async () => {
+  return await API.post("/session");
 }
 
 const getCurrentUserQueryFn =
@@ -67,8 +73,17 @@ const getCurrentUserQueryFn =
     return response.data;
   };
 
-// WORKSPACE
+const mfaSetupQueryFn = async () => {
+  const response = await API.get<MFASetupType>("/mfa/setup");
+  return response.data;
+}
 
+const mfaVerifyMutationFn = async (data: VerifyMFAType) => {
+  const response = await API.post("/mfa/verify", data);
+  return response.data;
+}
+
+// WORKSPACE
 const createWorkspaceMutationFn = async (
   data: CreateWorkspaceType
 ): Promise<CreateWorkspaceResponseType> => {
@@ -264,7 +279,10 @@ export {
   logoutMutationFn,
   forgotPasswordMutationFn,
   resetPasswordMutationFn,
+  getUserSessionQueryFn,
   getCurrentUserQueryFn,
+  mfaSetupQueryFn,
+  mfaVerifyMutationFn,
   createWorkspaceMutationFn,
   editWorkspaceMutationFn,
   getWorkspaceByIdQueryFn,

@@ -56,12 +56,30 @@ type UserType = {
     owner: string;
     inviteCode: string;
   };
+  userPreference: {
+    _id: string;
+    enable2FA: boolean;
+    emailNotification: boolean;
+  }
 };
 
 type CurrentUserResponseType = {
   message: string;
   user: UserType;
 };
+
+interface MFASetupType {
+  data: {
+    secret: string;
+    qrCode: string;
+  },
+  message: string;
+}
+
+interface VerifyMFAType {
+  code: string;
+  secretKey: string;
+}
 
 //******** */ WORKSPACE TYPES ****************
 // ******************************************
@@ -297,6 +315,8 @@ export type {
   resetPasswordType,
   UserType,
   CurrentUserResponseType,
+  MFASetupType,
+  VerifyMFAType,
   WorkspaceType,
   CreateWorkspaceType,
   EditWorkspaceType,

@@ -7,10 +7,9 @@ import { setAuthenticationCookies } from "../utils/cookie";
 
 const generateMFASetupController = asyncHandler(
   async (req: Request, res: Response) => {
-    const { secret, qrCode, message } = await generateMFASetupService(req);
+    const { data, message } = await generateMFASetupService(req);
     return res.status(HTTPSTATUS.OK).json({
-      secret,
-      qrCode,
+      data,
       message
     })
   }

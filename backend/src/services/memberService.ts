@@ -50,7 +50,6 @@ export const joinWorkspaceByInviteService = async (
     workspaceId: workspace._id,
   }).exec();
 
-  console.log(existingMember);
   if (existingMember) {
     throw new BadRequestException("Member already exits.");
   }
