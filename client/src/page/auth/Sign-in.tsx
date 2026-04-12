@@ -59,7 +59,7 @@ const SignIn = () => {
           navigate(`/verify-mfa?email=${values.email}`);
           return;
         }
-        navigate(`/workspace/${response.data.currentWorkspace}`);
+        navigate(`/workspace/${response.data.user.currentWorkspace}`);
       },
       onError: (error) => {
         toast({

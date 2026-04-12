@@ -14,10 +14,12 @@ interface LoginResponseType {
   message: string;
   data: {
     mfaRequired: boolean;
-    email: string;
-    name: string;
-    profilePicture: string;
-    currentWorkspace: string;
+    user: {
+      email: string;
+      name: string;
+      profilePicture: string;
+      currentWorkspace: string;
+    }
   };
 };
 
@@ -79,6 +81,11 @@ interface MFASetupType {
 interface VerifyMFAType {
   code: string;
   secretKey: string;
+}
+
+interface MFALoginType {
+  code: string;
+  email: string;
 }
 
 //******** */ WORKSPACE TYPES ****************
@@ -317,6 +324,7 @@ export type {
   CurrentUserResponseType,
   MFASetupType,
   VerifyMFAType,
+  MFALoginType,
   WorkspaceType,
   CreateWorkspaceType,
   EditWorkspaceType,

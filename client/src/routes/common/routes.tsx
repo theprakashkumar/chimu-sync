@@ -12,6 +12,7 @@ import InviteUser from "@/page/invite/InviteUser";
 import ResetPassword from "@/page/auth/reset-password";
 import VerifyEmail from "@/page/auth/verify-email";
 import Account from "@/page/auth/account";
+import VerifyMFA from "@/page/auth/verify-mfa";
 
 const authenticationRoutePaths = [
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
@@ -20,6 +21,7 @@ const authenticationRoutePaths = [
   { path: AUTH_ROUTES.RESET_PASSWORD, element: <ResetPassword /> },
   { path: AUTH_ROUTES.GOOGLE_OAUTH_CALLBACK, element: <GoogleOAuth /> },
   { path: AUTH_ROUTES.VERIFY_EMAIL, element: <VerifyEmail /> },
+  { path: AUTH_ROUTES.VERIFY_MFA, element: <VerifyMFA /> },
 ];
 
 const workspaceProtectedRoutePaths = [

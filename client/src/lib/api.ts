@@ -18,6 +18,7 @@ import {
   forgotPasswordType,
   LoginResponseType,
   loginType,
+  MFALoginType,
   MFASetupType,
   ProjectByIdPayloadType,
   ProjectResponseType,
@@ -85,6 +86,12 @@ const mfaVerifyMutationFn = async (data: VerifyMFAType) => {
 
 const mfaRevokeMutationFn = async () => {
   const response = await API.post("/mfa/revoke");
+  return response.data;
+}
+
+const mfaLoginMutationFn = async (data: MFALoginType
+) => {
+  const response = await API.post("/mfa/verify-login", data);
   return response.data;
 }
 
@@ -289,6 +296,7 @@ export {
   mfaSetupQueryFn,
   mfaVerifyMutationFn,
   mfaRevokeMutationFn,
+  mfaLoginMutationFn,
   createWorkspaceMutationFn,
   editWorkspaceMutationFn,
   getWorkspaceByIdQueryFn,

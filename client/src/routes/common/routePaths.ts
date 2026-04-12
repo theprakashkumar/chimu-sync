@@ -5,6 +5,7 @@ const AUTH_ROUTES = {
   RESET_PASSWORD: "/reset-password",
   GOOGLE_OAUTH_CALLBACK: "/google/oauth/callback",
   VERIFY_EMAIL: "verify-email",
+  VERIFY_MFA: "verify-mfa",
 };
 
 const PROTECTED_ROUTES = {
