@@ -17,7 +17,7 @@ const getAllSessionController = asyncHandler(
     }));
 
     return res.status(HTTPSTATUS.OK).json({
-      data: modifiedSession,
+      sessions: modifiedSession,
       message: "Fetched all session successfully!"
     })
   }

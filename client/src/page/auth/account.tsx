@@ -16,9 +16,7 @@ const Home = () => {
         <div className="steps-gradient dark:bg-gray-800 absolute top-0 h-[700px] w-px"></div>
         <div className="flex flex-col gap-5">
           <div className="relative pl-6 transition duration-200 ease-in-out">
-            <div className="bg-white dark:bg-background  absolute -left-[9.5px] top-7 z-10 block h-5 w-5 rounded-full">
-              <div className="ml-1 mt-1 h-3 w-3 rounded-full border-2 transition duration-200 ease-in-out border-primary"></div>
-            </div>
+            <div className="bg-white dark:bg-background  absolute -left-[9.5px] top-7 z-10 block h-5 w-5 rounded-full"></div>
             <div>
               <EnableMfa />
             </div>
@@ -27,9 +25,7 @@ const Home = () => {
 
         <div className="flex flex-col gap-5">
           <div className="relative pl-6 transition duration-200 ease-in-out">
-            <div className="bg-white dark:bg-background  absolute -left-[9.5px] top-7 z-10 block h-5 w-5 rounded-full">
-              <div className="ml-1 mt-1 h-3 w-3 rounded-full border-2 transition duration-200 ease-in-out border-primary"></div>
-            </div>
+            <div className="bg-white dark:bg-background  absolute -left-[9.5px] top-7 z-10 block h-5 w-5 rounded-full"></div>
             <div>
               <Sessions />
             </div>

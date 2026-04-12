@@ -1,6 +1,46 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
 import SessionItem from "./SessionItem";
+import { getAllSessionQueryFn, sessionDelMutationFn } from "@/lib/api";
+import { Loader } from "lucide-react";
+import { useCallback } from "react";
+import { toast } from "@/hooks/use-toast";
 
 const Sessions = () => {
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["sessions"],
+    queryFn: getAllSessionQueryFn,
+  });
+  const currentSession = data?.sessions?.find((session) => session.isCurrent);
+  const nonCurrentSession = data?.sessions?.filter(
+    (session) => !session.isCurrent,
+  );
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: sessionDelMutationFn,
+  });
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      mutate(id, {
+        onSuccess: () => {
+          refetch();
+          toast({
+            title: "Success",
+            description: "Session removed successfully",
+          });
+        },
+        onError: (error) => {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive",
+          });
+        },
+      });
+    },
+    [mutate, refetch],
+  );
+
   return (
     <div className="via-root to-root rounded-xl bg-gradient-to-r p-0.5">
       <div className="rounded-[10px] p-6">
@@ -21,27 +61,42 @@ const Sessions = () => {
               currently using it.
             </p>
           </div>
-          <div className="w-full">
-            <div className="w-full py-2 border-b pb-5">
-              <SessionItem
-                id=""
-                deviceName="Windows"
-                date="22 hours ago"
-                isCurrent={true}
-              />
+          {isLoading ? (
+            <Loader size="35px" className="animate-spin" />
+          ) : (
+            <div className="w-full">
+              <div className="w-full">
+                {currentSession && (
+                  <SessionItem
+                    loading={isLoading}
+                    userAgent={currentSession.userAgent}
+                    date={currentSession.createdAt}
+                    expiresAt={currentSession.expiresAt}
+                    isCurrent={currentSession.isCurrent}
+                  />
+                )}
+              </div>
+              <div className="mt-4">
+                <h5 className="text-base font-semibold">Other sessions</h5>
+                <ul className="mt-4">
+                  {nonCurrentSession?.map((session) => {
+                    return (
+                      <li key={session._id}>
+                        <SessionItem
+                          loading={isPending}
+                          userAgent={session.userAgent}
+                          date={session.createdAt}
+                          expiresAt={session.expiresAt}
+                          isCurrent={session.isCurrent}
+                          onRemove={() => handleDelete(session._id)}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </div>
-            <div className="mt-4">
-              <h5 className="text-base font-semibold">Other sessions</h5>
-              <ul className="mt-4">
-                <li>
-                  <SessionItem id="" deviceName="Android" date="22 hours ago" />
-                </li>
-                <li>
-                  <SessionItem id="" deviceName="Android" date="22 hours ago" />
-                </li>
-              </ul>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

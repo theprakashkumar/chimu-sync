@@ -5,12 +5,12 @@ import {
 } from "@/constant";
 
 
-interface loginType {
+export interface loginType {
   email: string;
   password: string;
-};
+}
 
-interface LoginResponseType {
+export interface LoginResponseType {
   message: string;
   data: {
     mfaRequired: boolean;
@@ -19,31 +19,31 @@ interface LoginResponseType {
       name: string;
       profilePicture: string;
       currentWorkspace: string;
-    }
+    };
   };
-};
+}
 
-interface registerType {
+export interface registerType {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
-};
+}
 
-interface verifyEmail {
+export interface verifyEmail {
   code: string;
 }
 
-interface forgotPasswordType {
+export interface forgotPasswordType {
   email: string;
 }
 
-interface resetPasswordType {
+export interface resetPasswordType {
   password: string;
   verificationCode: string;
 }
 
-type UserType = {
+export type UserType = {
   _id: string;
   name: string;
   email: string;
@@ -62,35 +62,49 @@ type UserType = {
     _id: string;
     enable2FA: boolean;
     emailNotification: boolean;
-  }
+  };
 };
 
-type CurrentUserResponseType = {
+export type CurrentUserResponseType = {
   message: string;
   user: UserType;
 };
 
-interface MFASetupType {
+export interface MFASetupType {
   data: {
     secret: string;
     qrCode: string;
-  },
+  };
   message: string;
 }
 
-interface VerifyMFAType {
+export interface VerifyMFAType {
   code: string;
   secretKey: string;
 }
 
-interface MFALoginType {
+export interface MFALoginType {
   code: string;
   email: string;
 }
 
+export interface SessionType {
+  _id: string;
+  userId: string;
+  userAgent: string;
+  createdAt: string;
+  expiresAt: string;
+  isCurrent: boolean
+}
+
+export interface SessionResponseType {
+  message: string;
+  sessions: SessionType[];
+}
+
 //******** */ WORKSPACE TYPES ****************
 // ******************************************
-type WorkspaceType = {
+export type WorkspaceType = {
   _id: string;
   name: string;
   description?: string;
@@ -98,12 +112,12 @@ type WorkspaceType = {
   inviteCode: string;
 };
 
-type CreateWorkspaceType = {
+export type CreateWorkspaceType = {
   name: string;
   description: string;
 };
 
-type EditWorkspaceType = {
+export type EditWorkspaceType = {
   workspaceId: string;
   data: {
     name: string;
@@ -111,17 +125,17 @@ type EditWorkspaceType = {
   };
 };
 
-type CreateWorkspaceResponseType = {
+export type CreateWorkspaceResponseType = {
   message: string;
   workspace: WorkspaceType;
 };
 
-type AllWorkspaceResponseType = {
+export type AllWorkspaceResponseType = {
   message: string;
   workspace: WorkspaceType[];
 };
 
-type WorkspaceWithMembersType = WorkspaceType & {
+export type WorkspaceWithMembersType = WorkspaceType & {
   members: {
     _id: string;
     userId: string;
@@ -136,12 +150,12 @@ type WorkspaceWithMembersType = WorkspaceType & {
   }[];
 };
 
-type WorkspaceByIdResponseType = {
+export type WorkspaceByIdResponseType = {
   message: string;
   workspace: WorkspaceWithMembersType;
 };
 
-type ChangeWorkspaceMemberRoleType = {
+export type ChangeWorkspaceMemberRoleType = {
   workspaceId: string;
   data: {
     roleId: string;
@@ -149,7 +163,7 @@ type ChangeWorkspaceMemberRoleType = {
   };
 };
 
-type AllMembersInWorkspaceResponseType = {
+export type AllMembersInWorkspaceResponseType = {
   message: string;
   members: {
     _id: string;
@@ -170,7 +184,7 @@ type AllMembersInWorkspaceResponseType = {
   roles: RoleType[];
 };
 
-type AnalyticsResponseType = {
+export type AnalyticsResponseType = {
   message: string;
   analytics: {
     totalTasks: number;
@@ -179,7 +193,7 @@ type AnalyticsResponseType = {
   };
 };
 
-type PaginationType = {
+export type PaginationType = {
   totalCount: number;
   pageSize: number;
   pageNumber: number;
@@ -188,7 +202,7 @@ type PaginationType = {
   limit: number;
 };
 
-type RoleType = {
+export type RoleType = {
   _id: string;
   name: string;
 };
@@ -196,7 +210,7 @@ type RoleType = {
 
 //******** */ PROJECT TYPES ****************
 //****************************************** */
-type ProjectType = {
+export type ProjectType = {
   _id: string;
   name: string;
   emoji: string;
@@ -211,7 +225,7 @@ type ProjectType = {
   updatedAt: string;
 };
 
-type CreateProjectPayloadType = {
+export type CreateProjectPayloadType = {
   workspaceId: string;
   data: {
     emoji: string;
@@ -220,12 +234,12 @@ type CreateProjectPayloadType = {
   };
 };
 
-type ProjectResponseType = {
+export type ProjectResponseType = {
   message: "Project created successfully";
   project: ProjectType;
 };
 
-type EditProjectPayloadType = {
+export type EditProjectPayloadType = {
   workspaceId: string;
   projectId: string;
   data: {
@@ -236,7 +250,7 @@ type EditProjectPayloadType = {
 };
 
 //ALL PROJECTS IN WORKSPACE TYPE
-type AllProjectPayloadType = {
+export type AllProjectPayloadType = {
   workspaceId: string;
   pageNumber?: number;
   pageSize?: number;
@@ -244,14 +258,14 @@ type AllProjectPayloadType = {
   skip?: boolean;
 };
 
-type AllProjectResponseType = {
+export type AllProjectResponseType = {
   message: string;
   projects: ProjectType[];
   pagination: PaginationType;
 };
 
 // SINGLE PROJECT IN WORKSPACE TYPE
-type ProjectByIdPayloadType = {
+export type ProjectByIdPayloadType = {
   workspaceId: string;
   projectId: string;
 };
@@ -259,7 +273,7 @@ type ProjectByIdPayloadType = {
 //********** */ TASK TYPES ************************
 //************************************************* */
 
-type CreateTaskPayloadType = {
+export type CreateTaskPayloadType = {
   workspaceId: string;
   projectId: string;
   data: {
@@ -272,7 +286,7 @@ type CreateTaskPayloadType = {
   };
 };
 
-type TaskType = {
+export type TaskType = {
   _id: string;
   title: string;
   description?: string;
@@ -295,7 +309,7 @@ type TaskType = {
   updatedAt?: string;
 };
 
-type AllTaskPayloadType = {
+export type AllTaskPayloadType = {
   workspaceId: string;
   projectId?: string | null;
   keyword?: string | null;
@@ -307,45 +321,8 @@ type AllTaskPayloadType = {
   pageSize?: number | null;
 };
 
-type AllTaskResponseType = {
+export type AllTaskResponseType = {
   message: string;
   tasks: TaskType[];
   pagination: PaginationType;
-};
-
-export type {
-  loginType,
-  LoginResponseType,
-  registerType,
-  verifyEmail,
-  forgotPasswordType,
-  resetPasswordType,
-  UserType,
-  CurrentUserResponseType,
-  MFASetupType,
-  VerifyMFAType,
-  MFALoginType,
-  WorkspaceType,
-  CreateWorkspaceType,
-  EditWorkspaceType,
-  CreateWorkspaceResponseType,
-  AllWorkspaceResponseType,
-  WorkspaceWithMembersType,
-  WorkspaceByIdResponseType,
-  ChangeWorkspaceMemberRoleType,
-  AllMembersInWorkspaceResponseType,
-  AnalyticsResponseType,
-  PaginationType,
-  RoleType,
-  ProjectType,
-  CreateProjectPayloadType,
-  ProjectResponseType,
-  EditProjectPayloadType,
-  AllProjectPayloadType,
-  AllProjectResponseType,
-  ProjectByIdPayloadType,
-  CreateTaskPayloadType,
-  TaskType,
-  AllTaskPayloadType,
-  AllTaskResponseType,
 };

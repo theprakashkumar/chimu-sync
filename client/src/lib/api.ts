@@ -24,86 +24,96 @@ import {
   ProjectResponseType,
   registerType,
   resetPasswordType,
+  SessionResponseType,
   UserType,
   verifyEmail,
   VerifyMFAType,
   WorkspaceByIdResponseType,
 } from "@/types/api.type";
 
-const loginMutationFn = async (
+export const loginMutationFn = async (
   data: loginType
 ): Promise<LoginResponseType> => {
   const response = await API.post("/auth/login", data);
   return response.data;
 };
 
-const refreshTokenMutationFn = async (): Promise<void> => {
+export const refreshTokenMutationFn = async (): Promise<void> => {
   await API.post('/auth/refresh');
 }
 
-const registerMutationFn = async (
+export const registerMutationFn = async (
   data: registerType
 ): Promise<UserType> => {
   const response = await API.post("/auth/register", data);
   return response.data;
 };
 
-const verifyEmailMutationFn = async (data: verifyEmail) => {
+export const verifyEmailMutationFn = async (data: verifyEmail) => {
   return await API.post("/auth/verify/email", data);
 }
 
-const logoutMutationFn = async () => {
+export const logoutMutationFn = async () => {
   return await API.post("/auth/logout");
 };
 
-const forgotPasswordMutationFn = async (data: forgotPasswordType) => {
+export const forgotPasswordMutationFn = async (data: forgotPasswordType) => {
   return await API.post('/auth/password/forgot', data);
 }
 
-const resetPasswordMutationFn = async (data: resetPasswordType) => {
+export const resetPasswordMutationFn = async (data: resetPasswordType) => {
   return await API.post('/auth/password/reset', data);
 }
 
-const getUserSessionQueryFn = async () => {
+export const getUserSessionQueryFn = async () => {
   return await API.post("/session");
 }
 
-const getCurrentUserQueryFn =
+export const getCurrentUserQueryFn =
   async (): Promise<CurrentUserResponseType> => {
     const response = await API.get(`/user/current`);
     return response.data;
   };
 
-const mfaSetupQueryFn = async () => {
+export const mfaSetupQueryFn = async () => {
   const response = await API.get<MFASetupType>("/mfa/setup");
   return response.data;
 }
 
-const mfaVerifyMutationFn = async (data: VerifyMFAType) => {
+export const mfaVerifyMutationFn = async (data: VerifyMFAType) => {
   const response = await API.post("/mfa/verify", data);
   return response.data;
 }
 
-const mfaRevokeMutationFn = async () => {
+export const mfaRevokeMutationFn = async () => {
   const response = await API.post("/mfa/revoke");
   return response.data;
 }
 
-const mfaLoginMutationFn = async (data: MFALoginType
+export const mfaLoginMutationFn = async (data: MFALoginType
 ) => {
   const response = await API.post("/mfa/verify-login", data);
   return response.data;
 }
 
+export const getAllSessionQueryFn = async (): Promise<SessionResponseType> => {
+  const response = await API.get("/session/all");
+  return response.data;
+}
+
+export const sessionDelMutationFn = async (id: string) => {
+  return await API.delete(`/session/${id}`);
+}
+
 // WORKSPACE
-const createWorkspaceMutationFn = async (
+export const createWorkspaceMutationFn = async (
   data: CreateWorkspaceType
 ): Promise<CreateWorkspaceResponseType> => {
   const response = await API.post("workspace/create/new", data);
   return response.data;
 };
 
-const editWorkspaceMutationFn = async ({
+export const editWorkspaceMutationFn = async ({
   workspaceId,
   data,
 }: {
@@ -114,34 +124,34 @@ const editWorkspaceMutationFn = async ({
   return response.data;
 };
 
-const getWorkspaceByIdQueryFn = async (
+export const getWorkspaceByIdQueryFn = async (
   workspaceId: string
 ): Promise<WorkspaceByIdResponseType> => {
   const response = await API.get(`/workspace/${workspaceId}`);
   return response.data;
 };
 
-const getAllWorkspacesUserIsMemberQueryFn =
+export const getAllWorkspacesUserIsMemberQueryFn =
   async (): Promise<AllWorkspaceResponseType> => {
     const response = await API.get("/workspace/all");
     return response.data;
   };
 
-const getMembersInWorkspaceQueryFn = async (
+export const getMembersInWorkspaceQueryFn = async (
   workspaceId: string
 ): Promise<AllMembersInWorkspaceResponseType> => {
   const response = await API.get(`/workspace/members/${workspaceId}`);
   return response.data;
 };
 
-const getWorkspaceAnalyticsQueryFn = async (
+export const getWorkspaceAnalyticsQueryFn = async (
   workspaceId: string
 ): Promise<AnalyticsResponseType> => {
   const response = await API.get(`workspace/analytics/${workspaceId}`);
   return response.data;
 };
 
-const changeWorkspaceMemberRoleMutationFn = async ({
+export const changeWorkspaceMemberRoleMutationFn = async ({
   workspaceId,
   data,
 }: ChangeWorkspaceMemberRoleType) => {
@@ -152,7 +162,7 @@ const changeWorkspaceMemberRoleMutationFn = async ({
   return response.data;
 };
 
-const deleteWorkspaceMutationFn = async (
+export const deleteWorkspaceMutationFn = async (
   workspaceId: string
 ): Promise<{ message: string; currentWorkspace: string }> => {
   const response = await API.delete(`workspace/delete/${workspaceId}`);
@@ -160,7 +170,7 @@ const deleteWorkspaceMutationFn = async (
 };
 
 // MEMBER
-const invitedUserJoinWorkspaceMutationFn = async (
+export const invitedUserJoinWorkspaceMutationFn = async (
   inviteCode: string
 ): Promise<{
   message: string;
@@ -171,7 +181,7 @@ const invitedUserJoinWorkspaceMutationFn = async (
 };
 
 //PROJECTS
-const createProjectMutationFn = async ({
+export const createProjectMutationFn = async ({
   workspaceId,
   data,
 }: CreateProjectPayloadType): Promise<ProjectResponseType> => {
@@ -182,7 +192,7 @@ const createProjectMutationFn = async ({
   return response.data;
 };
 
-const editProjectMutationFn = async ({
+export const editProjectMutationFn = async ({
   projectId,
   workspaceId,
   data,
@@ -194,7 +204,7 @@ const editProjectMutationFn = async ({
   return response.data;
 };
 
-const getProjectsInWorkspaceQueryFn = async ({
+export const getProjectsInWorkspaceQueryFn = async ({
   workspaceId,
   pageSize = 10,
   pageNumber = 1,
@@ -205,7 +215,7 @@ const getProjectsInWorkspaceQueryFn = async ({
   return response.data;
 };
 
-const getProjectByIdQueryFn = async ({
+export const getProjectByIdQueryFn = async ({
   projectId,
   workspaceId,
 }: ProjectByIdPayloadType): Promise<ProjectResponseType> => {
@@ -216,7 +226,7 @@ const getProjectByIdQueryFn = async ({
   return response.data;
 };
 
-const getProjectAnalyticsQueryFn = async ({
+export const getProjectAnalyticsQueryFn = async ({
   workspaceId,
   projectId,
 }: ProjectByIdPayloadType): Promise<AnalyticsResponseType> => {
@@ -226,7 +236,7 @@ const getProjectAnalyticsQueryFn = async ({
   return response.data;
 };
 
-const deleteProjectMutationFn = async ({
+export const deleteProjectMutationFn = async ({
   workspaceId,
   projectId,
 }: ProjectByIdPayloadType): Promise<{ message: string }> => {
@@ -238,7 +248,7 @@ const deleteProjectMutationFn = async ({
 
 //TASKS
 
-const createTaskMutationFn = async ({
+export const createTaskMutationFn = async ({
   workspaceId,
   projectId,
   data,
@@ -251,7 +261,7 @@ const createTaskMutationFn = async ({
   return response.data;
 };
 
-const getAllTasksQueryFn = async ({
+export const getAllTasksQueryFn = async ({
   workspaceId,
   keyword,
   projectId,
@@ -281,38 +291,4 @@ const getAllTasksQueryFn = async ({
   return response.data;
 };
 
-const deleteTaskMutationFn = async () => { };
-
-export {
-  loginMutationFn,
-  refreshTokenMutationFn,
-  registerMutationFn,
-  verifyEmailMutationFn,
-  logoutMutationFn,
-  forgotPasswordMutationFn,
-  resetPasswordMutationFn,
-  getUserSessionQueryFn,
-  getCurrentUserQueryFn,
-  mfaSetupQueryFn,
-  mfaVerifyMutationFn,
-  mfaRevokeMutationFn,
-  mfaLoginMutationFn,
-  createWorkspaceMutationFn,
-  editWorkspaceMutationFn,
-  getWorkspaceByIdQueryFn,
-  getAllWorkspacesUserIsMemberQueryFn,
-  getMembersInWorkspaceQueryFn,
-  getWorkspaceAnalyticsQueryFn,
-  changeWorkspaceMemberRoleMutationFn,
-  deleteWorkspaceMutationFn,
-  invitedUserJoinWorkspaceMutationFn,
-  createProjectMutationFn,
-  editProjectMutationFn,
-  getProjectsInWorkspaceQueryFn,
-  getProjectByIdQueryFn,
-  getProjectAnalyticsQueryFn,
-  deleteProjectMutationFn,
-  createTaskMutationFn,
-  getAllTasksQueryFn,
-  deleteTaskMutationFn,
-};
+export const deleteTaskMutationFn = async () => { };

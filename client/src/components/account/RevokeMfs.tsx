@@ -30,7 +30,7 @@ const RevokeMFA = () => {
 
   const submit = useCallback(() => {
     mutate();
-  }, []);
+  }, [mutate]);
 
   return (
     <Button
