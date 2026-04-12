@@ -1,7 +1,6 @@
 // Pre-configured Axios HTTP client for making API requests in the application.
 import { CustomError } from "@/types/custom.error.type";
 import axios from "axios";
-import { refreshTokenMutationFn } from "./api";
 
 // Define default options for the Axios instance:
 // - baseURL: All requests will be prefixed with this URL.
@@ -14,6 +13,8 @@ const options = {
 };
 
 const API = axios.create(options);
+export const APIRefresh = axios.create(options);
+APIRefresh.interceptors.response.use((response) => response);
 
 // Set up a response interceptor:
 // - If the response is successful, just return it.
@@ -26,16 +27,13 @@ API.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const originalRequest = error.config;
     const { data, status } = error.response;
 
-    if (data === "Unauthorized" && status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    if (data.errorCode === "ACCESS_UNAUTHORIZED" && status === 401) {
       try {
-        await refreshTokenMutationFn();
-        return API(originalRequest);
+        await APIRefresh.get("/auth/refresh");
+        return APIRefresh(error.config);
       } catch {
-        window.location.href = "/";
         return Promise.reject(error);
       }
     }

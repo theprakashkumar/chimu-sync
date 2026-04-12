@@ -20,7 +20,6 @@ const LogoutDialog = (props: {
 }) => {
   const { isOpen, setIsOpen } = props;
   const navigate = useNavigate();
-
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({

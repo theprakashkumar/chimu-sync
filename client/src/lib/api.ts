@@ -38,10 +38,6 @@ export const loginMutationFn = async (
   return response.data;
 };
 
-export const refreshTokenMutationFn = async (): Promise<void> => {
-  await API.post('/auth/refresh');
-}
-
 export const registerMutationFn = async (
   data: registerType
 ): Promise<UserType> => {
