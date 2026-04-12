@@ -34,7 +34,7 @@ const revokeMFAController = asyncHandler(
 
     return res.status(HTTPSTATUS.OK).json({
       message,
-      data: userPreferences,
+      userPreferences,
     })
   }
 );

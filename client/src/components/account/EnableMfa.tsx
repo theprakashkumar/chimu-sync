@@ -32,6 +32,7 @@ import { mfaSetupQueryFn, mfaVerifyMutationFn } from "@/lib/api";
 import { Skeleton } from "../ui/skeleton";
 import { toast } from "@/hooks/use-toast";
 import { VerifyMFAType } from "@/types/api.type";
+import RevokeMFA from "./RevokeMfs";
 
 const EnableMfa = () => {
   const { user, refetchAuth } = useAuthContext();
@@ -114,9 +115,7 @@ const EnableMfa = () => {
           Protect your account by adding an extra layer of security.
         </p>
         {user?.userPreference.enable2FA ? (
-          <Button className="h-[35px] text-[#c40006d3] bg-red-100 shadow-none mr-1">
-            Revoke Access
-          </Button>
+          <RevokeMFA />
         ) : (
           <Dialog modal open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>

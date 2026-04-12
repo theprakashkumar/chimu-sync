@@ -83,6 +83,11 @@ const mfaVerifyMutationFn = async (data: VerifyMFAType) => {
   return response.data;
 }
 
+const mfaRevokeMutationFn = async () => {
+  const response = await API.post("/mfa/revoke");
+  return response.data;
+}
+
 // WORKSPACE
 const createWorkspaceMutationFn = async (
   data: CreateWorkspaceType
@@ -283,6 +288,7 @@ export {
   getCurrentUserQueryFn,
   mfaSetupQueryFn,
   mfaVerifyMutationFn,
+  mfaRevokeMutationFn,
   createWorkspaceMutationFn,
   editWorkspaceMutationFn,
   getWorkspaceByIdQueryFn,
