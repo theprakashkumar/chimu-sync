@@ -23,6 +23,7 @@ import { appConfig } from "../config/appConfig";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { getEnv } from "../utils/getEnv";
 import { hashValue } from "../utils/bcrypt";
+import { sendEmail } from "../lib/nodeMailer";
 
 const registerUserService = async (registerData: registerInput) => {
   const { email, name, password } = registerData;
@@ -57,8 +58,6 @@ const registerUserService = async (registerData: registerInput) => {
     });
     await verificationCode.save({ session });
 
-    // Send verification url
-
     // Create workspace.
     const workspace = new WorkspaceModel({
       name: "My Workspace",
@@ -90,6 +89,13 @@ const registerUserService = async (registerData: registerInput) => {
 
     await session.commitTransaction();
     session.endSession();
+
+    const verificationLink = `${getEnv("FRONTEND_ORIGIN")}/verify-email?code=${verificationCode.code}`;
+    try {
+      await sendEmail(user.email, "signup", user.name, verificationLink);
+    } catch (err) {
+      console.error("Failed to send verification email:", err);
+    }
 
     return { user, workspaceId: workspace._id };
   } catch (error) {
@@ -258,14 +264,13 @@ const forgotPasswordService = async (email: string) => {
   });
   await verificationCode.save();
 
-  const resetLink = `${getEnv('FRONTEND_ORIGIN')}/reset-password?verification-code=${verificationCode.code}`;
+  const resetLink = `${getEnv("FRONTEND_ORIGIN")}/reset-password?verification-code=${verificationCode.code}`;
 
-  // TODO: Send email with verification URL.
-
-  return {
-    url: resetLink,
-    email: email
-  };
+  try {
+    await sendEmail(email, "forget-password", user.name, resetLink);
+  } catch (err) {
+    console.error("Failed to send password reset email:", err);
+  }
 }
 
 const resetPasswordService = async ({ password, verificationCode }: resetPasswordInput) => {
