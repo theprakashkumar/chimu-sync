@@ -1,11 +1,11 @@
 import nodemailer from "nodemailer";
-import { getEnv } from "../utils/getEnv";
+import { appConfig } from "../config/appConfig";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: getEnv('SMTP_USER'),
-    pass: getEnv('SMTP_PASS')
+    user: appConfig.SMTP_USER,
+    pass: appConfig.SMTP_PASS,
   }
 });
 
@@ -74,7 +74,7 @@ export const sendEmail = async (
   link: string
 ) => {
   await transporter.sendMail({
-    from: getEnv('MAIL_FROM'),
+    from: appConfig.MAIL_FROM,
     to,
     subject: getEmailSubject(emailType),
     text: getEmailText(emailType, name, link),

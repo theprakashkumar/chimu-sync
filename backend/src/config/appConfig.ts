@@ -14,16 +14,14 @@ import { getEnv } from "../utils/getEnv";
  *   FRONTEND_ORIGIN: string,
  *   FRONTEND_GOOGLE_CALLBACK_URL: string,
  *   JWT_SECRET: string,
- *   JWT_EXPIRES_IN: string
+ *   JWT_EXPIRES_IN: string,
  *   JWT_REFRESH_SECRET: string,
  *   JWT_REFRESH_EXPIRES_IN: string,
- * }} An object containing configuration values for the application.
- *
- * @example
- * // Usage:
- * import { appConfig } from './config/appConfig';
- * const port = appConfig.PORT;
- */
+ *   SMTP_USER: string,
+ *   SMTP_PASS: string,
+ *   MAIL_FROM: string,
+ * }} 
+ **/
 const getAppConfig = () => ({
   NODE_ENV: getEnv("NODE_ENV", "development"),
   PORT: getEnv("PORT", "8080"),
@@ -38,6 +36,9 @@ const getAppConfig = () => ({
   JWT_EXPIRES_IN: getEnv("JWT_EXPIRES_IN", "1d"),
   JWT_REFRESH_SECRET: getEnv("JWT_REFRESH_SECRET"),
   JWT_REFRESH_EXPIRES_IN: getEnv("JWT_REFRESH_EXPIRES_IN", "7d"),
+  SMTP_USER: getEnv("SMTP_USER"),
+  SMTP_PASS: getEnv("SMTP_PASS"),
+  MAIL_FROM: getEnv("MAIL_FROM")
 });
 
 export const appConfig = getAppConfig();

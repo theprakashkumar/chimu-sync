@@ -21,7 +21,6 @@ import SessionModel from "../models/sessionModel";
 import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
 import { appConfig } from "../config/appConfig";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { getEnv } from "../utils/getEnv";
 import { hashValue } from "../utils/bcrypt";
 import { sendEmail } from "../lib/nodeMailer";
 
@@ -90,7 +89,7 @@ const registerUserService = async (registerData: registerInput) => {
     await session.commitTransaction();
     session.endSession();
 
-    const verificationLink = `${getEnv("FRONTEND_ORIGIN")}/verify-email?code=${verificationCode.code}`;
+    const verificationLink = `${appConfig.FRONTEND_ORIGIN}/verify-email?code=${verificationCode.code}`;
     try {
       await sendEmail(user.email, "signup", user.name, verificationLink);
     } catch (err) {
@@ -264,7 +263,7 @@ const forgotPasswordService = async (email: string) => {
   });
   await verificationCode.save();
 
-  const resetLink = `${getEnv("FRONTEND_ORIGIN")}/reset-password?verification-code=${verificationCode.code}`;
+  const resetLink = `${appConfig.FRONTEND_ORIGIN}/reset-password?verification-code=${verificationCode.code}`;
 
   try {
     await sendEmail(email, "forget-password", user.name, resetLink);
