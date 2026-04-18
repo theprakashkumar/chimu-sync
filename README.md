@@ -13,9 +13,11 @@ A modern, full-stack project management application built with the MERN stack, d
 
 ### 🔐 Authentication & Security
 
-- **Google OAuth Integration** - Seamless sign-in with Google accounts
-- **Email & Password Authentication** - Traditional login system
-- **JWT Token Management** - Secure session handling
+- **Email & Password Authentication** - Registration and login with hashed passwords
+- **JWT + HTTP-only cookies** - Access and refresh tokens; MFA challenge cookie for the 2FA step
+- **Multi-Factor Authentication (TOTP)** - Optional 2FA setup, verification, and revoke from account settings
+- **Email verification** - Verify account email after signup
+- **Password reset** - Forgot password and reset flows via email
 - **Role-based Access Control** - Granular permissions system
 
 ### 🏢 Workspace Management
@@ -55,8 +57,9 @@ A modern, full-stack project management application built with the MERN stack, d
 ### 🚪 Session Management
 
 - **Secure Logout** - Proper session termination
-- **Session Persistence** - Maintain user state
-- **Auto-logout** - Automatic session expiry
+- **Refresh tokens** - Rotate access tokens via `GET .../auth/refresh`
+- **Device sessions** - List and revoke sessions on the account page
+- **Session Persistence** - Maintain user state across requests
 
 ### 🌱 Development Features
 
@@ -74,8 +77,12 @@ A modern, full-stack project management application built with the MERN stack, d
 - **Express.js** - Web framework
 - **MongoDB** - NoSQL database
 - **Mongoose** - MongoDB ODM
-- **JWT** - Authentication tokens
-- **Passport.js** - Authentication middleware
+- **JWT** - Access, refresh, and MFA challenge tokens
+- **cookie-parser** - Cookie-based auth and MFA step-up
+- **bcrypt** - Password hashing
+- **Nodemailer** - Transactional email (verification, password reset)
+- **Speakeasy / QRCode** - TOTP MFA setup
+- **Zod** - Request validation
 - **TypeScript** - Type safety
 
 ### Frontend
@@ -128,17 +135,21 @@ A modern, full-stack project management application built with the MERN stack, d
 
 4. **Environment Setup**
 
-   - Copy `.env.example` to `.env` in both backend and client directories
-   - Configure your environment variables
+   - **Backend:** copy `backend/.env.example` to `backend/.env` and set variables (JWT secrets, `MONGO_URI`, `MFA_*`, SMTP, `FRONTEND_ORIGIN`, `BASE_PATH`, etc.).
+   - **Client:** copy `client/example.env` to `client/.env` and point the API URL at your backend.
 
-5. **Database Setup**
+5. **Database**
+
+   - Use your own MongoDB, or start the local replica set with `docker compose -f backend/docker-compose.yml up -d` (see `backend/docker-compose.yml`). Then run any one-time init your deployment needs (e.g. replica set initiation if required).
+
+6. **Seed roles (optional)**
 
    ```bash
    cd backend
    npm run seed
    ```
 
-6. **Start Development Servers**
+7. **Start Development Servers**
 
    ```bash
    # Backend (from backend directory)
@@ -156,7 +167,7 @@ chimu-sync/
 │   ├── src/
 │   │   ├── controllers/     # Route controllers
 │   │   ├── models/         # Mongoose models
-│   │   ├── routes/         # API routes
+│   │   ├── routes/         # API routes (auth, mfa, session, …)
 │   │   ├── services/       # Business logic
 │   │   ├── middlewares/    # Custom middlewares
 │   │   └── utils/          # Utility functions
@@ -174,36 +185,31 @@ chimu-sync/
 
 ## 🔧 API Endpoints
 
+The API is mounted under a configurable prefix (`BASE_PATH`, default `/api`). Paths below use `/api` as an example.
+
 ### Authentication
 
-- `POST /api/auth/signup` - User registration
-- `POST /api/auth/signin` - User login
-- `GET /api/auth/google` - Google OAuth
-- `POST /api/auth/logout` - User logout
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login (returns MFA challenge cookie when 2FA is enabled)
+- `GET /api/auth/refresh` - Refresh access token (uses refresh cookie)
+- `POST /api/auth/verify/email` - Verify email with code
+- `POST /api/auth/password/forgot` - Request password reset email
+- `POST /api/auth/password/reset` - Reset password with code
+- `POST /api/auth/logout` - Logout (JWT required)
 
-### Workspaces
+### MFA
 
-- `GET /api/workspaces` - Get user workspaces
-- `POST /api/workspaces` - Create workspace
-- `PUT /api/workspaces/:id` - Update workspace
-- `DELETE /api/workspaces/:id` - Delete workspace
+- `GET /api/mfa/setup` - MFA setup payload (QR / secret) (JWT required)
+- `POST /api/mfa/verify` - Complete MFA setup with TOTP code (JWT required)
+- `POST /api/mfa/revoke` - Disable MFA (JWT required)
+- `POST /api/mfa/verify-login` - Complete login after MFA (TOTP + MFA challenge cookie)
 
-### Projects
+### Sessions
 
-- `GET /api/workspaces/:workspaceId/projects` - Get projects
-- `POST /api/workspaces/:workspaceId/projects` - Create project
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
+- `GET /api/session/all` - List sessions (JWT required)
+- `GET /api/session/current` - Current session (JWT required)
+- `DELETE /api/session/:id` - Revoke a session (JWT required)
 
-### Tasks
+### Workspaces, projects, tasks, members
 
-- `GET /api/projects/:projectId/tasks` - Get tasks
-- `POST /api/projects/:projectId/tasks` - Create task
-- `PUT /api/tasks/:id` - Update task
-- `DELETE /api/tasks/:id` - Delete task
-
-### Members
-
-- `GET /api/workspaces/:id/members` - Get workspace members
-- `POST /api/workspaces/:id/members/invite` - Invite member
-- `DELETE /api/workspaces/:id/members/:memberId` - Remove member
+Protected routes live under `/api/workspace`, `/api/project`, `/api/task`, and `/api/member` (see `backend/src/routes/` for exact paths and handlers).
