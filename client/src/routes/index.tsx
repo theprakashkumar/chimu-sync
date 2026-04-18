@@ -7,10 +7,10 @@ import {
   standaloneProtectedRoutePaths,
   workspaceProtectedRoutePaths,
 } from "./common/routes";
-import AppLayout from "@/layout/app.layout";
 import BaseLayout from "@/layout/base.layout";
 import NotFound from "@/page/errors/NotFound";
 import WorkplaceLayout from "@/layout/workplace.layout";
+import StandaloneLayout from "@/layout/standalone.layout";
 
 const AppRoutes = () => {
   return (
@@ -45,7 +45,7 @@ const AppRoutes = () => {
               />
             ))}
           </Route>
-          <Route element={<AppLayout />}>
+          <Route element={<StandaloneLayout />}>
             {standaloneProtectedRoutePaths.map((route) => (
               <Route
                 key={route.path}

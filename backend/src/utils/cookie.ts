@@ -9,7 +9,7 @@ interface CookiePayloadType {
 }
 
 export const REFRESH_PATH = `${appConfig.BASE_PATH}/auth/refresh`;
-const MFA_LOGIN_PATH = `${appConfig.BASE_PATH}/verify-login`
+const MFA_LOGIN_PATH = `${appConfig.BASE_PATH}/mfa/verify-login`
 
 const defaults: CookieOptions = {
   httpOnly: true,
