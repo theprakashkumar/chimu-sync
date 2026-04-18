@@ -4,7 +4,7 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import UserModel from "../models/userModel";
 import SessionModel from "../models/sessionModel";
-import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken } from "../utils/jwt";
+import { accessTokenSignOptions, mfaTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
 
 const generateMFASetupService = async (req: Request) => {
   const user = req.user;
@@ -109,14 +109,28 @@ const revokeMFAService = async (req: Request) => {
 
 }
 
-const verifyMFAForLoginService = async (code: string, email: string, userAgent?: string) => {
-  const user = await UserModel.findOne({ email });
+const verifyMFAForLoginService = async (
+  code: string,
+  mfaChallengeToken: string,
+  userAgent?: string
+) => {
+  // Verify if mfa challenge token is valid.
+  const mfaTokenResult = verifyJwtToken(mfaChallengeToken, { secret: mfaTokenSignOptions.secret, audience: ["mfa"] });
+  if ("error" in mfaTokenResult) {
+    throw new UnauthorizedException("User is not authorized!");
+  }
+  const { userId } = mfaTokenResult.payload as { userId: string };
+  if (!userId) {
+    throw new UnauthorizedException("User is not authorized!");
+  }
+
+  const user = await UserModel.findById(userId);
 
   if (!user) {
     throw new NotFoundException("User not found!");
   }
 
-  if (!user.userPreference.enable2FA && !user.userPreference.twoFactorSecret) {
+  if (!user.userPreference.enable2FA || !user.userPreference.twoFactorSecret) {
     throw new UnauthorizedException("MFA not enabled!");
   }
 
@@ -125,7 +139,6 @@ const verifyMFAForLoginService = async (code: string, email: string, userAgent?:
     encoding: "base32",
     token: code
   })
-
   if (!isValid) {
     throw new BadRequestException("Invalid MFA code!");
   }
@@ -136,15 +149,10 @@ const verifyMFAForLoginService = async (code: string, email: string, userAgent?:
   })
   await session.save();
 
-  if (!session) {
-    throw new BadRequestException("Invalid email or password!")
-  }
-
   const accessToken = signJwtToken(
     { userId: user._id, sessionId: session._id },
     accessTokenSignOptions
   )
-
   const refreshToken = signJwtToken(
     { sessionId: session._id },
     refreshTokenSignOptions

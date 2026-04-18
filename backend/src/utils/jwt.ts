@@ -12,44 +12,49 @@ type RefreshTokenPayload = {
   sessionId: SessionDocument["_id"]
 }
 
+type MfaTokenPayload = {
+  userId: UserDocument["_id"];
+}
 
 type SignOptsAndSecret = SignOptions & {
   secret: string;
 };
 
-const defaults: SignOptions = {
+export const accessTokenSignOptions: SignOptsAndSecret = {
+  expiresIn: appConfig.JWT_EXPIRES_IN as SignOptions['expiresIn'],
+  secret: appConfig.JWT_SECRET,
   audience: ["user"],
 };
 
-const accessTokenSignOptions: SignOptsAndSecret = {
-  expiresIn: appConfig.JWT_EXPIRES_IN as SignOptions['expiresIn'],
-  secret: appConfig.JWT_SECRET,
-};
-
-const refreshTokenSignOptions: SignOptsAndSecret = {
+export const refreshTokenSignOptions: SignOptsAndSecret = {
   expiresIn: appConfig.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'],
   secret: appConfig.JWT_REFRESH_SECRET,
+  audience: ["refresh"],
 };
 
-const signJwtToken = (
-  payload: AccessTokenPayload | RefreshTokenPayload,
+export const mfaTokenSignOptions: SignOptsAndSecret = {
+  expiresIn: appConfig.MFA_TOKEN_EXPIRES_IN as SignOptions['expiresIn'],
+  secret: appConfig.MFA_TOKEN_SECRET,
+  audience: ["mfa"],
+};
+
+export const signJwtToken = (
+  payload: AccessTokenPayload | RefreshTokenPayload | MfaTokenPayload,
   options?: SignOptsAndSecret
 ) => {
   const { secret, ...opts } = options || accessTokenSignOptions;
   return jwt.sign(payload, secret, {
-    ...defaults,
     ...opts,
   });
 };
 
-const verifyJwtToken = (
+export const verifyJwtToken = (
   token: string,
   options?: VerifyOptions & { secret: string }
 ) => {
   try {
     const { secret = appConfig.JWT_SECRET, ...opts } = options || {};
     const payload = jwt.verify(token, secret, {
-      ...defaults as VerifyOptions,
       ...opts
     })
     return { payload };
@@ -60,5 +65,3 @@ const verifyJwtToken = (
   }
 
 }
-
-export { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken }

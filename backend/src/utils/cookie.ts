@@ -8,7 +8,8 @@ interface CookiePayloadType {
   refreshToken: string;
 }
 
-const REFRESH_PATH = `${appConfig.BASE_PATH}/auth/refresh`;
+export const REFRESH_PATH = `${appConfig.BASE_PATH}/auth/refresh`;
+const MFA_LOGIN_PATH = `${appConfig.BASE_PATH}/verify-login`
 
 const defaults: CookieOptions = {
   httpOnly: true,
@@ -16,7 +17,7 @@ const defaults: CookieOptions = {
   sameSite: appConfig.NODE_ENV === "production" ? "strict" : "lax"
 }
 
-const getAccessTokenCookieOptions = (): CookieOptions => {
+export const getAccessTokenCookieOptions = (): CookieOptions => {
   const expiresIn = appConfig.JWT_EXPIRES_IN;
   const expires = calculateExpirationDate(expiresIn);
 
@@ -27,7 +28,7 @@ const getAccessTokenCookieOptions = (): CookieOptions => {
   }
 }
 
-const getRefreshTokenCookieOptions = (): CookieOptions => {
+export const getRefreshTokenCookieOptions = (): CookieOptions => {
   const expiresIn = appConfig.JWT_REFRESH_EXPIRES_IN;
   const expires = calculateExpirationDate(expiresIn);
 
@@ -38,7 +39,18 @@ const getRefreshTokenCookieOptions = (): CookieOptions => {
   }
 }
 
-const setAuthenticationCookies = ({
+export const getMfaTokenCookieOptions = (): CookieOptions => {
+  const expiresIn = appConfig.MFA_TOKEN_EXPIRES_IN;
+  const expires = calculateExpirationDate(expiresIn);
+
+  return {
+    ...defaults,
+    expires,
+    path: MFA_LOGIN_PATH
+  }
+}
+
+export const setAuthenticationCookies = ({
   res, accessToken, refreshToken
 }: CookiePayloadType): Response => {
   return res
@@ -46,16 +58,17 @@ const setAuthenticationCookies = ({
     .cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions())
 }
 
-const clearAuthenticationCookie = (res: Response): Response => {
+export const clearAuthenticationCookie = (res: Response): Response => {
   return res.clearCookie("accessToken").clearCookie("refreshToken", {
     path: REFRESH_PATH
-  })
+  });
 }
 
-export {
-  REFRESH_PATH,
-  getAccessTokenCookieOptions,
-  getRefreshTokenCookieOptions,
-  setAuthenticationCookies,
-  clearAuthenticationCookie
-};
+export const setMfaTokenCookie = ({ res, mfaChallengeToken }: { res: Response, mfaChallengeToken: string }): Response => {
+  return res.cookie("mfaChallengeToken", mfaChallengeToken, getMfaTokenCookieOptions());
+}
+
+export const clearMfaTokenCookie = (res: Response): Response => {
+  return res
+    .clearCookie("mfaChallengeToken", { path: MFA_LOGIN_PATH })
+}

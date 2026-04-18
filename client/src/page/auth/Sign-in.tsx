@@ -3,13 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  // CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -20,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Logo from "@/components/logo";
-// import GoogleOauthButton from "@/components/auth/google-oauth-button";
 import { useMutation } from "@tanstack/react-query";
 import { loginMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
@@ -56,7 +49,7 @@ const SignIn = () => {
     mutate(values, {
       onSuccess: (response) => {
         if (response.data.mfaRequired) {
-          navigate(`/verify-mfa?email=${values.email}`);
+          navigate("/verify-mfa");
           return;
         }
         navigate(`/workspace/${response.data.user.currentWorkspace}`);

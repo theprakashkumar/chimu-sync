@@ -85,7 +85,6 @@ export interface VerifyMFAType {
 
 export interface MFALoginType {
   code: string;
-  email: string;
 }
 
 export interface SessionType {

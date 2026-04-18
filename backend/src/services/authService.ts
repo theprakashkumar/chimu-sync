@@ -18,7 +18,7 @@ import { VerificationEnum } from "../enums/verificationCodeEnum";
 import { calculateExpirationDate, fortyFiveMinutesFromNow, ONE_DAY_MS, threeMinutesAgo } from "../utils/dateTime";
 import { LoginInput, registerInput, resetPasswordInput } from "../validation/authValidation";
 import SessionModel from "../models/sessionModel";
-import { accessTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
+import { accessTokenSignOptions, mfaTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
 import { appConfig } from "../config/appConfig";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { hashValue } from "../utils/bcrypt";
@@ -117,13 +117,14 @@ const loginUserService = async (loginData: LoginInput) => {
     throw new BadRequestException("Invalid email or password!")
   }
 
+  // Issue a short-lived MFA challenge token so the TOTP step is bound to this
+  // password attempt. Without this, any holder of email + TOTP could log in.
   if (user.userPreference.enable2FA) {
+    const mfaChallengeToken = signJwtToken({ userId: user._id }, mfaTokenSignOptions);
     return {
-      user,
-      accessToken: "",
-      refreshToken: "",
-      mfaRequired: true
-    }
+      mfaRequired: true as const,
+      mfaChallengeToken,
+    };
   }
 
   const session = new SessionModel({
@@ -150,12 +151,12 @@ const loginUserService = async (loginData: LoginInput) => {
     user,
     accessToken,
     refreshToken,
-    mfaRequired: false
+    mfaRequired: false as const
   }
 }
 
 const refreshTokenService = async (refreshToken: string) => {
-  const { payload } = verifyJwtToken(refreshToken, { secret: refreshTokenSignOptions.secret });
+  const { payload } = verifyJwtToken(refreshToken, { secret: refreshTokenSignOptions.secret, audience: ["refresh"], });
 
   if (!payload) {
     throw new UnauthorizedException("Invalid refresh token!");
@@ -312,81 +313,6 @@ const logoutService = async (sessionId: string) => {
   return true;
 }
 
-const loginOrCreateAccountService = async (data: {
-  provider: string;
-  displayName: string;
-  providerId: string;
-  picture?: string;
-  email?: string;
-}) => {
-  const { provider, displayName, providerId, picture, email } = data;
-  // Creating a session here as we have to create a workspace just after creating a user.
-  const session = await mongoose.startSession();
-  try {
-    session.startTransaction();
-    console.info("Started a session for create/login user.");
-    let user = await UserModel.findOne({ email }).session(session);
-    if (!user) {
-      user = new UserModel({
-        email,
-        name: displayName,
-        profilePicture: picture || null,
-      });
-      await user.save({ session });
-
-      const account = new AccountModel({
-        userId: user._id,
-        provider,
-        providerId,
-      });
-
-      await account.save({ session });
-
-      // Create workspace.
-      const workspace = new WorkspaceModel({
-        name: "My Workspace",
-        description: `Workspace created for ${user.name}`,
-        owner: user._id,
-      });
-
-      await workspace.save({ session });
-
-      const ownerRole = await RoleModel.findOne({
-        name: Roles.OWNER,
-      }).session(session);
-
-      if (!ownerRole) {
-        throw new NotFoundException("Owner role not found!");
-      }
-
-      const member = new MemberModel({
-        userId: user._id,
-        workspaceId: workspace._id,
-        role: ownerRole._id,
-        joinedAt: new Date(),
-      });
-
-      await member.save({ session });
-
-      user.currentWorkspace = workspace._id as mongoose.Types.ObjectId;
-
-      await user.save({ session });
-    }
-    await session.commitTransaction();
-    session.endSession();
-    console.info("Ended a session for create/login user.");
-
-    return { user };
-  } catch (error) {
-    // If something goes wrong abort the session.
-    await session.abortTransaction();
-    session.endSession();
-    throw error;
-  } finally {
-    session.endSession();
-  }
-};
-
 const verifyUserService = async ({
   email,
   password,
@@ -426,6 +352,5 @@ export {
   forgotPasswordService,
   resetPasswordService,
   logoutService,
-  loginOrCreateAccountService,
   verifyUserService
 }

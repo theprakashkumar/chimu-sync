@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { emailSchema, loginSchema, registerSchema, resetPasswordSchema, verificationEmailSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { forgotPasswordService, loginUserService, logoutService, refreshTokenService, registerUserService, resetPasswordService, verifyEmailService } from "../services/authService";
-import { clearAuthenticationCookie, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthenticationCookies } from "../utils/cookie";
+import { clearAuthenticationCookie, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthenticationCookies, setMfaTokenCookie } from "../utils/cookie";
 import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
 
 const registerUserController = asyncHandler(
@@ -27,29 +27,29 @@ const loginController = asyncHandler(
       userAgent
     })
 
-    const { user, accessToken, refreshToken, mfaRequired } = await loginUserService(body)
-
-    if (mfaRequired) {
-      return res.status(HTTPSTATUS.OK).json({
-        message: "Verify MFA to login!",
-        data: {
-          user,
-          mfaRequired
-        }
-      })
+    const result = await loginUserService(body);
+    if (result.mfaRequired) {
+      return setMfaTokenCookie({ res, mfaChallengeToken: result.mfaChallengeToken })
+        .status(HTTPSTATUS.OK)
+        .json({
+          message: "Verify MFA to login!",
+          data: { mfaRequired: true },
+        });
     }
 
     return setAuthenticationCookies({
-      res, accessToken, refreshToken
+      res,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
     })
       .status(HTTPSTATUS.OK)
       .json({
         message: "User login successfully!",
         data: {
-          user,
-          mfaRequired
-        }
-      })
+          user: result.user,
+          mfaRequired: false,
+        },
+      });
   }
 );
 

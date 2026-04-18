@@ -20,15 +20,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Loader } from "lucide-react";
 import Logo from "@/components/logo";
 import { Card } from "@/components/ui/card";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { mfaLoginMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 
 const VerifyMFA = () => {
   const navigate = useNavigate();
-  const [params] = useSearchParams();
-  const email = params.get("email");
 
   const { mutate, isPending } = useMutation({
     mutationFn: mfaLoginMutationFn,
@@ -48,14 +46,8 @@ const VerifyMFA = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    if (!email) {
-      navigate("/");
-      return;
-    }
-
     const data = {
       code: values.pin,
-      email,
     };
 
     mutate(data, {
@@ -156,12 +148,14 @@ const VerifyMFA = () => {
             </Form>
           </div>
 
-          <Button
-            variant="ghost"
-            className="w-full text-[15px] mt-2 h-[40px] bg-gray-50"
-          >
-            Return to sign in
-          </Button>
+          <Link to="/">
+            <Button
+              variant="ghost"
+              className="w-full h-[40px] text-[15px] mt-2"
+            >
+              Return to sign in
+            </Button>
+          </Link>
         </Card>
       </div>
     </main>

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizedException } from "../utils/appErrors";
-import { verifyJwtToken } from "../utils/jwt";
+import { accessTokenSignOptions, verifyJwtToken } from "../utils/jwt";
 import { asyncHandler } from "./asyncHandlerMiddleware";
 import SessionModel from "../models/sessionModel";
 import mongoose from "mongoose";
@@ -20,7 +20,10 @@ const authenticateJwtHandler = async (
     throw new UnauthorizedException("User is not authorized!");
   }
 
-  const result = verifyJwtToken(accessToken);
+  const result = verifyJwtToken(accessToken, {
+    secret: accessTokenSignOptions.secret,
+    audience: ["user"],
+  });
   if ("error" in result) {
     throw new UnauthorizedException("User is not authorized!");
   }

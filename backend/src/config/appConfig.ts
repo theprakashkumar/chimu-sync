@@ -20,6 +20,8 @@ import { getEnv } from "../utils/getEnv";
  *   SMTP_USER: string,
  *   SMTP_PASS: string,
  *   MAIL_FROM: string,
+ *   MFA_TOKEN_SECRET: string,
+ *   MFA_TOKEN_EXPIRES_IN: string,
  * }} 
  **/
 const getAppConfig = () => ({
@@ -38,7 +40,9 @@ const getAppConfig = () => ({
   JWT_REFRESH_EXPIRES_IN: getEnv("JWT_REFRESH_EXPIRES_IN", "7d"),
   SMTP_USER: getEnv("SMTP_USER"),
   SMTP_PASS: getEnv("SMTP_PASS"),
-  MAIL_FROM: getEnv("MAIL_FROM")
+  MAIL_FROM: getEnv("MAIL_FROM"),
+  MFA_TOKEN_SECRET: getEnv("MFA_TOKEN_SECRET"),
+  MFA_TOKEN_EXPIRES_IN: getEnv("MFA_TOKEN_EXPIRES_IN", "5m"),
 });
 
 export const appConfig = getAppConfig();
