@@ -5,7 +5,7 @@ import { deleteSessionService, getAllSessionService, getCurrentSessionService } 
 import { NotFoundException } from "../utils/appErrors";
 import z from "zod";
 
-const getAllSessionController = asyncHandler(
+export const getAllSessionController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
     const sessionId = req.sessionId;
@@ -23,7 +23,7 @@ const getAllSessionController = asyncHandler(
   }
 );
 
-const getCurrentSessionController = asyncHandler(
+export const getCurrentSessionController = asyncHandler(
   async (req: Request, res: Response) => {
     const sessionId = req.sessionId;
     if (!sessionId) {
@@ -39,7 +39,7 @@ const getCurrentSessionController = asyncHandler(
   }
 );
 
-const deleteSessionController = asyncHandler(
+export const deleteSessionController = asyncHandler(
   async (req: Request, res: Response) => {
     const sessionId = z.string().parse(req.params.id);
     const userId = req.user?.id;
@@ -52,5 +52,3 @@ const deleteSessionController = asyncHandler(
     });
   }
 );
-
-export { getAllSessionController, getCurrentSessionController, deleteSessionController };

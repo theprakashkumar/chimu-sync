@@ -24,7 +24,7 @@ import { HTTPSTATUS } from "../config/httpConfig";
 import { hashValue } from "../utils/bcrypt";
 import { sendEmail } from "../lib/nodeMailer";
 
-const registerUserService = async (registerData: registerInput) => {
+export const registerUserService = async (registerData: registerInput) => {
   const { email, name, password } = registerData;
 
   const existingUser = await UserModel.exists({ email });
@@ -104,7 +104,7 @@ const registerUserService = async (registerData: registerInput) => {
   }
 };
 
-const loginUserService = async (loginData: LoginInput) => {
+export const loginUserService = async (loginData: LoginInput) => {
   const { email, password, userAgent } = loginData;
 
   const user = await UserModel.findOne({ email });
@@ -155,7 +155,7 @@ const loginUserService = async (loginData: LoginInput) => {
   }
 }
 
-const refreshTokenService = async (refreshToken: string) => {
+export const refreshTokenService = async (refreshToken: string) => {
   const { payload } = verifyJwtToken(refreshToken, { secret: refreshTokenSignOptions.secret, audience: ["refresh"], });
 
   if (!payload) {
@@ -201,7 +201,7 @@ const refreshTokenService = async (refreshToken: string) => {
   return { accessToken, newRefreshToken }
 }
 
-const verifyEmailService = async (code: string) => {
+export const verifyEmailService = async (code: string) => {
   const validCode = await verificationCodeModel.findOne({
     code,
     type: VerificationEnum.EMAIL_VERIFICATION,
@@ -235,7 +235,7 @@ const verifyEmailService = async (code: string) => {
   }
 }
 
-const forgotPasswordService = async (email: string) => {
+export const forgotPasswordService = async (email: string) => {
   const user = await UserModel.findOne({ email });
   if (!user) {
     throw new NotFoundException("User not found!");
@@ -273,7 +273,7 @@ const forgotPasswordService = async (email: string) => {
   }
 }
 
-const resetPasswordService = async ({ password, verificationCode }: resetPasswordInput) => {
+export const resetPasswordService = async ({ password, verificationCode }: resetPasswordInput) => {
   const validCode = await verificationCodeModel.findOne({
     code: verificationCode,
     type: VerificationEnum.PASSWORD_RESET,
@@ -303,7 +303,7 @@ const resetPasswordService = async ({ password, verificationCode }: resetPasswor
   return updatedUser;
 }
 
-const logoutService = async (sessionId: string) => {
+export const logoutService = async (sessionId: string) => {
   const session = await SessionModel.findByIdAndDelete(sessionId);
 
   if (!session) {
@@ -313,7 +313,7 @@ const logoutService = async (sessionId: string) => {
   return true;
 }
 
-const verifyUserService = async ({
+export const verifyUserService = async ({
   email,
   password,
   provider = ProviderEnum.EMAIL,
@@ -343,14 +343,3 @@ const verifyUserService = async ({
 
   return user;
 };
-
-export {
-  registerUserService,
-  loginUserService,
-  refreshTokenService,
-  verifyEmailService,
-  forgotPasswordService,
-  resetPasswordService,
-  logoutService,
-  verifyUserService
-}

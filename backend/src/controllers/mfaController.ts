@@ -5,7 +5,7 @@ import { HTTPSTATUS } from "../config/httpConfig";
 import { verifyMFAForLoginSchema, verifyMFASchema } from "../validation/mfaValidation";
 import { clearMfaTokenCookie, setAuthenticationCookies } from "../utils/cookie";
 
-const generateMFASetupController = asyncHandler(
+export const generateMFASetupController = asyncHandler(
   async (req: Request, res: Response) => {
     const { data, message } = await generateMFASetupService(req);
     return res.status(HTTPSTATUS.OK).json({
@@ -15,7 +15,7 @@ const generateMFASetupController = asyncHandler(
   }
 )
 
-const verifyMFASetupController = asyncHandler(
+export const verifyMFASetupController = asyncHandler(
   async (req: Request, res: Response) => {
     const { code, secretKey } = await verifyMFASchema.parse(req.body);
 
@@ -28,7 +28,7 @@ const verifyMFASetupController = asyncHandler(
   }
 );
 
-const revokeMFAController = asyncHandler(
+export const revokeMFAController = asyncHandler(
   async (req: Request, res: Response) => {
     const { message, userPreferences } = await revokeMFAService(req);
 
@@ -39,7 +39,7 @@ const revokeMFAController = asyncHandler(
   }
 );
 
-const verifyMFAForLoginController = asyncHandler(
+export const verifyMFAForLoginController = asyncHandler(
   async (req: Request, res: Response) => {
     const { code, userAgent } = verifyMFAForLoginSchema.parse({
       ...req.body,
@@ -58,10 +58,3 @@ const verifyMFAForLoginController = asyncHandler(
       })
   }
 );
-
-export {
-  generateMFASetupController,
-  verifyMFASetupController,
-  revokeMFAController,
-  verifyMFAForLoginController
-};

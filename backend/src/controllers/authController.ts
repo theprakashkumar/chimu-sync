@@ -6,7 +6,7 @@ import { forgotPasswordService, loginUserService, logoutService, refreshTokenSer
 import { clearAuthenticationCookie, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthenticationCookies, setMfaTokenCookie } from "../utils/cookie";
 import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
 
-const registerUserController = asyncHandler(
+export const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
     const body = registerSchema.parse({ ...req.body });
     const { user } = await registerUserService(body);
@@ -18,7 +18,7 @@ const registerUserController = asyncHandler(
   }
 );
 
-const loginController = asyncHandler(
+export const loginController = asyncHandler(
   async (req: Request, res: Response) => {
     const userAgent = req.header("user-agent");
 
@@ -53,7 +53,7 @@ const loginController = asyncHandler(
   }
 );
 
-const refreshTokenController = asyncHandler(
+export const refreshTokenController = asyncHandler(
   async (req: Request, res: Response) => {
     const refreshToken: string | undefined = req.cookies.refreshToken;
     if (!refreshToken) {
@@ -73,7 +73,7 @@ const refreshTokenController = asyncHandler(
   }
 )
 
-const verifyEmailController = asyncHandler(
+export const verifyEmailController = asyncHandler(
   async (req: Request, res: Response) => {
     const { code } = verificationEmailSchema.parse(req.body);
     await verifyEmailService(code);
@@ -84,7 +84,7 @@ const verifyEmailController = asyncHandler(
   }
 );
 
-const forgotPasswordController = asyncHandler(
+export const forgotPasswordController = asyncHandler(
   async (req: Request, res: Response) => {
     const email = emailSchema.parse(req.body.email);
 
@@ -97,7 +97,7 @@ const forgotPasswordController = asyncHandler(
   }
 );
 
-const resetPasswordController = asyncHandler(
+export const resetPasswordController = asyncHandler(
   async (req: Request, res: Response) => {
     const { password, verificationCode } = resetPasswordSchema.parse(req.body);
 
@@ -109,7 +109,7 @@ const resetPasswordController = asyncHandler(
   }
 );
 
-const logOutController = asyncHandler(
+export const logOutController = asyncHandler(
   async (req: Request, res: Response) => {
     const sessionId = req.sessionId;
     if (!sessionId) {
@@ -123,13 +123,3 @@ const logOutController = asyncHandler(
       .json({ message: "Logged out successfully" });
   }
 );
-
-export {
-  registerUserController,
-  loginController,
-  refreshTokenController,
-  verifyEmailController,
-  forgotPasswordController,
-  resetPasswordController,
-  logOutController,
-};
