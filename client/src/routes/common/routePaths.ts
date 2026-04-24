@@ -1,14 +1,15 @@
-export const isAuthRoute = (pathname: string): boolean => {
-  return Object.values(AUTH_ROUTES).includes(pathname);
-};
-
-export const AUTH_ROUTES = {
+const AUTH_ROUTES = {
   SIGN_IN: "/",
   SIGN_UP: "/sign-up",
+  FORGOT_PASSWORD: "/forgot-password",
+  RESET_PASSWORD: "/reset-password",
   GOOGLE_OAUTH_CALLBACK: "/google/oauth/callback",
+  VERIFY_EMAIL: "verify-email",
+  VERIFY_MFA: "verify-mfa",
 };
 
-export const PROTECTED_ROUTES = {
+const PROTECTED_ROUTES = {
+  ACCOUNT: "/account",
   WORKSPACE: "/workspace/:workspaceId",
   TASKS: "/workspace/:workspaceId/tasks",
   MEMBERS: "/workspace/:workspaceId/members",
@@ -16,6 +17,12 @@ export const PROTECTED_ROUTES = {
   PROJECT_DETAILS: "/workspace/:workspaceId/project/:projectId",
 };
 
-export const BASE_ROUTE = {
+const BASE_ROUTE = {
   INVITE_URL: "/invite/workspace/:inviteCode/join",
 };
+
+const isAuthRoute = (pathname: string): boolean => {
+  return Object.values(AUTH_ROUTES).includes(pathname);
+};
+
+export { isAuthRoute, AUTH_ROUTES, PROTECTED_ROUTES, BASE_ROUTE };

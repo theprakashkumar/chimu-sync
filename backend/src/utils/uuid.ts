@@ -1,9 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
 
-export function generateInviteCode() {
+const generateInviteCode = () => {
   return uuidv4().replace(/-/g, "").substring(0, 8);
 }
 
-export function generateTaskCode() {
+const generateTaskCode = () => {
   return `task-${uuidv4().replace(/-/g, "").substring(0, 3)}`;
 }
+
+const generateVerificationCode = () => {
+  return uuidv4().replace(/-/g, "").substring(0, 25);
+}
+
+export { generateInviteCode, generateTaskCode, generateVerificationCode }

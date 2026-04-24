@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext } from "react";
-// import useWorkspaceId from "@/hooks/use-workspace-id";
 import useAuth from "@/hooks/api/use-auth";
 import { UserType, WorkspaceType } from "@/types/api.type";
 import useWorkspaceId from "@/hooks/use-workspace-id";
@@ -36,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isFetching: authFetch,
     refetch: refetchAuth,
   } = useAuth();
+
   const user = authData?.user;
 
   const {
@@ -51,10 +51,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const hasPermission = (permission: PermissionType): boolean => {
     return permissions.includes(permission);
   };
-
-  // Checking if user can access of the workspace.
-  // For now check in the axios interceptor.
-  // useEffect(() => {});
 
   return (
     <AuthContext.Provider

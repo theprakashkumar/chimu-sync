@@ -1,99 +1,124 @@
-import { appConfig } from "../config/appConfig";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
-import { NextFunction, Request, Response } from "express";
-import { registerSchema } from "../validation/authValidation";
+import { Request, Response } from "express";
+import { emailSchema, loginSchema, registerSchema, resetPasswordSchema, verificationEmailSchema } from "../validation/authValidation";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { registerUserService } from "../services/authService";
-import passport from "passport";
-import { signJwtToken } from "../utils/jwt";
-
-export const googleLoginCallback = asyncHandler(
-  async (req: Request, res: Response) => {
-    const jwt = req.jwt;
-    const currentWorkspace = req.user?.currentWorkspace;
-
-    if (!jwt) {
-      return res.redirect(
-        `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`
-      );
-    }
-
-    // return res.redirect(
-    //   `${appConfig.FRONTEND_ORIGIN}/workspace/${currentWorkspace}`
-    // );
-
-    return res.redirect(
-      `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=success&access_token=${jwt}&current_workspace=${currentWorkspace}`
-    );
-  }
-);
+import { forgotPasswordService, loginUserService, logoutService, refreshTokenService, registerUserService, resetPasswordService, verifyEmailService } from "../services/authService";
+import { clearAuthenticationCookie, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthenticationCookies, setMfaTokenCookie } from "../utils/cookie";
+import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
 
 export const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
     const body = registerSchema.parse({ ...req.body });
-
-    await registerUserService(body);
+    const { user } = await registerUserService(body);
 
     return res.status(HTTPSTATUS.CREATED).json({
       message: "User created successfully",
+      data: user
     });
   }
 );
 
 export const loginController = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate(
-      "local",
-      (
-        err: Error | null,
-        user: Express.User | false,
-        info: { message: string } | undefined
-      ) => {
-        if (err) {
-          return next(err);
-        }
+  async (req: Request, res: Response) => {
+    const userAgent = req.header("user-agent");
 
-        if (!user) {
-          return res.status(HTTPSTATUS.UNAUTHORIZED).json({
-            message: info?.message || "Invalid email or password",
-          });
-        }
+    const body = loginSchema.parse({
+      ...req.body,
+      userAgent
+    })
 
-        // req.logIn(user, (err) => {
-        //   if (err) {
-        //     return next(err);
-        //   }
-
-        //   return res.status(HTTPSTATUS.OK).json({
-        //     message: "Logged in successfully",
-        //     user,
-        //   });
-        // });
-
-        const access_token = signJwtToken({ userId: user._id });
-        return res.status(HTTPSTATUS.OK).json({
-          message: "Logged in successfully",
-          access_token,
-          user,
+    const result = await loginUserService(body);
+    if (result.mfaRequired) {
+      return setMfaTokenCookie({ res, mfaChallengeToken: result.mfaChallengeToken })
+        .status(HTTPSTATUS.OK)
+        .json({
+          message: "Verify MFA to login!",
+          data: { mfaRequired: true },
         });
-      }
-    )(req, res, next);
+    }
+
+    return setAuthenticationCookies({
+      res,
+      accessToken: result.accessToken,
+      refreshToken: result.refreshToken,
+    })
+      .status(HTTPSTATUS.OK)
+      .json({
+        message: "User login successfully!",
+        data: {
+          user: result.user,
+          mfaRequired: false,
+        },
+      });
+  }
+);
+
+export const refreshTokenController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const refreshToken: string | undefined = req.cookies.refreshToken;
+    if (!refreshToken) {
+      throw new UnauthorizedException("User not authorized!");
+    }
+
+    const { accessToken, newRefreshToken } = await refreshTokenService(refreshToken);
+    // If new refresh token the add it to cookie.
+    if (newRefreshToken) {
+      res.cookie("refreshToken", newRefreshToken, getRefreshTokenCookieOptions())
+    }
+
+    return res
+      .status(HTTPSTATUS.OK)
+      .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
+      .json({ message: "Refresh access token successfully!" })
+  }
+)
+
+export const verifyEmailController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { code } = verificationEmailSchema.parse(req.body);
+    await verifyEmailService(code);
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Email verified successfully!"
+    });
+  }
+);
+
+export const forgotPasswordController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const email = emailSchema.parse(req.body.email);
+
+    await forgotPasswordService(email);
+
+    // Clear all the cookies.
+    return clearAuthenticationCookie(res).status(HTTPSTATUS.OK).json({
+      message: "Email sent successfully!"
+    })
+  }
+);
+
+export const resetPasswordController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { password, verificationCode } = resetPasswordSchema.parse(req.body);
+
+    await resetPasswordService({ password, verificationCode });
+
+    return res.status(HTTPSTATUS.OK).json({
+      message: "Reset password successfully!"
+    })
   }
 );
 
 export const logOutController = asyncHandler(
   async (req: Request, res: Response) => {
-    req.logout((err) => {
-      if (err) {
-        console.error("Logout error:", err);
-        return res
-          .status(HTTPSTATUS.INTERNAL_SERVER_ERROR)
-          .json({ error: "Failed to log out" });
-      }
-    });
+    const sessionId = req.sessionId;
+    if (!sessionId) {
+      throw new NotFoundException("Session is invalid!")
+    }
 
-    req.session = null;
-    return res
+    await logoutService(sessionId);
+
+    return clearAuthenticationCookie(res)
       .status(HTTPSTATUS.OK)
       .json({ message: "Logged out successfully" });
   }

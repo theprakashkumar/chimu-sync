@@ -1,36 +1,24 @@
 import { Router } from "express";
-import passport from "passport";
-import { appConfig } from "../config/appConfig";
 import {
-  googleLoginCallback,
+  forgotPasswordController,
   loginController,
   logOutController,
+  refreshTokenController,
   registerUserController,
+  resetPasswordController,
+  verifyEmailController,
 } from "../controllers/authController";
+import { authenticatedJwt } from "../middlewares/authenticateJwtMiddleware";
 
-const failedUrl = `${appConfig.FRONTEND_GOOGLE_CALLBACK_URL}?status=failure`;
 
 const authRoutes = Router();
 
 authRoutes.post("/register", registerUserController);
 authRoutes.post("/login", loginController);
-authRoutes.post("/logout", logOutController);
-
-authRoutes.get(
-  "/google",
-  passport.authenticate("google", {
-    scope: ["profile", "email"],
-    session: false,
-  })
-);
-
-authRoutes.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    failureFlash: failedUrl,
-    session: false,
-  }),
-  googleLoginCallback
-);
+authRoutes.get("/refresh", refreshTokenController);
+authRoutes.post("/verify/email", verifyEmailController);
+authRoutes.post("/password/forgot", forgotPasswordController); // Send verification code to email.
+authRoutes.post("/password/reset", resetPasswordController);
+authRoutes.post("/logout", authenticatedJwt, logOutController);
 
 export default authRoutes;

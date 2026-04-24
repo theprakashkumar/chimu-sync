@@ -15,12 +15,19 @@ import {
   CurrentUserResponseType,
   EditProjectPayloadType,
   EditWorkspaceType,
+  forgotPasswordType,
   LoginResponseType,
   loginType,
+  MFALoginType,
+  MFASetupType,
   ProjectByIdPayloadType,
   ProjectResponseType,
   registerType,
+  resetPasswordType,
+  SessionResponseType,
   UserType,
+  verifyEmail,
+  VerifyMFAType,
   WorkspaceByIdResponseType,
 } from "@/types/api.type";
 
@@ -38,9 +45,25 @@ export const registerMutationFn = async (
   return response.data;
 };
 
+export const verifyEmailMutationFn = async (data: verifyEmail) => {
+  return await API.post("/auth/verify/email", data);
+}
+
 export const logoutMutationFn = async () => {
   return await API.post("/auth/logout");
 };
+
+export const forgotPasswordMutationFn = async (data: forgotPasswordType) => {
+  return await API.post('/auth/password/forgot', data);
+}
+
+export const resetPasswordMutationFn = async (data: resetPasswordType) => {
+  return await API.post('/auth/password/reset', data);
+}
+
+export const getUserSessionQueryFn = async () => {
+  return await API.post("/session");
+}
 
 export const getCurrentUserQueryFn =
   async (): Promise<CurrentUserResponseType> => {
@@ -48,8 +71,37 @@ export const getCurrentUserQueryFn =
     return response.data;
   };
 
-// WORKSPACE
+export const mfaSetupQueryFn = async () => {
+  const response = await API.get<MFASetupType>("/mfa/setup");
+  return response.data;
+}
 
+export const mfaVerifyMutationFn = async (data: VerifyMFAType) => {
+  const response = await API.post("/mfa/verify", data);
+  return response.data;
+}
+
+export const mfaRevokeMutationFn = async () => {
+  const response = await API.post("/mfa/revoke");
+  return response.data;
+}
+
+export const mfaLoginMutationFn = async (data: MFALoginType
+) => {
+  const response = await API.post("/mfa/verify-login", data);
+  return response.data;
+}
+
+export const getAllSessionQueryFn = async (): Promise<SessionResponseType> => {
+  const response = await API.get("/session/all");
+  return response.data;
+}
+
+export const sessionDelMutationFn = async (id: string) => {
+  return await API.delete(`/session/${id}`);
+}
+
+// WORKSPACE
 export const createWorkspaceMutationFn = async (
   data: CreateWorkspaceType
 ): Promise<CreateWorkspaceResponseType> => {
@@ -65,7 +117,6 @@ export const editWorkspaceMutationFn = async ({
   data: { name: string; description: string };
 }): Promise<EditWorkspaceType> => {
   const response = await API.put(`/workspace/update/${workspaceId}`, data);
-
   return response.data;
 };
 
@@ -236,4 +287,4 @@ export const getAllTasksQueryFn = async ({
   return response.data;
 };
 
-export const deleteTaskMutationFn = async () => {};
+export const deleteTaskMutationFn = async () => { };

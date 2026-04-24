@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { EllipsisIcon, Loader, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { EllipsisIcon, Loader, Lock, LogOut } from "lucide-react";
 import {
   Sidebar,
   SidebarHeader,
@@ -17,7 +17,6 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -35,6 +34,7 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 
 const Asidebar = () => {
   const { open } = useSidebar();
+  const navigate = useNavigate();
   const workspaceId = useWorkspaceId();
 
   const { user, authLoading } = useAuthContext();
@@ -104,8 +104,11 @@ const Asidebar = () => {
                     align="start"
                     sideOffset={4}
                   >
-                    <DropdownMenuGroup></DropdownMenuGroup>
                     <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => navigate("/account")}>
+                      <Lock />
+                      Account
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setIsOpen(true)}>
                       <LogOut />
                       Log out

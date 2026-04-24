@@ -4,23 +4,45 @@ import {
   TaskStatusEnumType,
 } from "@/constant";
 
-export type loginType = { email: string; password: string };
-export type LoginResponseType = {
-  message: string;
-  access_token: string;
-  user: {
-    _id: string;
-    currentWorkspace: string;
-  };
-};
 
-export type registerType = {
+export interface loginType {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponseType {
+  message: string;
+  data: {
+    mfaRequired: boolean;
+    user: {
+      email: string;
+      name: string;
+      profilePicture: string;
+      currentWorkspace: string;
+    };
+  };
+}
+
+export interface registerType {
   name: string;
   email: string;
   password: string;
-};
+  confirmPassword: string;
+}
 
-// USER TYPE
+export interface verifyEmail {
+  code: string;
+}
+
+export interface forgotPasswordType {
+  email: string;
+}
+
+export interface resetPasswordType {
+  password: string;
+  verificationCode: string;
+}
+
 export type UserType = {
   _id: string;
   name: string;
@@ -36,12 +58,48 @@ export type UserType = {
     owner: string;
     inviteCode: string;
   };
+  userPreference: {
+    _id: string;
+    enable2FA: boolean;
+    emailNotification: boolean;
+  };
 };
 
 export type CurrentUserResponseType = {
   message: string;
   user: UserType;
 };
+
+export interface MFASetupType {
+  data: {
+    secret: string;
+    qrCode: string;
+  };
+  message: string;
+}
+
+export interface VerifyMFAType {
+  code: string;
+  secretKey: string;
+}
+
+export interface MFALoginType {
+  code: string;
+}
+
+export interface SessionType {
+  _id: string;
+  userId: string;
+  userAgent: string;
+  createdAt: string;
+  expiresAt: string;
+  isCurrent: boolean
+}
+
+export interface SessionResponseType {
+  message: string;
+  sessions: SessionType[];
+}
 
 //******** */ WORKSPACE TYPES ****************
 // ******************************************

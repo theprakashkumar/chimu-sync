@@ -1,16 +1,16 @@
 import { Outlet } from "react-router-dom";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/context/auth-provider";
-import Asidebar from "@/components/asidebar/asidebar";
-import Header from "@/components/header";
 import CreateWorkspaceDialog from "@/components/workspace/create-workspace-dialog";
 import CreateProjectDialog from "@/components/workspace/project/create-project-dialog";
+import Header from "@/components/header";
+import StandaloneAsidebar from "@/components/asidebar/standalone-asidebar";
 
-const AppLayout = () => {
+const StandaloneLayout = () => {
   return (
     <AuthProvider>
       <SidebarProvider>
-        <Asidebar />
+        <StandaloneAsidebar />
         <SidebarInset className="overflow-x-hidden">
           <div className="w-full">
             <>
@@ -28,4 +28,4 @@ const AppLayout = () => {
   );
 };
 
-export default AppLayout;
+export default StandaloneLayout;

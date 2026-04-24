@@ -4,13 +4,15 @@ import AuthRoute from "./auth.route";
 import {
   authenticationRoutePaths,
   baseRoutePaths,
-  protectedRoutePaths,
+  standaloneProtectedRoutePaths,
+  workspaceProtectedRoutePaths,
 } from "./common/routes";
-import AppLayout from "@/layout/app.layout";
 import BaseLayout from "@/layout/base.layout";
 import NotFound from "@/page/errors/NotFound";
+import WorkplaceLayout from "@/layout/workplace.layout";
+import StandaloneLayout from "@/layout/standalone.layout";
 
-function AppRoutes() {
+const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -34,8 +36,17 @@ function AppRoutes() {
 
         {/* Protected Route */}
         <Route path="/" element={<ProtectedRoute />}>
-          <Route element={<AppLayout />}>
-            {protectedRoutePaths.map((route) => (
+          <Route element={<WorkplaceLayout />}>
+            {workspaceProtectedRoutePaths.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+          </Route>
+          <Route element={<StandaloneLayout />}>
+            {standaloneProtectedRoutePaths.map((route) => (
               <Route
                 key={route.path}
                 path={route.path}
@@ -49,6 +60,6 @@ function AppRoutes() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default AppRoutes;

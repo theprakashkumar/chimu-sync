@@ -108,19 +108,19 @@ export default function CreateTaskForm(props: {
       Object.values(TaskStatusEnum) as [keyof typeof TaskStatusEnum],
       {
         message: "Status is required",
-      }
+      },
     ),
     priority: z.enum(
       Object.values(TaskPriorityEnum) as [keyof typeof TaskPriorityEnum],
       {
         message: "Priority is required",
-      }
+      },
     ),
     assignedTo: z.string().trim().min(1, {
       message: "AssignedTo is required",
     }),
     dueDate: z.date({
-      message: "A date of birth is required.",
+      message: "Due date is required.",
     }),
   });
 
@@ -333,7 +333,7 @@ export default function CreateTaskForm(props: {
                             variant={"outline"}
                             className={cn(
                               "w-full flex-1 pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value ? (
