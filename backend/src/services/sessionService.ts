@@ -1,7 +1,7 @@
 import SessionModel from "../models/sessionModel"
 import { NotFoundException } from "../utils/appErrors";
 
-const getAllSessionService = async (userId: string) => {
+export const getAllSessionService = async (userId: string) => {
   const sessions = await SessionModel.find({
     userId,
     expiredAt: { $gt: Date.now() }
@@ -22,7 +22,7 @@ const getAllSessionService = async (userId: string) => {
   return sessions;
 }
 
-const getCurrentSessionService = async (sessionId: string) => {
+export const getCurrentSessionService = async (sessionId: string) => {
   const session = await SessionModel.findById(sessionId)
     .populate("userId")
     .select("-expiresAt");
@@ -34,7 +34,7 @@ const getCurrentSessionService = async (sessionId: string) => {
   return user;
 }
 
-const deleteSessionService = async (sessionId: string, userId: string) => {
+export const deleteSessionService = async (sessionId: string, userId: string) => {
   const deletedSession = await SessionModel.findByIdAndDelete({
     _id: sessionId,
     userId
@@ -46,5 +46,3 @@ const deleteSessionService = async (sessionId: string, userId: string) => {
 
   return deletedSession;
 };
-
-export { getAllSessionService, getCurrentSessionService, deleteSessionService }

@@ -6,7 +6,7 @@ import UserModel from "../models/userModel";
 import SessionModel from "../models/sessionModel";
 import { accessTokenSignOptions, mfaTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
 
-const generateMFASetupService = async (req: Request) => {
+export const generateMFASetupService = async (req: Request) => {
   const user = req.user;
   if (!user) {
     throw new UnauthorizedException("User not authorized!")
@@ -44,7 +44,7 @@ const generateMFASetupService = async (req: Request) => {
   }
 };
 
-const verifyMFASetupService = async (req: Request, code: string, secretKey: string) => {
+export const verifyMFASetupService = async (req: Request, code: string, secretKey: string) => {
   const user = req.user;
   if (!user) {
     throw new UnauthorizedException("User not authorized!")
@@ -80,7 +80,7 @@ const verifyMFASetupService = async (req: Request, code: string, secretKey: stri
   }
 }
 
-const revokeMFAService = async (req: Request) => {
+export const revokeMFAService = async (req: Request) => {
   const user = req.user;
 
   if (!user) {
@@ -109,7 +109,7 @@ const revokeMFAService = async (req: Request) => {
 
 }
 
-const verifyMFAForLoginService = async (
+export const verifyMFAForLoginService = async (
   code: string,
   mfaChallengeToken: string,
   userAgent?: string
@@ -164,10 +164,3 @@ const verifyMFAForLoginService = async (
     refreshToken,
   }
 }
-
-export {
-  generateMFASetupService,
-  verifyMFASetupService,
-  revokeMFAService,
-  verifyMFAForLoginService
-};
