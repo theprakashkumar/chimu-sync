@@ -1,6 +1,6 @@
 packages:
-  - "backend"
-  - "client"
+  - "apps/*"
+  - "packages/*"
 onlyBuiltDependencies:
   - bcrypt
   - esbuild
