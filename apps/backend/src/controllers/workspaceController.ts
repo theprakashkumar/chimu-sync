@@ -51,7 +51,7 @@ export const getAllWorkspaceUserIsMemberController = asyncHandler(
 
 export const getWorkspaceByIdController = asyncHandler(
   async (req: Request, res: Response) => {
-    const workspaceId = req.params.id;
+    const workspaceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const userId = req.user?._id;
 
     const { workspace } = await getWorkspaceByIdService(workspaceId, userId);
@@ -65,7 +65,7 @@ export const getWorkspaceByIdController = asyncHandler(
 
 export const getWorkspaceMembersController = asyncHandler(
   async (req: Request, res: Response) => {
-    const workspaceId = req.params.id;
+    const workspaceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const userId = req.user?._id;
 
     // User should be the member of workspace in order to access the workspace.
@@ -86,7 +86,7 @@ export const getWorkspaceMembersController = asyncHandler(
 
 export const getWorkspaceAnalyticsController = asyncHandler(
   async (req: Request, res: Response) => {
-    const workspaceId = req.params.id;
+    const workspaceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const userId = req.user?._id;
 
     const { role } = await getMemberRoleInWorkspace(userId, workspaceId);
@@ -103,7 +103,7 @@ export const getWorkspaceAnalyticsController = asyncHandler(
 
 export const changeWorkspaceMemberRoleController = asyncHandler(
   async (req: Request, res: Response) => {
-    const workspaceId = req.params.id;
+    const workspaceId = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
     const { memberId, roleId } = changeRoleSchema.parse(req.body);
 
     const userId = req.user?._id;

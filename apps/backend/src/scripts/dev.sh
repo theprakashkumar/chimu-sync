@@ -70,6 +70,6 @@ for i in $(seq 1 45); do
 done
 
 echo ""
-echo "🚀  Starting API (npm run dev:server)..."
+echo "🚀  Starting API (pnpm run dev:server)..."
 echo ""
-exec npm run dev:server
+exec pnpm run dev:server
