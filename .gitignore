@@ -4,3 +4,7 @@ dist/
 .env
 .vercel
 .turbo/
+.env.deploy.local
+
+# Turborepo
+.turbo
