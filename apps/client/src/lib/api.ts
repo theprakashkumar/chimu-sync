@@ -16,7 +16,6 @@ import {
   EditProjectPayloadType,
   EditWorkspaceType,
   forgotPasswordType,
-  LoginResponseType,
   loginType,
   MFALoginType,
   MFASetupType,
@@ -30,6 +29,8 @@ import {
   VerifyMFAType,
   WorkspaceByIdResponseType,
 } from "@/types/api.type";
+
+import { LoginResponseType } from "@chimu-sync/shared";
 
 export const loginMutationFn = async (
   data: loginType
