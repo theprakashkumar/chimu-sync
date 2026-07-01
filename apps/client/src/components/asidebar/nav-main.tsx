@@ -14,7 +14,7 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { useAuthContext } from "@/context/auth-provider";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 
 type ItemType = {
   title: string;

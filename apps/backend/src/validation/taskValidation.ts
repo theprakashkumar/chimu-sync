@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TaskPriorityEnum, TaskStatusEnum } from "../enums/taskEnum";
+import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
 export const taskIdSchema = z.string().trim().min(1);
 
 // export const taskCode =

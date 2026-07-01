@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import WorkspaceHeader from "@/components/workspace/common/workspace-header";
 import EditWorkspaceForm from "@/components/workspace/edit-workspace-form";
 import DeleteWorkspaceCard from "@/components/workspace/settings/delete-workspace-card";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 import withPermission from "@/hoc/with-permission";
 
 const Settings = () => {
@@ -32,7 +32,7 @@ const Settings = () => {
 
 const settingWithPermission = withPermission(
   Settings,
-  Permissions.MANAGE_WORKSPACE_SETTINGS
+  Permissions.MANAGE_WORKSPACE_SETTINGS,
 );
 
 export default settingWithPermission;

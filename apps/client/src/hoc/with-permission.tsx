@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PermissionType } from "@/constant";
+import { PermissionType } from "@chimu-sync/shared";
 import { useAuthContext } from "@/context/auth-provider";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { useEffect } from "react";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const withPermission = (
   WrappedComponent: React.ComponentType,
-  requiredPermission: PermissionType
+  requiredPermission: PermissionType,
 ) => {
   const WithPermission = (props: any) => {
     const navigate = useNavigate();

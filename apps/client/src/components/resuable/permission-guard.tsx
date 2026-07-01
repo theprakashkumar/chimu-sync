@@ -1,5 +1,5 @@
 import React from "react";
-import { PermissionType } from "@/constant";
+import { PermissionType } from "@chimu-sync/shared";
 import { useAuthContext } from "@/context/auth-provider";
 
 type PermissionsGuardProps = {

@@ -7,7 +7,7 @@ import { CheckIcon, CopyIcon, Loader } from "lucide-react";
 import { useAuthContext } from "@/context/auth-provider";
 import { BASE_ROUTE } from "@/routes/common/routePaths";
 import PermissionsGuard from "@/components/resuable/permission-guard";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 
 const InviteMember = () => {
   const { workspace, workspaceLoading } = useAuthContext();
@@ -16,7 +16,7 @@ const InviteMember = () => {
   const inviteUrl = workspace
     ? `${window.location.origin}${BASE_ROUTE.INVITE_URL.replace(
         ":inviteCode",
-        workspace.inviteCode
+        workspace.inviteCode,
       )}`
     : "";
 

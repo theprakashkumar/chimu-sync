@@ -1,17 +1,17 @@
-import { PermissionType } from "@/constant";
+import { PermissionType } from "@chimu-sync/shared";
 import { UserType, WorkspaceWithMembersType } from "@/types/api.type";
 import { useEffect, useMemo, useState } from "react";
 
 const usePermissions = (
   user: UserType | undefined,
-  workspace: WorkspaceWithMembersType | undefined
+  workspace: WorkspaceWithMembersType | undefined,
 ) => {
   const [permission, setPermission] = useState<PermissionType[]>([]);
 
   useEffect(() => {
     if (user && workspace) {
       const member = workspace.members.find(
-        (member) => member.userId === user._id
+        (member) => member.userId === user._id,
       );
       if (member) {
         setPermission(member.role.permissions || []);

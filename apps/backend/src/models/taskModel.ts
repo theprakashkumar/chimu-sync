@@ -4,7 +4,8 @@ import {
   TaskPriorityEnumType,
   TaskStatusEnum,
   TaskStatusEnumType,
-} from "../enums/taskEnum";
+} from "@chimu-sync/shared";
+
 import { generateTaskCode } from "../utils/uuid";
 
 export interface TaskDocument extends Document {

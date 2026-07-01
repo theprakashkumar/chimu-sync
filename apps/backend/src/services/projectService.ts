@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import ProjectModel from "../models/projectModel";
 import TaskModel from "../models/taskModel";
 import { NotFoundException } from "../utils/appErrors";
-import { TaskStatusEnum } from "../enums/taskEnum";
+import { TaskStatusEnum } from "@chimu-sync/shared";
 
 export const createProjectService = async (
   userId: string,

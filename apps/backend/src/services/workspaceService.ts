@@ -6,7 +6,7 @@ import UserModel from "../models/userModel";
 import WorkspaceModel from "../models/workspaceModel";
 import { BadRequestException, NotFoundException } from "../utils/appErrors";
 import TaskModel from "../models/taskModel";
-import { TaskStatusEnum } from "../enums/taskEnum";
+import { TaskStatusEnum } from "@chimu-sync/shared";
 import ProjectModel from "../models/projectModel";
 
 export const createWorkspaceService = async (
