@@ -1,8 +1,8 @@
+import { Permissions } from "@chimu-sync/shared";
 import { Separator } from "@/components/ui/separator";
 import WorkspaceHeader from "@/components/workspace/common/workspace-header";
 import EditWorkspaceForm from "@/components/workspace/edit-workspace-form";
 import DeleteWorkspaceCard from "@/components/workspace/settings/delete-workspace-card";
-import { Permissions } from "@chimu-sync/shared";
 import withPermission from "@/hoc/with-permission";
 
 const Settings = () => {

@@ -23,7 +23,7 @@ const connectDatabase = async () => {
       ...(shouldUseDirectConnection(uri) ? { directConnection: true } : {}),
     });
     console.info("Connected to database.✅");
-  } catch (error) {
+  } catch (_error) {
     console.error("Error while connection to database.❎");
     //? Immediately stop the Node.js process if a database connection error occurs, preventing the application from running in an unstable or unusable state.
     process.exit(1);

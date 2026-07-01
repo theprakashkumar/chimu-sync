@@ -1,5 +1,5 @@
+import { Activity, ArrowBigDown, ArrowBigUp, Loader } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Activity, ArrowBigUp, ArrowBigDown, Loader } from "lucide-react";
 
 const AnalyticsCard = (props: {
   title: string;

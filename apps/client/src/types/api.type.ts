@@ -1,9 +1,8 @@
-import {
+import type {
   PermissionType,
   TaskPriorityEnumType,
   TaskStatusEnumType,
 } from "@chimu-sync/shared";
-
 
 export interface loginType {
   email: string;
@@ -93,7 +92,7 @@ export interface SessionType {
   userAgent: string;
   createdAt: string;
   expiresAt: string;
-  isCurrent: boolean
+  isCurrent: boolean;
 }
 
 export interface SessionResponseType {

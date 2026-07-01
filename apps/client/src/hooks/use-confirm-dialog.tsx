@@ -1,5 +1,5 @@
-import {parseAsBoolean, useQueryState} from "nuqs";
-import {useState} from "react";
+import { parseAsBoolean, useQueryState } from "nuqs";
+import { useState } from "react";
 
 const useConfirmDialog = () => {
   const [open, setOpen] = useQueryState(

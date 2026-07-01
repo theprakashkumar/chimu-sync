@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import type { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
+import SessionModel from "../models/sessionModel";
 import { UnauthorizedException } from "../utils/appErrors";
 import { accessTokenSignOptions, verifyJwtToken } from "../utils/jwt";
 import { asyncHandler } from "./asyncHandlerMiddleware";
-import SessionModel from "../models/sessionModel";
-import mongoose from "mongoose";
 
 type AccessTokenPayload = {
   userId: string;
@@ -13,7 +13,7 @@ type AccessTokenPayload = {
 const authenticateJwtHandler = async (
   req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const accessToken = req.cookies?.accessToken;
   if (!accessToken) {

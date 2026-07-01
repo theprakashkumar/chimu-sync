@@ -1,5 +1,5 @@
-import { Skeleton } from "@/components/ui/skeleton";
 import { Loader } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function DashboardSkeleton() {
   return (
@@ -51,8 +51,9 @@ export function DashboardSkeleton() {
           <div className="space-y-4">
             <Skeleton className="h-6 w-48" />
             <div className="space-y-2">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className="flex items-center justify-between">
+              {Array.from({ length: 6 }).map(() => (
+                // biome-ignore lint/correctness/useJsxKeyInIterable: static skeleton placeholders, fixed length, never reorder
+                <div className="flex items-center justify-between">
                   <Skeleton className="h-6 w-64" />
                   <Skeleton className="h-6 w-12 rounded-full" />
                 </div>

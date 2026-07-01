@@ -1,7 +1,7 @@
-import type {PermissionType} from "@chimu-sync/shared";
-import {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import {useAuthContext} from "@/context/auth-provider";
+import type { PermissionType } from "@chimu-sync/shared";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "@/context/auth-provider";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 
 const withPermission = (
@@ -10,7 +10,7 @@ const withPermission = (
 ) => {
   const WithPermission = (props: any) => {
     const navigate = useNavigate();
-    const {user, hasPermission, authLoading} = useAuthContext();
+    const { user, hasPermission, authLoading } = useAuthContext();
     const workspaceId = useWorkspaceId();
 
     useEffect(() => {

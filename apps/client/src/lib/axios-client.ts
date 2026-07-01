@@ -1,6 +1,7 @@
 // Pre-configured Axios HTTP client for making API requests in the application.
-import { CustomError } from "@/types/custom.error.type";
+
 import axios from "axios";
+import type { CustomError } from "@/types/custom.error.type";
 
 // Define default options for the Axios instance:
 // - baseURL: All requests will be prefixed with this URL.
@@ -47,7 +48,7 @@ API.interceptors.response.use(
     return Promise.reject({
       customError,
     });
-  }
+  },
 );
 
 export default API;

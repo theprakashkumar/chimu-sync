@@ -11,7 +11,7 @@ import {
 
 export const getMemberRoleInWorkspace = async (
   userId: string,
-  workspaceId: string
+  workspaceId: string,
 ) => {
   const workspace = await WorkspaceModel.findById(workspaceId);
   if (!workspace) {
@@ -26,7 +26,7 @@ export const getMemberRoleInWorkspace = async (
   if (!member) {
     throw new UnauthorizedException(
       "You are not a member of this workspace",
-      ErrorCodeEnum.ACCESS_UNAUTHORIZED
+      ErrorCodeEnum.ACCESS_UNAUTHORIZED,
     );
   }
 
@@ -37,7 +37,7 @@ export const getMemberRoleInWorkspace = async (
 
 export const joinWorkspaceByInviteService = async (
   userId: string,
-  inviteCode: string
+  inviteCode: string,
 ) => {
   // Find the workspace by invite code.
   const workspace = await WorkspaceModel.findOne({ inviteCode }).exec();

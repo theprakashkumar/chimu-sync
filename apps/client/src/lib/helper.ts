@@ -1,7 +1,7 @@
 //THE UPDATED ONE BECAUSE OF THE FILTERS ->  Take Note ->
 export const transformOptions = (
   options: string[],
-  iconMap?: Record<string, React.ComponentType<{ className?: string }>>
+  iconMap?: Record<string, React.ComponentType<{ className?: string }>>,
 ) =>
   options.map((value) => ({
     label: value

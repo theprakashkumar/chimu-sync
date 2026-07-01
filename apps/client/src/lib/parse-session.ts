@@ -1,10 +1,7 @@
-
 import { format, formatDistanceToNowStrict, isPast } from "date-fns";
-import { Smartphone, Laptop, LucideIcon } from "lucide-react";
-import { UAParser } from "ua-parser-js";
-
-
+import { Laptop, type LucideIcon, Smartphone } from "lucide-react";
 import type { IDevice } from "ua-parser-js";
+import { UAParser } from "ua-parser-js";
 
 interface SessionInfo {
   deviceType: IDevice["type"] | "Desktop"; // UAParser can return undefined, so add Desktop fallback
@@ -16,7 +13,7 @@ interface SessionInfo {
 
 export const parseSession = (
   userAgent: string,
-  createdAt: string
+  createdAt: string,
 ): SessionInfo => {
   const parser = new UAParser(userAgent);
   const result = parser.getResult();

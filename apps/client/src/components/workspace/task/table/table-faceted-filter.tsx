@@ -1,7 +1,7 @@
-import {Check, PlusCircle} from "lucide-react";
+import { Check, PlusCircle } from "lucide-react";
 import * as React from "react";
-import {Badge} from "@/components/ui/badge";
-import {Button} from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,9 +11,13 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {Separator} from "@/components/ui/separator";
-import {cn} from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 interface DataTableFacetedFilterProps {
   title?: string;
@@ -21,7 +25,7 @@ interface DataTableFacetedFilterProps {
     // @ts-expect-error - Error from UI library
     label: string | JSX.Element;
     value: string;
-    icon?: React.ComponentType<{className?: string}> | any;
+    icon?: React.ComponentType<{ className?: string }> | any;
   }[];
   disabled?: boolean;
   multiSelect?: boolean;

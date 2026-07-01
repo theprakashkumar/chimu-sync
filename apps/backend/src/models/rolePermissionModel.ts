@@ -1,9 +1,9 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 import {
   Permissions,
-  PermissionType,
+  type PermissionType,
   Roles,
-  RoleType,
+  type RoleType,
 } from "../enums/roleEnum";
 import { RolePermissions } from "../utils/rolePermission";
 
@@ -31,7 +31,7 @@ const roleSchema = new Schema<RoleDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const RoleModel = mongoose.model<RoleDocument>("Role", roleSchema);

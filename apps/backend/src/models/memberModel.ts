@@ -1,5 +1,5 @@
-import mongoose, { Document, Schema } from "mongoose";
-import { RoleDocument } from "./rolePermissionModel";
+import mongoose, { type Document, Schema } from "mongoose";
+import type { RoleDocument } from "./rolePermissionModel";
 
 export interface MemberDocument extends Document {
   userId: mongoose.Types.ObjectId;
@@ -32,7 +32,7 @@ const memberSchema = new Schema<MemberDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const MemberModel = mongoose.model<MemberDocument>("Member", memberSchema);

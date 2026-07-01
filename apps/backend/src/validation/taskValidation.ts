@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
+import { z } from "zod";
 export const taskIdSchema = z.string().trim().min(1);
 
 // export const taskCode =
@@ -7,10 +7,10 @@ export const titleSchema = z.string().trim().min(1).max(255);
 export const descriptionSchema = z.string().trim().optional();
 export const taskCode = z.string().trim();
 export const prioritySchema = z.enum(
-  Object.values(TaskPriorityEnum) as [string, ...string[]]
+  Object.values(TaskPriorityEnum) as [string, ...string[]],
 );
 export const statusSchema = z.enum(
-  Object.values(TaskStatusEnum) as [string, ...string[]]
+  Object.values(TaskStatusEnum) as [string, ...string[]],
 );
 export const assignedToSchema = z.string().trim().min(1).nullable().optional();
 // The .refine() method here is used to add a custom validation to the schema.

@@ -1,9 +1,11 @@
-import { useCallback, useState } from "react";
-import { z } from "zod";
-import { Check, Copy, Loader } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { Check, Copy, Loader } from "lucide-react";
+import { useCallback, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,11 +14,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
-import {
   Form,
   FormControl,
   FormField,
@@ -24,13 +21,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { useAuthContext } from "@/context/auth-provider";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { mfaSetupQueryFn, mfaVerifyMutationFn } from "@/lib/api";
-import { Skeleton } from "../ui/skeleton";
 import { toast } from "@/hooks/use-toast";
-import { VerifyMFAType } from "@/types/api.type";
+import { mfaSetupQueryFn, mfaVerifyMutationFn } from "@/lib/api";
+import type { VerifyMFAType } from "@/types/api.type";
+import { Skeleton } from "../ui/skeleton";
 import RevokeMFA from "./RevokeMfs";
 
 const EnableMfa = () => {
@@ -176,6 +176,7 @@ const EnableMfa = () => {
                     >
                       <span>Copy setup key</span>
                       <button
+                        type="button"
                         onClick={() => onCopy(mfaData?.data.secret || "")}
                         disabled={!copied}
                       >

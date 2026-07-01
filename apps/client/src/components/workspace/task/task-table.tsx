@@ -1,21 +1,21 @@
-import { FC, useState } from "react";
-import { getColumns } from "./table/columns";
-import { DataTable } from "./table/table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
-import { DataTableFacetedFilter } from "./table/table-faceted-filter";
-import { priorities, statuses } from "./table/data";
-import useTaskTableFilter from "@/hooks/use-task-table-filter";
 import { useQuery } from "@tanstack/react-query";
-import useProjectId from "@/hooks/use-project-id";
-import useWorkspaceId from "@/hooks/use-workspace-id";
-import { getAllTasksQueryFn } from "@/lib/api";
-import { TaskType } from "@/types/api.type";
+import { X } from "lucide-react";
+import { type FC, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import useGetProjects from "@/hooks/api/use-get-projects";
 import useGetWorkspaceMember from "@/hooks/api/use-get-workspace-members";
+import useProjectId from "@/hooks/use-project-id";
+import useTaskTableFilter from "@/hooks/use-task-table-filter";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { getAllTasksQueryFn } from "@/lib/api";
 import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { TaskType } from "@/types/api.type";
+import { getColumns } from "./table/columns";
+import { priorities, statuses } from "./table/data";
+import { DataTable } from "./table/table";
+import { DataTableFacetedFilter } from "./table/table-faceted-filter";
 
 type Filters = ReturnType<typeof useTaskTableFilter>[0];
 type SetFilters = ReturnType<typeof useTaskTableFilter>[1];
@@ -205,7 +205,7 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({
       )}
 
       {Object.values(filters).some(
-        (value) => value !== null && value !== ""
+        (value) => value !== null && value !== "",
       ) && (
         <Button
           disabled={isLoading}

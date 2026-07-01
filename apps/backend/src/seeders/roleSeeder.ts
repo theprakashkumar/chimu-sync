@@ -22,7 +22,7 @@ const seedRoles = async () => {
       const permissions = RolePermissions[role];
       // Check if role already exists
       const existingRole = await RoleModel.findOne({ name: role }).session(
-        session
+        session,
       );
 
       if (!existingRole) {
@@ -49,5 +49,5 @@ const seedRoles = async () => {
 };
 
 seedRoles().catch((error) =>
-  console.error("Error while seeding the DB:", error)
+  console.error("Error while seeding the DB:", error),
 );

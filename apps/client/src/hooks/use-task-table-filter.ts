@@ -1,18 +1,18 @@
 import {
   TaskPriorityEnum,
-  TaskPriorityEnumType,
+  type TaskPriorityEnumType,
   TaskStatusEnum,
-  TaskStatusEnumType,
+  type TaskStatusEnumType,
 } from "@chimu-sync/shared";
 import { parseAsString, parseAsStringEnum, useQueryStates } from "nuqs";
 
 const useTaskTableFilter = () => {
   return useQueryStates({
     status: parseAsStringEnum<TaskStatusEnumType>(
-      Object.values(TaskStatusEnum)
+      Object.values(TaskStatusEnum),
     ),
     priority: parseAsStringEnum<TaskPriorityEnumType>(
-      Object.values(TaskPriorityEnum)
+      Object.values(TaskPriorityEnum),
     ),
     keyword: parseAsString,
     projectId: parseAsString,

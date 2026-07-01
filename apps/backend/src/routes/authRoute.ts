@@ -10,7 +10,6 @@ import {
 } from "../controllers/authController";
 import { authenticatedJwt } from "../middlewares/authenticateJwtMiddleware";
 
-
 const authRoutes = Router();
 
 authRoutes.post("/register", registerUserController);

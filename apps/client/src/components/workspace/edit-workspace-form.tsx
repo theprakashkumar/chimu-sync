@@ -1,6 +1,11 @@
+import { Permissions } from "@chimu-sync/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -10,16 +15,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "../ui/textarea";
 import { useAuthContext } from "@/context/auth-provider";
-import { useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { editWorkspaceMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import { Loader } from "lucide-react";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { Permissions } from "@chimu-sync/shared";
+import { editWorkspaceMutationFn } from "@/lib/api";
+import { Textarea } from "../ui/textarea";
 
 export default function EditWorkspaceForm() {
   const { workspace, hasPermission } = useAuthContext();

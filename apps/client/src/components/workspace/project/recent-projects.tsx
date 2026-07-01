@@ -1,10 +1,10 @@
+import { format } from "date-fns";
+import { Loader } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useWorkspaceId from "@/hooks/use-workspace-id";
 import useGetProjects from "@/hooks/api/use-get-projects";
-import { Loader } from "lucide-react";
+import useWorkspaceId from "@/hooks/use-workspace-id";
 import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
-import { format } from "date-fns";
 
 const RecentProjects = () => {
   const workspaceId = useWorkspaceId();
@@ -90,7 +90,7 @@ const RecentProjects = () => {
           No Project Created Yet
         </div>
       )}
-      <ul role="list" className="space-y-2">
+      <ul className="space-y-2">
         {projects?.map((item) => {
           const name = item.createdBy.name;
           const initials = getAvatarFallbackText(name);
@@ -98,7 +98,6 @@ const RecentProjects = () => {
           return (
             <li
               key={item._id}
-              role="listitem"
               className="shadow-none cursor-pointer border-0 py-2 hover:bg-gray-50 transition-colors ease-in-out "
             >
               <Link

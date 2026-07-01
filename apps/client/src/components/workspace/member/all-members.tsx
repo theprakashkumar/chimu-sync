@@ -1,7 +1,8 @@
+import { Permissions } from "@chimu-sync/shared";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, Loader } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-
 import {
   Command,
   CommandEmpty,
@@ -15,14 +16,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
 import { useAuthContext } from "@/context/auth-provider";
-import useWorkspaceId from "@/hooks/use-workspace-id";
 import useGetWorkspaceMember from "@/hooks/api/use-get-workspace-members";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { changeWorkspaceMemberRoleMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import { Permissions } from "@chimu-sync/shared";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { changeWorkspaceMemberRoleMutationFn } from "@/lib/api";
+import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
+
 const AllMembers = () => {
   const { user, hasPermission } = useAuthContext();
   const canChangeMemberRole = hasPermission(Permissions.CHANGE_MEMBER_ROLE);
@@ -77,7 +77,10 @@ const AllMembers = () => {
         const avatarColor = getAvatarColor(name);
 
         return (
-          <div className="flex items-center justify-between space-x-4">
+          <div
+            key={member.userId._id}
+            className="flex items-center justify-between space-x-4"
+          >
             <div className="flex items-center space-x-4">
               <Avatar className="h-8 w-8">
                 <AvatarImage

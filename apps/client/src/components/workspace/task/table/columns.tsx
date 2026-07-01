@@ -1,24 +1,23 @@
-import { Column, ColumnDef, Row } from "@tanstack/react-table";
-import { format } from "date-fns";
-
-import { DataTableColumnHeader } from "./table-column-header";
-import { DataTableRowActions } from "./table-row-actions";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import {
   TaskPriorityEnum,
-  TaskPriorityEnumType,
+  type TaskPriorityEnumType,
   TaskStatusEnum,
-  TaskStatusEnumType,
+  type TaskStatusEnumType,
 } from "@chimu-sync/shared";
+import type { Column, ColumnDef, Row } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   formatStatusToEnum,
   getAvatarColor,
   getAvatarFallbackText,
 } from "@/lib/helper";
+import type { TaskType } from "@/types/api.type";
 import { priorities, statuses } from "./data";
-import { TaskType } from "@/types/api.type";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DataTableColumnHeader } from "./table-column-header";
+import { DataTableRowActions } from "./table-row-actions";
 
 export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
   const columns: ColumnDef<TaskType>[] = [
@@ -207,11 +206,7 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
     {
       id: "actions",
       cell: ({ row }) => {
-        return (
-          <>
-            <DataTableRowActions row={row} />
-          </>
-        );
+        return <DataTableRowActions row={row} />;
       },
     },
   ];

@@ -14,25 +14,25 @@ projectRouters.post("/workspace/:workspaceId/create", createProjectController);
 
 projectRouters.put(
   "/:id/workspace/:workspaceId/update",
-  updateProjectController
+  updateProjectController,
 );
 
 projectRouters.delete(
   "/:id/workspace/:workspaceId/delete",
-  deleteProjectController
+  deleteProjectController,
 );
 
 projectRouters.get(
   "/workspace/:workspaceId/all",
-  getAllProjectByWorkspaceIdController
+  getAllProjectByWorkspaceIdController,
 );
 projectRouters.get(
   "/:id/workspace/:workspaceId/analytics",
-  getProjectAnalyticsController
+  getProjectAnalyticsController,
 );
 projectRouters.get(
   "/:id/workspace/:workspaceId",
-  getProjectByIdAndWorkspaceIdController
+  getProjectByIdAndWorkspaceIdController,
 );
 
 export default projectRouters;

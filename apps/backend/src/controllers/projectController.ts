@@ -1,14 +1,8 @@
-import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
-import { Request, Response } from "express";
-import {
-  createProjectSchema,
-  projectIdSchema,
-  updateProjectSchema,
-} from "../validation/projectValidation";
-import { workspaceIdSchema } from "../validation/workspaceValidation";
-import { getMemberRoleInWorkspace } from "../services/memberService";
-import { roleGuard } from "../utils/roleGuard";
+import type { Request, Response } from "express";
+import { HTTPSTATUS } from "../config/httpConfig";
 import { Permissions } from "../enums/roleEnum";
+import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
+import { getMemberRoleInWorkspace } from "../services/memberService";
 import {
   createProjectService,
   deleteProjectService,
@@ -17,7 +11,13 @@ import {
   getProjectByIdAndWorkspaceId,
   updateProjectService,
 } from "../services/projectService";
-import { HTTPSTATUS } from "../config/httpConfig";
+import { roleGuard } from "../utils/roleGuard";
+import {
+  createProjectSchema,
+  projectIdSchema,
+  updateProjectSchema,
+} from "../validation/projectValidation";
+import { workspaceIdSchema } from "../validation/workspaceValidation";
 
 export const createProjectController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ export const createProjectController = asyncHandler(
       message: "Project created successfully.",
       project,
     });
-  }
+  },
 );
 
 export const getAllProjectByWorkspaceIdController = asyncHandler(
@@ -52,7 +52,7 @@ export const getAllProjectByWorkspaceIdController = asyncHandler(
       await getAllProjectByWorkspaceIdService(
         workspaceId,
         pageSize,
-        pageNumber
+        pageNumber,
       );
 
     res.status(HTTPSTATUS.CREATED).json({
@@ -66,7 +66,7 @@ export const getAllProjectByWorkspaceIdController = asyncHandler(
         pageNumber,
       },
     });
-  }
+  },
 );
 export const getProjectByIdAndWorkspaceIdController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -79,14 +79,14 @@ export const getProjectByIdAndWorkspaceIdController = asyncHandler(
 
     const { project } = await getProjectByIdAndWorkspaceId(
       projectId,
-      workspaceId
+      workspaceId,
     );
 
     res.status(HTTPSTATUS.CREATED).json({
       message: "Project fetched successfully.",
       project,
     });
-  }
+  },
 );
 
 export const getProjectAnalyticsController = asyncHandler(
@@ -100,14 +100,14 @@ export const getProjectAnalyticsController = asyncHandler(
 
     const { analytics } = await getProjectAnalyticsService(
       projectId,
-      workspaceId
+      workspaceId,
     );
 
     res.status(HTTPSTATUS.CREATED).json({
       message: "Project analytics fetched successfully.",
       analytics,
     });
-  }
+  },
 );
 
 export const updateProjectController = asyncHandler(
@@ -125,14 +125,14 @@ export const updateProjectController = asyncHandler(
     const { project } = await updateProjectService(
       workspaceId,
       projectId,
-      body
+      body,
     );
 
     return res.status(HTTPSTATUS.OK).json({
       message: "Project updated successfully",
       project,
     });
-  }
+  },
 );
 
 export const deleteProjectController = asyncHandler(
@@ -150,5 +150,5 @@ export const deleteProjectController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Project deleted successfully",
     });
-  }
+  },
 );

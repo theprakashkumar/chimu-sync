@@ -1,13 +1,18 @@
+import { NuqsAdapter } from "nuqs/adapters/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { NuqsAdapter } from "nuqs/adapters/react";
 
 import "./index.css";
 import App from "./App.tsx";
-import QueryProvider from "./context/query-provider.tsx";
 import { Toaster } from "./components/ui/toaster.tsx";
+import QueryProvider from "./context/query-provider.tsx";
 
-createRoot(document.getElementById("root")!).render(
+const root = document.getElementById("root");
+if (!root) {
+  throw new Error("Root element not found!");
+}
+
+createRoot(root).render(
   <StrictMode>
     <QueryProvider>
       <NuqsAdapter>

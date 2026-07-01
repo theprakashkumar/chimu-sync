@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: appConfig.SMTP_USER,
     pass: appConfig.SMTP_PASS,
-  }
+  },
 });
 
 type EmailType = "signup" | "forget-password";
@@ -19,7 +19,7 @@ const getEmailSubject = (emailType: EmailType) => {
   } else {
     return "Notification from Chimu Sync";
   }
-}
+};
 
 const getEmailText = (emailType: EmailType, name: string, link: string) => {
   if (emailType === "signup") {
@@ -71,7 +71,7 @@ export const sendEmail = async (
   to: string,
   emailType: EmailType,
   name: string,
-  link: string
+  link: string,
 ) => {
   await transporter.sendMail({
     from: appConfig.MAIL_FROM,

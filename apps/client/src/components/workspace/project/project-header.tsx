@@ -1,4 +1,4 @@
-import {Permissions} from "@chimu-sync/shared";
+import { Permissions } from "@chimu-sync/shared";
 import PermissionsGuard from "@/components/resuable/permission-guard";
 import useGetProject from "@/hooks/api/use-get-project";
 import useProjectId from "@/hooks/use-project-id";
@@ -10,7 +10,7 @@ const ProjectHeader = () => {
   const projectId = useProjectId();
   const workspaceId = useWorkspaceId();
 
-  const {data, isLoading, isError} = useGetProject({
+  const { data, isLoading, isError } = useGetProject({
     workspaceId,
     projectId,
   });

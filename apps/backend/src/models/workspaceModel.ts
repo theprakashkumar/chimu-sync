@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 import { generateInviteCode } from "../utils/uuid";
 
 export interface WorkspaceDocument extends Document {
@@ -28,7 +28,7 @@ const workspaceSchema = new Schema<WorkspaceDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 workspaceSchema.methods.resetInviteCode = function () {
@@ -37,7 +37,7 @@ workspaceSchema.methods.resetInviteCode = function () {
 
 const WorkspaceModel = mongoose.model<WorkspaceDocument>(
   "Workspace",
-  workspaceSchema
+  workspaceSchema,
 );
 
 export default WorkspaceModel;

@@ -1,5 +1,4 @@
 import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
-import { transformOptions } from "@/lib/helper";
 import {
   ArrowDown,
   ArrowRight,
@@ -10,6 +9,7 @@ import {
   Timer,
   View,
 } from "lucide-react";
+import { transformOptions } from "@/lib/helper";
 
 const statusIcons = {
   [TaskStatusEnum.BACKLOG]: HelpCircle,

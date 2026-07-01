@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { AvatarImage } from "@radix-ui/react-avatar";
 import {
   EllipsisIcon,
   LayoutDashboard,
@@ -7,6 +6,18 @@ import {
   Lock,
   LogOut,
 } from "lucide-react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import LogoutDialog from "@/components/asidebar/logout-dialog";
+import Logo from "@/components/logo";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -20,17 +31,6 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
-import Logo from "@/components/logo";
-import LogoutDialog from "@/components/asidebar/logout-dialog";
 import { useAuthContext } from "@/context/auth-provider";
 
 const StandaloneAsidebar = () => {

@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { verifyEmailMutationFn } from "@/lib/api";
 import { Loader, MailXIcon } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { AUTH_ROUTES } from "@/routes/common/routePaths";
+import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { verifyEmailMutationFn } from "@/lib/api";
+import { AUTH_ROUTES } from "@/routes/common/routePaths";
 
 const VerifyEmail = () => {
   const navigate = useNavigate();

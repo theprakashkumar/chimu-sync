@@ -1,9 +1,9 @@
+import { format } from "date-fns";
+import { Loader } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import useGetWorkspaceMembers from "@/hooks/api/use-get-workspace-members";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
-import { format } from "date-fns";
-import { Loader } from "lucide-react";
 
 const RecentMembers = () => {
   const workspaceId = useWorkspaceId();
@@ -21,15 +21,14 @@ const RecentMembers = () => {
         />
       ) : null}
 
-      <ul role="list" className="space-y-3">
-        {members.map((member, index) => {
+      <ul className="space-y-3">
+        {members.map((member) => {
           const name = member?.userId?.name || "";
           const initials = getAvatarFallbackText(name);
           const avatarColor = getAvatarColor(name);
           return (
             <li
-              key={index}
-              role="listitem"
+              key={member.userId._id}
               className="flex items-center gap-4 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
             >
               {/* Avatar */}

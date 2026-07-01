@@ -1,5 +1,8 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,13 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Logo from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import { BASE_ROUTE } from "@/routes/common/routePaths";
 import useAuth from "@/hooks/api/use-auth";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { invitedUserJoinWorkspaceMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import { invitedUserJoinWorkspaceMutationFn } from "@/lib/api";
+import { BASE_ROUTE } from "@/routes/common/routePaths";
 
 const InviteUser = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const InviteUser = () => {
   });
 
   const returnUrl = encodeURIComponent(
-    `${BASE_ROUTE.INVITE_URL.replace(":inviteCode", inviteCode)}`
+    `${BASE_ROUTE.INVITE_URL.replace(":inviteCode", inviteCode)}`,
   );
 
   const handleSubmit = (e: { preventDefault: () => void }) => {

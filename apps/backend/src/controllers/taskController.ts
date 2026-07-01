@@ -1,3 +1,4 @@
+import type { Request, Response } from "express";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { Permissions } from "../enums/roleEnum";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
@@ -17,7 +18,6 @@ import {
   updateTaskSchema,
 } from "../validation/taskValidation";
 import { workspaceIdSchema } from "../validation/workspaceValidation";
-import { Request, Response } from "express";
 
 export const createTaskController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -33,14 +33,14 @@ export const createTaskController = asyncHandler(
       userId,
       workspaceId,
       projectId,
-      body
+      body,
     );
 
     res.status(HTTPSTATUS.CREATED).json({
       message: "Task created successfully.",
       task,
     });
-  }
+  },
 );
 
 export const updateTaskController = asyncHandler(
@@ -58,14 +58,14 @@ export const updateTaskController = asyncHandler(
       workspaceId,
       projectId,
       taskId,
-      body
+      body,
     );
 
     res.status(HTTPSTATUS.CREATED).json({
       message: "Task updated successfully.",
       task,
     });
-  }
+  },
 );
 
 export const getAllTaskController = asyncHandler(
@@ -102,7 +102,7 @@ export const getAllTaskController = asyncHandler(
       message: "Tasks fetched successfully.",
       ...result,
     });
-  }
+  },
 );
 
 export const getTaskByIdController = asyncHandler(
@@ -122,7 +122,7 @@ export const getTaskByIdController = asyncHandler(
       message: "Task fetched successfully",
       task,
     });
-  }
+  },
 );
 
 export const deleteTaskController = asyncHandler(
@@ -140,5 +140,5 @@ export const deleteTaskController = asyncHandler(
     return res.status(HTTPSTATUS.OK).json({
       message: "Task deleted successfully",
     });
-  }
+  },
 );
