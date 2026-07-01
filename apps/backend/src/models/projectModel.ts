@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { type Document, Schema } from "mongoose";
 
 export interface ProjectDocument extends Document {
   name: string;
@@ -37,7 +37,7 @@ const projectSchema = new Schema<ProjectDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const ProjectModel = mongoose.model<ProjectDocument>("Project", projectSchema);

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "../ui/button";
-import { mfaRevokeMutationFn } from "@/lib/api";
-import { toast } from "@/hooks/use-toast";
-import { useCallback } from "react";
 import { Loader } from "lucide-react";
+import { useCallback } from "react";
+import { toast } from "@/hooks/use-toast";
+import { mfaRevokeMutationFn } from "@/lib/api";
+import { Button } from "../ui/button";
 
 const RevokeMFA = () => {
   const queryClient = useQueryClient();

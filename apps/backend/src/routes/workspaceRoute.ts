@@ -16,7 +16,7 @@ workspaceRoutes.post("/create/new", createWorkspaceController);
 workspaceRoutes.put("/update/:id", updateWorkspaceByIdController);
 workspaceRoutes.put(
   "/change/member/role/:id",
-  changeWorkspaceMemberRoleController
+  changeWorkspaceMemberRoleController,
 );
 workspaceRoutes.delete("/delete/:id", deleteWorkspaceByIdController);
 workspaceRoutes.get("/all", getAllWorkspaceUserIsMemberController);

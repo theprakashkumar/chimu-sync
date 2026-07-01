@@ -1,6 +1,9 @@
+import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { Loader } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { getAllTasksQueryFn } from "@/lib/api";
 import {
@@ -8,10 +11,7 @@ import {
   getAvatarFallbackText,
   transformStatusEnum,
 } from "@/lib/helper";
-import { TaskType } from "@/types/api.type";
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { Loader } from "lucide-react";
+import type { TaskType } from "@/types/api.type";
 
 const RecentTasks = () => {
   const workspaceId = useWorkspaceId();
@@ -36,7 +36,7 @@ const RecentTasks = () => {
           No Task Created Yet
         </div>
       )}
-      <ul role="list" className="divide-y divide-gray-200">
+      <ul className="divide-y divide-gray-200">
         {tasks.map((task) => {
           const name = task?.assignedTo?.name || "";
           const initials = getAvatarFallbackText(name);

@@ -1,8 +1,8 @@
+import { TaskStatusEnum } from "@chimu-sync/shared";
 import mongoose from "mongoose";
 import ProjectModel from "../models/projectModel";
 import TaskModel from "../models/taskModel";
 import { NotFoundException } from "../utils/appErrors";
-import { TaskStatusEnum } from "@chimu-sync/shared";
 
 export const createProjectService = async (
   userId: string,
@@ -11,7 +11,7 @@ export const createProjectService = async (
     emoji?: string;
     name: string;
     description?: string;
-  }
+  },
 ) => {
   const project = new ProjectModel({
     ...(body.emoji && { emoji: body.emoji }),
@@ -29,7 +29,7 @@ export const createProjectService = async (
 export const getAllProjectByWorkspaceIdService = async (
   workspaceId: string,
   pageSize: number,
-  pageNumber: number
+  pageNumber: number,
 ) => {
   // Find all project in the workspace.
   const totalCount = await ProjectModel.countDocuments({
@@ -52,7 +52,7 @@ export const getAllProjectByWorkspaceIdService = async (
 
 export const getProjectByIdAndWorkspaceId = async (
   projectId: string,
-  workspaceId: string
+  workspaceId: string,
 ) => {
   const project = await ProjectModel.findOne({
     _id: projectId,
@@ -68,14 +68,14 @@ export const getProjectByIdAndWorkspaceId = async (
 
 export const getProjectAnalyticsService = async (
   projectId: string,
-  workspaceId: string
+  workspaceId: string,
 ) => {
   const project = await ProjectModel.findById(projectId);
 
   // If project don't exits or project's workspace id don't match with workspaceId.
   if (!project || project.workspace.toString() !== workspaceId) {
     throw new NotFoundException(
-      "Project not found or does not belong to this workspace."
+      "Project not found or does not belong to this workspace.",
     );
   }
 
@@ -150,7 +150,7 @@ export const updateProjectService = async (
     emoji?: string;
     name: string;
     description?: string;
-  }
+  },
 ) => {
   const { name, emoji, description } = body;
 
@@ -161,7 +161,7 @@ export const updateProjectService = async (
 
   if (!project) {
     throw new NotFoundException(
-      "Project not found or does not belong to the specified workspace"
+      "Project not found or does not belong to the specified workspace",
     );
   }
 
@@ -176,7 +176,7 @@ export const updateProjectService = async (
 
 export const deleteProjectService = async (
   workspaceId: string,
-  projectId: string
+  projectId: string,
 ) => {
   const project = await ProjectModel.findOne({
     _id: projectId,
@@ -185,7 +185,7 @@ export const deleteProjectService = async (
 
   if (!project) {
     throw new NotFoundException(
-      "Project not found or does not belong to the specified workspace"
+      "Project not found or does not belong to the specified workspace",
     );
   }
 

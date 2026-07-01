@@ -22,7 +22,7 @@ import { getEnv } from "../utils/getEnv";
  *   MAIL_FROM: string,
  *   MFA_TOKEN_SECRET: string,
  *   MFA_TOKEN_EXPIRES_IN: string,
- * }} 
+ * }}
  **/
 const getAppConfig = () => ({
   NODE_ENV: getEnv("NODE_ENV", "development"),

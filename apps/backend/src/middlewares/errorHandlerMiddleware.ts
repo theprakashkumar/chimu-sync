@@ -1,9 +1,13 @@
-import { ErrorRequestHandler } from "express";
-import { Request, Response, NextFunction } from "express";
-import { HTTPSTATUS } from "../config/httpConfig";
-import { AppError } from "../utils/appErrors";
+import type {
+  ErrorRequestHandler,
+  NextFunction,
+  Request,
+  Response,
+} from "express";
 import { ZodError } from "zod";
+import { HTTPSTATUS } from "../config/httpConfig";
 import { ErrorCodeEnum } from "../enums/errorCodeEnum";
+import { AppError } from "../utils/appErrors";
 import { clearAuthenticationCookie, REFRESH_PATH } from "../utils/cookie";
 
 /**
@@ -16,7 +20,7 @@ import { clearAuthenticationCookie, REFRESH_PATH } from "../utils/cookie";
  * - Any other errors as generic internal server errors
  *
  * Responds with appropriate HTTP status codes and error messages/structures.
- * 
+ *
  * @param {any} error - The error object thrown in the request lifecycle.
  * @param {Request} req - Express request object.
  * @param {Response} res - Express response object.
@@ -45,9 +49,9 @@ export const errorHandler: ErrorRequestHandler = (
   error: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction,
 ): any => {
-  // If path is for refresh token then clear cookies. 
+  // If path is for refresh token then clear cookies.
   if (req.path === REFRESH_PATH) {
     clearAuthenticationCookie(res);
   }

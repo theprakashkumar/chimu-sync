@@ -19,10 +19,12 @@ const PROTECTED_ROUTES = {
 
 const BASE_ROUTE = {
   INVITE_URL: "/invite/workspace/:inviteCode/join",
+  TERMS_OF_SERVICE: "/terms-of-service",
+  PRIVACY_POLICY: "/privacy-policy",
 };
 
 const isAuthRoute = (pathname: string): boolean => {
   return Object.values(AUTH_ROUTES).includes(pathname);
 };
 
-export { isAuthRoute, AUTH_ROUTES, PROTECTED_ROUTES, BASE_ROUTE };
+export { AUTH_ROUTES, BASE_ROUTE, isAuthRoute, PROTECTED_ROUTES };

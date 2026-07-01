@@ -1,21 +1,31 @@
-import { Request } from "express";
-import { BadRequestException, NotFoundException, UnauthorizedException } from "../utils/appErrors";
-import speakeasy from "speakeasy";
+import type { Request } from "express";
 import qrcode from "qrcode";
-import UserModel from "../models/userModel";
+import speakeasy from "speakeasy";
 import SessionModel from "../models/sessionModel";
-import { accessTokenSignOptions, mfaTokenSignOptions, refreshTokenSignOptions, signJwtToken, verifyJwtToken } from "../utils/jwt";
+import UserModel from "../models/userModel";
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from "../utils/appErrors";
+import {
+  accessTokenSignOptions,
+  mfaTokenSignOptions,
+  refreshTokenSignOptions,
+  signJwtToken,
+  verifyJwtToken,
+} from "../utils/jwt";
 
 export const generateMFASetupService = async (req: Request) => {
   const user = req.user;
   if (!user) {
-    throw new UnauthorizedException("User not authorized!")
+    throw new UnauthorizedException("User not authorized!");
   }
 
   if (user.userPreference.enable2FA) {
     return {
-      message: "MFA already enabled!"
-    }
+      message: "MFA already enabled!",
+    };
   }
 
   let secretKey = user.userPreference.twoFactorSecret;
@@ -30,8 +40,8 @@ export const generateMFASetupService = async (req: Request) => {
     secret: secretKey,
     label: user.email,
     issuer: "chimusync",
-    encoding: "base32"
-  })
+    encoding: "base32",
+  });
 
   const qrImageUrl = await qrcode.toDataURL(url);
 
@@ -40,30 +50,34 @@ export const generateMFASetupService = async (req: Request) => {
       secret: secretKey,
       qrCode: qrImageUrl,
     },
-    message: "Scan the QR code or use the setup key!"
-  }
+    message: "Scan the QR code or use the setup key!",
+  };
 };
 
-export const verifyMFASetupService = async (req: Request, code: string, secretKey: string) => {
+export const verifyMFASetupService = async (
+  req: Request,
+  code: string,
+  secretKey: string,
+) => {
   const user = req.user;
   if (!user) {
-    throw new UnauthorizedException("User not authorized!")
+    throw new UnauthorizedException("User not authorized!");
   }
 
   // If MFA is already active:
   if (user.userPreference.enable2FA) {
     return {
       URLSearchParams: {
-        enable2FA: user.userPreference.enable2FA
+        enable2FA: user.userPreference.enable2FA,
       },
-      message: "MFA is already enabled!"
-    }
+      message: "MFA is already enabled!",
+    };
   }
 
   const isValid = speakeasy.totp.verify({
     secret: secretKey,
     encoding: "base32",
-    token: code
+    token: code,
   });
   if (!isValid) {
     throw new BadRequestException("Invalid MFA code, please try again!");
@@ -74,17 +88,17 @@ export const verifyMFASetupService = async (req: Request, code: string, secretKe
 
   return {
     userPreferences: {
-      enable2FA: user.userPreference.enable2FA
+      enable2FA: user.userPreference.enable2FA,
     },
-    message: "MFA setup completed successfully!"
-  }
-}
+    message: "MFA setup completed successfully!",
+  };
+};
 
 export const revokeMFAService = async (req: Request) => {
   const user = req.user;
 
   if (!user) {
-    throw new UnauthorizedException("User not authorized!")
+    throw new UnauthorizedException("User not authorized!");
   }
 
   if (!user.userPreference.enable2FA) {
@@ -92,8 +106,8 @@ export const revokeMFAService = async (req: Request) => {
       userPreferences: {
         enable2FA: user.userPreference.enable2FA,
       },
-      message: "MFA is not enabled!"
-    }
+      message: "MFA is not enabled!",
+    };
   }
 
   user.userPreference.twoFactorSecret = undefined;
@@ -104,18 +118,20 @@ export const revokeMFAService = async (req: Request) => {
     userPreferences: {
       enable2FA: user.userPreference.enable2FA,
     },
-    message: "MFA revoked successfully!"
-  }
-
-}
+    message: "MFA revoked successfully!",
+  };
+};
 
 export const verifyMFAForLoginService = async (
   code: string,
   mfaChallengeToken: string,
-  userAgent?: string
+  userAgent?: string,
 ) => {
   // Verify if mfa challenge token is valid.
-  const mfaTokenResult = verifyJwtToken(mfaChallengeToken, { secret: mfaTokenSignOptions.secret, audience: ["mfa"] });
+  const mfaTokenResult = verifyJwtToken(mfaChallengeToken, {
+    secret: mfaTokenSignOptions.secret,
+    audience: ["mfa"],
+  });
   if ("error" in mfaTokenResult) {
     throw new UnauthorizedException("User is not authorized!");
   }
@@ -134,11 +150,16 @@ export const verifyMFAForLoginService = async (
     throw new UnauthorizedException("MFA not enabled!");
   }
 
+  const twoFactorSecret = user.userPreference.twoFactorSecret;
+  if (!twoFactorSecret) {
+    throw new UnauthorizedException("MFA not enabled!");
+  }
+
   const isValid = speakeasy.totp.verify({
-    secret: user.userPreference.twoFactorSecret!,
+    secret: twoFactorSecret,
     encoding: "base32",
-    token: code
-  })
+    token: code,
+  });
   if (!isValid) {
     throw new BadRequestException("Invalid MFA code!");
   }
@@ -146,21 +167,21 @@ export const verifyMFAForLoginService = async (
   const session = new SessionModel({
     userId: user._id,
     userAgent,
-  })
+  });
   await session.save();
 
   const accessToken = signJwtToken(
     { userId: user._id, sessionId: session._id },
-    accessTokenSignOptions
-  )
+    accessTokenSignOptions,
+  );
   const refreshToken = signJwtToken(
     { sessionId: session._id },
-    refreshTokenSignOptions
-  )
+    refreshTokenSignOptions,
+  );
 
   return {
     user,
     accessToken,
     refreshToken,
-  }
-}
+  };
+};

@@ -1,10 +1,30 @@
-import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
-import { Request, Response } from "express";
-import { emailSchema, loginSchema, registerSchema, resetPasswordSchema, verificationEmailSchema } from "../validation/authValidation";
+import type { Request, Response } from "express";
 import { HTTPSTATUS } from "../config/httpConfig";
-import { forgotPasswordService, loginUserService, logoutService, refreshTokenService, registerUserService, resetPasswordService, verifyEmailService } from "../services/authService";
-import { clearAuthenticationCookie, getAccessTokenCookieOptions, getRefreshTokenCookieOptions, setAuthenticationCookies, setMfaTokenCookie } from "../utils/cookie";
+import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
+import {
+  forgotPasswordService,
+  loginUserService,
+  logoutService,
+  refreshTokenService,
+  registerUserService,
+  resetPasswordService,
+  verifyEmailService,
+} from "../services/authService";
 import { NotFoundException, UnauthorizedException } from "../utils/appErrors";
+import {
+  clearAuthenticationCookie,
+  getAccessTokenCookieOptions,
+  getRefreshTokenCookieOptions,
+  setAuthenticationCookies,
+  setMfaTokenCookie,
+} from "../utils/cookie";
+import {
+  emailSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+  verificationEmailSchema,
+} from "../validation/authValidation";
 
 export const registerUserController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -13,9 +33,9 @@ export const registerUserController = asyncHandler(
 
     return res.status(HTTPSTATUS.CREATED).json({
       message: "User created successfully",
-      data: user
+      data: user,
     });
-  }
+  },
 );
 
 export const loginController = asyncHandler(
@@ -24,12 +44,15 @@ export const loginController = asyncHandler(
 
     const body = loginSchema.parse({
       ...req.body,
-      userAgent
-    })
+      userAgent,
+    });
 
     const result = await loginUserService(body);
     if (result.mfaRequired) {
-      return setMfaTokenCookie({ res, mfaChallengeToken: result.mfaChallengeToken })
+      return setMfaTokenCookie({
+        res,
+        mfaChallengeToken: result.mfaChallengeToken,
+      })
         .status(HTTPSTATUS.OK)
         .json({
           message: "Verify MFA to login!",
@@ -50,7 +73,7 @@ export const loginController = asyncHandler(
           mfaRequired: false,
         },
       });
-  }
+  },
 );
 
 export const refreshTokenController = asyncHandler(
@@ -60,18 +83,23 @@ export const refreshTokenController = asyncHandler(
       throw new UnauthorizedException("User not authorized!");
     }
 
-    const { accessToken, newRefreshToken } = await refreshTokenService(refreshToken);
+    const { accessToken, newRefreshToken } =
+      await refreshTokenService(refreshToken);
     // If new refresh token the add it to cookie.
     if (newRefreshToken) {
-      res.cookie("refreshToken", newRefreshToken, getRefreshTokenCookieOptions())
+      res.cookie(
+        "refreshToken",
+        newRefreshToken,
+        getRefreshTokenCookieOptions(),
+      );
     }
 
     return res
       .status(HTTPSTATUS.OK)
       .cookie("accessToken", accessToken, getAccessTokenCookieOptions())
-      .json({ message: "Refresh access token successfully!" })
-  }
-)
+      .json({ message: "Refresh access token successfully!" });
+  },
+);
 
 export const verifyEmailController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -79,9 +107,9 @@ export const verifyEmailController = asyncHandler(
     await verifyEmailService(code);
 
     return res.status(HTTPSTATUS.OK).json({
-      message: "Email verified successfully!"
+      message: "Email verified successfully!",
     });
-  }
+  },
 );
 
 export const forgotPasswordController = asyncHandler(
@@ -92,9 +120,9 @@ export const forgotPasswordController = asyncHandler(
 
     // Clear all the cookies.
     return clearAuthenticationCookie(res).status(HTTPSTATUS.OK).json({
-      message: "Email sent successfully!"
-    })
-  }
+      message: "Email sent successfully!",
+    });
+  },
 );
 
 export const resetPasswordController = asyncHandler(
@@ -104,16 +132,16 @@ export const resetPasswordController = asyncHandler(
     await resetPasswordService({ password, verificationCode });
 
     return res.status(HTTPSTATUS.OK).json({
-      message: "Reset password successfully!"
-    })
-  }
+      message: "Reset password successfully!",
+    });
+  },
 );
 
 export const logOutController = asyncHandler(
   async (req: Request, res: Response) => {
     const sessionId = req.sessionId;
     if (!sessionId) {
-      throw new NotFoundException("Session is invalid!")
+      throw new NotFoundException("Session is invalid!");
     }
 
     await logoutService(sessionId);
@@ -121,5 +149,5 @@ export const logOutController = asyncHandler(
     return clearAuthenticationCookie(res)
       .status(HTTPSTATUS.OK)
       .json({ message: "Logged out successfully" });
-  }
+  },
 );

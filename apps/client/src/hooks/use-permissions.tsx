@@ -1,6 +1,6 @@
-import { PermissionType } from "@chimu-sync/shared";
-import { UserType, WorkspaceWithMembersType } from "@/types/api.type";
+import type { PermissionType } from "@chimu-sync/shared";
 import { useEffect, useMemo, useState } from "react";
+import type { UserType, WorkspaceWithMembersType } from "@/types/api.type";
 
 const usePermissions = (
   user: UserType | undefined,

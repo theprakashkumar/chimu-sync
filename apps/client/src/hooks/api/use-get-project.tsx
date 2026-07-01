@@ -1,5 +1,5 @@
-import { getProjectByIdQueryFn } from "@/lib/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getProjectByIdQueryFn } from "@/lib/api";
 
 const useGetProject = ({
   workspaceId,

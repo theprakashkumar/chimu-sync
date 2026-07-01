@@ -1,8 +1,8 @@
 import { Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import CreateTaskForm from "./create-task-form";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import CreateTaskForm from "./create-task-form";
 
 const CreateTaskDialog = (props: { projectId?: string }) => {
   const [isOpen, setIsOpen] = useState(false);

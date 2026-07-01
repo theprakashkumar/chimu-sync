@@ -1,19 +1,9 @@
+import { AvatarImage } from "@radix-ui/react-avatar";
+import { EllipsisIcon, Loader, Lock, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { EllipsisIcon, Loader, Lock, LogOut } from "lucide-react";
-import {
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarGroupContent,
-  SidebarGroup,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarFooter,
-  SidebarRail,
-  useSidebar,
-} from "@/components/ui/sidebar";
+import Logo from "@/components/logo";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,16 +11,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import Logo from "@/components/logo";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import { useAuthContext } from "@/context/auth-provider";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { Separator } from "../ui/separator";
 import LogoutDialog from "./logout-dialog";
-import { WorkspaceSwitcher } from "./workspace-switcher";
 import { NavMain } from "./nav-main";
 import { NavProjects } from "./nav-projects";
-import { Separator } from "../ui/separator";
-import useWorkspaceId from "@/hooks/use-workspace-id";
-import { useAuthContext } from "@/context/auth-provider";
-import { AvatarImage } from "@radix-ui/react-avatar";
+import { WorkspaceSwitcher } from "./workspace-switcher";
 
 const Asidebar = () => {
   const { open } = useSidebar();

@@ -1,9 +1,13 @@
+import type { Request, Response } from "express";
+import z from "zod";
 import { HTTPSTATUS } from "../config/httpConfig";
 import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
-import { Request, Response } from "express";
-import { deleteSessionService, getAllSessionService, getCurrentSessionService } from "../services/sessionService";
+import {
+  deleteSessionService,
+  getAllSessionService,
+  getCurrentSessionService,
+} from "../services/sessionService";
 import { NotFoundException } from "../utils/appErrors";
-import z from "zod";
 
 export const getAllSessionController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -13,14 +17,16 @@ export const getAllSessionController = asyncHandler(
 
     const modifiedSession = sessions.map((session) => ({
       ...session.toObject(),
-      ...(session.id === sessionId ? { isCurrent: true } : { isCurrent: false })
+      ...(session.id === sessionId
+        ? { isCurrent: true }
+        : { isCurrent: false }),
     }));
 
     return res.status(HTTPSTATUS.OK).json({
       sessions: modifiedSession,
-      message: "Fetched all session successfully!"
-    })
-  }
+      message: "Fetched all session successfully!",
+    });
+  },
 );
 
 export const getCurrentSessionController = asyncHandler(
@@ -34,9 +40,9 @@ export const getCurrentSessionController = asyncHandler(
 
     return res.status(HTTPSTATUS.OK).json({
       data: user,
-      message: "Fetched current session successfully!"
-    })
-  }
+      message: "Fetched current session successfully!",
+    });
+  },
 );
 
 export const deleteSessionController = asyncHandler(
@@ -48,7 +54,7 @@ export const deleteSessionController = asyncHandler(
 
     return res.status(HTTPSTATUS.OK).json({
       data: deletedSession,
-      message: "Session is deleted successfully!"
+      message: "Session is deleted successfully!",
     });
-  }
+  },
 );

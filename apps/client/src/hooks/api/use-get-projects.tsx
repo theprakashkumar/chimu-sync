@@ -1,6 +1,6 @@
-import { getProjectsInWorkspaceQueryFn } from "@/lib/api";
-import { AllProjectPayloadType } from "@/types/api.type";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getProjectsInWorkspaceQueryFn } from "@/lib/api";
+import type { AllProjectPayloadType } from "@/types/api.type";
 
 const useGetProjects = ({
   workspaceId,

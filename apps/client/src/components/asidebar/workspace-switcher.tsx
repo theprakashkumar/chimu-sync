@@ -1,5 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader, Plus } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,11 +18,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useNavigate } from "react-router-dom";
-import useWorkspaceId from "@/hooks/use-workspace-id";
 import useCreateWorkspaceDialog from "@/hooks/use-create-workspace-dialog";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import useWorkspaceId from "@/hooks/use-workspace-id";
 import { getAllWorkspacesUserIsMemberQueryFn } from "@/lib/api";
 
 type WorkspaceType = {
@@ -71,6 +70,7 @@ export function WorkspaceSwitcher() {
       <SidebarGroupLabel className="w-full justify-between pr-0">
         <span>Workspaces</span>
         <button
+          type="button"
           onClick={onOpen}
           className="flex size-5 items-center justify-center rounded-full border"
         >

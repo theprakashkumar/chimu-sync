@@ -1,6 +1,6 @@
+import { Loader } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuthContext } from "@/context/auth-provider";
-import { Loader } from "lucide-react";
 
 const WorkspaceHeader = () => {
   const { workspaceLoading, workspace } = useAuthContext();

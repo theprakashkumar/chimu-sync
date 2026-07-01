@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type { PermissionType } from "@chimu-sync/shared";
 import { createContext, useContext } from "react";
 import useAuth from "@/hooks/api/use-auth";
-import { UserType, WorkspaceType } from "@/types/api.type";
-import useWorkspaceId from "@/hooks/use-workspace-id";
 import useGetWorkspace from "@/hooks/api/use-get-workspace";
 import usePermissions from "@/hooks/use-permissions";
-
-import { PermissionType } from "@chimu-sync/shared";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import type { UserType, WorkspaceType } from "@/types/api.type";
 
 // Define the context shape
 type AuthContextType = {
@@ -71,7 +71,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
   if (!context) {

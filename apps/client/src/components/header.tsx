@@ -1,4 +1,4 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,9 +7,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Separator } from "./ui/separator";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthContext } from "@/context/auth-provider";
+import { Separator } from "./ui/separator";
 
 const Header = () => {
   const location = useLocation();

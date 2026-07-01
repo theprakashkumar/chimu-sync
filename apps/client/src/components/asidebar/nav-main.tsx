@@ -1,20 +1,20 @@
+import { Permissions } from "@chimu-sync/shared";
 import {
-  LucideIcon,
-  Settings,
-  Users,
   CheckCircle,
   LayoutDashboard,
+  type LucideIcon,
+  Settings,
+  Users,
 } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Link, useLocation } from "react-router-dom";
-import useWorkspaceId from "@/hooks/use-workspace-id";
 import { useAuthContext } from "@/context/auth-provider";
-import { Permissions } from "@chimu-sync/shared";
+import useWorkspaceId from "@/hooks/use-workspace-id";
 
 type ItemType = {
   title: string;

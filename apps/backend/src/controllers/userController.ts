@@ -1,6 +1,6 @@
-import { Request, Response } from "express";
-import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
+import type { Request, Response } from "express";
 import { HTTPSTATUS } from "../config/httpConfig";
+import { asyncHandler } from "../middlewares/asyncHandlerMiddleware";
 import { getCurrentUserService } from "../services/userService";
 
 export const getCurrentUserController = asyncHandler(
@@ -13,5 +13,5 @@ export const getCurrentUserController = asyncHandler(
       message: "Successfully got the user!",
       user,
     });
-  }
+  },
 );

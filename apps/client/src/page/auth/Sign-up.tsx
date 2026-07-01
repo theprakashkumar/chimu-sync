@@ -1,7 +1,12 @@
-import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { ArrowRight, Loader, MailCheckIcon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { z } from "zod";
+import GoogleOauthButton from "@/components/auth/google-oauth-button";
+import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,13 +24,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import Logo from "@/components/logo";
-import GoogleOauthButton from "@/components/auth/google-oauth-button";
-import { useMutation } from "@tanstack/react-query";
-import { registerMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import { ArrowRight, Loader, MailCheckIcon } from "lucide-react";
-import { useState } from "react";
+import { registerMutationFn } from "@/lib/api";
 
 const SignUp = () => {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -245,8 +245,8 @@ const SignUp = () => {
           {!isSubmitted && (
             <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
               By clicking continue, you agree to our{" "}
-              <a href="#">Terms of Service</a> and{" "}
-              <a href="#">Privacy Policy</a>.
+              <a href="/terms-of-service">Terms of Service</a> and{" "}
+              <a href="/privacy-policy">Privacy Policy</a>.
             </div>
           )}
         </div>

@@ -1,3 +1,8 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,13 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { logoutMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import { Loader } from "lucide-react";
+import { logoutMutationFn } from "@/lib/api";
 
 const LogoutDialog = (props: {
   isOpen: boolean;
@@ -47,28 +47,26 @@ const LogoutDialog = (props: {
     mutate();
   }, [isPending, mutate]);
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Are you sure you want to log out?</DialogTitle>
-            <DialogDescription>
-              This will end your current session and you will need to log in
-              again to access your account.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button disabled={isPending} type="button" onClick={handleLogout}>
-              {isPending && <Loader className="w-5 h-5 animate-spin" />}
-              Sign out
-            </Button>
-            <Button type="button" onClick={() => setIsOpen(false)}>
-              Cancel
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you sure you want to log out?</DialogTitle>
+          <DialogDescription>
+            This will end your current session and you will need to log in again
+            to access your account.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button disabled={isPending} type="button" onClick={handleLogout}>
+            {isPending && <Loader className="w-5 h-5 animate-spin" />}
+            Sign out
+          </Button>
+          <Button type="button" onClick={() => setIsOpen(false)}>
+            Cancel
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 

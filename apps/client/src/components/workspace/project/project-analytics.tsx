@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import AnalyticsCard from "../common/analytics-card";
 import useProjectId from "@/hooks/use-project-id";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { getProjectAnalyticsQueryFn } from "@/lib/api";
+import AnalyticsCard from "../common/analytics-card";
 
 const ProjectAnalytics = () => {
   const projectId = useProjectId();

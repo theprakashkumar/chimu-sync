@@ -1,7 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import EmojiPicker from "emoji-picker-react";
+import { Loader } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,20 +16,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "../../ui/textarea";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProjectMutationFn } from "@/lib/api";
-import useWorkspaceId from "@/hooks/use-workspace-id";
 import { toast } from "@/hooks/use-toast";
-import { Loader } from "lucide-react";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { createProjectMutationFn } from "@/lib/api";
+import { Textarea } from "../../ui/textarea";
 
 export default function CreateProjectForm({
   onClose,
@@ -109,7 +109,10 @@ export default function CreateProjectForm({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="emoji"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Select Emoji
               </label>
               <Popover>

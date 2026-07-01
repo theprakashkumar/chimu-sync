@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import SessionItem from "./SessionItem";
-import { getAllSessionQueryFn, sessionDelMutationFn } from "@/lib/api";
 import { Loader } from "lucide-react";
 import { useCallback } from "react";
 import { toast } from "@/hooks/use-toast";
+import { getAllSessionQueryFn, sessionDelMutationFn } from "@/lib/api";
+import SessionItem from "./SessionItem";
 
 const Sessions = () => {
   const { data, isLoading, refetch } = useQuery({

@@ -1,18 +1,20 @@
+import Account from "@/page/auth/account";
+import ForgotPassword from "@/page/auth/forgot-password";
 import GoogleOAuth from "@/page/auth/GoogleOAuth";
+import ResetPassword from "@/page/auth/reset-password";
 import SignIn from "@/page/auth/Sign-in";
 import SignUp from "@/page/auth/Sign-up";
-import ForgotPassword from "@/page/auth/forgot-password";
+import VerifyEmail from "@/page/auth/verify-email";
+import VerifyMFA from "@/page/auth/verify-mfa";
+import InviteUser from "@/page/invite/InviteUser";
+import PrivacyPolicy from "@/page/legal/PrivacyPolicy";
+import TermsOfService from "@/page/legal/TermsOfService";
 import WorkspaceDashboard from "@/page/workspace/Dashboard";
 import Members from "@/page/workspace/Members";
 import ProjectDetails from "@/page/workspace/ProjectDetails";
 import Settings from "@/page/workspace/Settings";
 import Tasks from "@/page/workspace/Tasks";
 import { AUTH_ROUTES, BASE_ROUTE, PROTECTED_ROUTES } from "./routePaths";
-import InviteUser from "@/page/invite/InviteUser";
-import ResetPassword from "@/page/auth/reset-password";
-import VerifyEmail from "@/page/auth/verify-email";
-import Account from "@/page/auth/account";
-import VerifyMFA from "@/page/auth/verify-mfa";
 
 const authenticationRoutePaths = [
   { path: AUTH_ROUTES.SIGN_IN, element: <SignIn /> },
@@ -38,11 +40,13 @@ const standaloneProtectedRoutePaths = [
 
 const baseRoutePaths = [
   { path: BASE_ROUTE.INVITE_URL, element: <InviteUser /> },
+  { path: BASE_ROUTE.TERMS_OF_SERVICE, element: <TermsOfService /> },
+  { path: BASE_ROUTE.PRIVACY_POLICY, element: <PrivacyPolicy /> },
 ];
 
 export {
   authenticationRoutePaths,
-  workspaceProtectedRoutePaths,
-  standaloneProtectedRoutePaths,
   baseRoutePaths,
+  standaloneProtectedRoutePaths,
+  workspaceProtectedRoutePaths,
 };

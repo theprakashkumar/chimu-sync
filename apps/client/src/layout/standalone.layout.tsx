@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
+import StandaloneAsidebar from "@/components/asidebar/standalone-asidebar";
+import Header from "@/components/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AuthProvider } from "@/context/auth-provider";
 import CreateWorkspaceDialog from "@/components/workspace/create-workspace-dialog";
 import CreateProjectDialog from "@/components/workspace/project/create-project-dialog";
-import Header from "@/components/header";
-import StandaloneAsidebar from "@/components/asidebar/standalone-asidebar";
+import { AuthProvider } from "@/context/auth-provider";
 
 const StandaloneLayout = () => {
   return (

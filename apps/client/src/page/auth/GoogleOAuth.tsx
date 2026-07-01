@@ -1,9 +1,9 @@
-import Logo from "@/components/logo";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 // import { useStore } from "@/store/store";
 // import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 const GoogleOAuthFailure = () => {
   const navigate = useNavigate();

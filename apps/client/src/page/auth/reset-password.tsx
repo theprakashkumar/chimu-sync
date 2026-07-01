@@ -1,6 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { ArrowLeft, Frown, Loader } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
+import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -10,15 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/logo";
-import { ArrowLeft, Frown, Loader } from "lucide-react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Card } from "@/components/ui/card";
-import { useMutation } from "@tanstack/react-query";
-import { resetPasswordMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import { useEffect, useState } from "react";
+import { resetPasswordMutationFn } from "@/lib/api";
 
 const ResetPassword = () => {
   const navigate = useNavigate();

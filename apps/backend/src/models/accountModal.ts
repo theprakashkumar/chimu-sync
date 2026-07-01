@@ -1,5 +1,8 @@
-import mongoose, { Document, Schema } from "mongoose";
-import { ProviderEnum, ProviderEnumType } from "../enums/accountProviderEnum";
+import mongoose, { type Document, Schema } from "mongoose";
+import {
+  ProviderEnum,
+  type ProviderEnumType,
+} from "../enums/accountProviderEnum";
 
 export interface AccountDocument extends Document {
   provider: ProviderEnumType;
@@ -36,11 +39,11 @@ const accountSchema = new Schema<AccountDocument>(
     // The 'toJSON' option allows us to define a 'transform' function that modifies the output.
     // Here, before sending the object (e.g., in API responses), we remove the 'refreshToken' field for security reasons.
     toJSON: {
-      transform(doc, ret) {
+      transform(_doc, ret) {
         delete ret.refreshToken;
       },
     },
-  }
+  },
 );
 
 const AccountModel = mongoose.model<AccountDocument>("Account", accountSchema);

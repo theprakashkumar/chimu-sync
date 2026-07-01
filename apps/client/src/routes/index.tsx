@@ -1,5 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ProtectedRoute from "./protected.route";
+import BaseLayout from "@/layout/base.layout";
+import StandaloneLayout from "@/layout/standalone.layout";
+import WorkplaceLayout from "@/layout/workplace.layout";
+import NotFound from "@/page/errors/NotFound";
 import AuthRoute from "./auth.route";
 import {
   authenticationRoutePaths,
@@ -7,10 +10,7 @@ import {
   standaloneProtectedRoutePaths,
   workspaceProtectedRoutePaths,
 } from "./common/routes";
-import BaseLayout from "@/layout/base.layout";
-import NotFound from "@/page/errors/NotFound";
-import WorkplaceLayout from "@/layout/workplace.layout";
-import StandaloneLayout from "@/layout/standalone.layout";
+import ProtectedRoute from "./protected.route";
 
 const AppRoutes = () => {
   return (

@@ -1,10 +1,10 @@
-import mongoose, { Document, Schema } from "mongoose";
 import {
   TaskPriorityEnum,
-  TaskPriorityEnumType,
+  type TaskPriorityEnumType,
   TaskStatusEnum,
-  TaskStatusEnumType,
+  type TaskStatusEnumType,
 } from "@chimu-sync/shared";
+import mongoose, { type Document, Schema } from "mongoose";
 
 import { generateTaskCode } from "../utils/uuid";
 
@@ -77,7 +77,7 @@ const taskSchema = new Schema<TaskDocument>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const TaskModel = mongoose.model<TaskDocument>("Task", taskSchema);

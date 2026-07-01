@@ -1,3 +1,5 @@
+import { Permissions } from "@chimu-sync/shared";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowRight,
   Folder,
@@ -6,6 +8,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -23,19 +26,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import useWorkspaceId from "@/hooks/use-workspace-id";
-import useCreateProjectDialog from "@/hooks/use-create-project-dialog";
-import { ConfirmDialog } from "../resuable/confirm-dialog";
-import useConfirmDialog from "@/hooks/use-confirm-dialog";
-import { Button } from "../ui/button";
-import { useState } from "react";
-import PermissionsGuard from "../resuable/permission-guard";
-import { Permissions } from "@chimu-sync/shared";
 import useGetProjects from "@/hooks/api/use-get-projects";
-import { PaginationType } from "@/types/api.type";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteProjectMutationFn } from "@/lib/api";
+import useConfirmDialog from "@/hooks/use-confirm-dialog";
+import useCreateProjectDialog from "@/hooks/use-create-project-dialog";
 import { toast } from "@/hooks/use-toast";
+import useWorkspaceId from "@/hooks/use-workspace-id";
+import { deleteProjectMutationFn } from "@/lib/api";
+import type { PaginationType } from "@/types/api.type";
+import { ConfirmDialog } from "../resuable/confirm-dialog";
+import PermissionsGuard from "../resuable/permission-guard";
+import { Button } from "../ui/button";
 
 export function NavProjects() {
   const navigate = useNavigate();

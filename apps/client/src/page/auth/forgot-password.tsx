@@ -1,8 +1,13 @@
-import { useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Loader, MailCheckIcon } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useSearchParams } from "react-router-dom";
+import { z } from "zod";
+import Logo from "@/components/logo";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -12,13 +17,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/logo";
-import { Card } from "@/components/ui/card";
-import { useMutation } from "@tanstack/react-query";
-import { forgotPasswordMutationFn } from "@/lib/api";
-import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { forgotPasswordMutationFn } from "@/lib/api";
 
 const ForgotPassword = () => {
   const [params] = useSearchParams();
