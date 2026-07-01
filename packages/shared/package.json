@@ -7,7 +7,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json",
-    "dev": "tsc -w -p tsconfig.json & tsc -w -p tsconfig.esm.json & wait"
+    "dev": "tsc -w -p tsconfig.json & tsc -w -p tsconfig.esm.json & wait",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write ."
   },
   "exports": {
     ".": {

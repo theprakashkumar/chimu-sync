@@ -6,11 +6,13 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
     "start": "turbo run start",
     "dev:client": "turbo run dev --filter=client",
     "dev:backend": "turbo run dev --filter=backend"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.1",
     "turbo": "^2.9.16"
   }
 }

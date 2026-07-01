@@ -4,7 +4,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
-      "env": ["DISABLE_ESLINT_PLUGIN", "VITE_*"]
+      "env": ["VITE_*"]
     },
     "dev": {
       "cache": false,
@@ -12,6 +12,9 @@
       "dependsOn": ["build"]
     },
     "lint": {},
+    "lint:fix": {
+      "cache": false
+    },
     "start": {
       "dependsOn": ["build"],
       "cache": false,

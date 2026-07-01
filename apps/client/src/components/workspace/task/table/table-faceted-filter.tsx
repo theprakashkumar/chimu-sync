@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import {Check, PlusCircle} from "lucide-react";
 import * as React from "react";
-import { Check, PlusCircle } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -14,12 +11,9 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {Separator} from "@/components/ui/separator";
+import {cn} from "@/lib/utils";
 
 interface DataTableFacetedFilterProps {
   title?: string;
@@ -27,7 +21,7 @@ interface DataTableFacetedFilterProps {
     // @ts-expect-error - Error from UI library
     label: string | JSX.Element;
     value: string;
-    icon?: React.ComponentType<{ className?: string }> | any;
+    icon?: React.ComponentType<{className?: string}> | any;
   }[];
   disabled?: boolean;
   multiSelect?: boolean;
@@ -127,7 +121,7 @@ export function DataTableFacetedFilter({
                           "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                           isSelected
                             ? "bg-primary text-primary-foreground"
-                            : "opacity-50 [&_svg]:invisible"
+                            : "opacity-50 [&_svg]:invisible",
                         )}
                       >
                         <Check />

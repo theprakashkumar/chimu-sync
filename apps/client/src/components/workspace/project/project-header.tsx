@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import {Permissions} from "@chimu-sync/shared";
+import PermissionsGuard from "@/components/resuable/permission-guard";
+import useGetProject from "@/hooks/api/use-get-project";
+import useProjectId from "@/hooks/use-project-id";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import CreateTaskDialog from "../task/create-task-dialog";
 import EditProjectDialog from "./edit-project-dialog";
-import useProjectId from "@/hooks/use-project-id";
-import useGetProject from "@/hooks/api/use-get-project";
-import PermissionsGuard from "@/components/resuable/permission-guard";
-import { Permissions } from "@chimu-sync/shared";
 
 const ProjectHeader = () => {
   const projectId = useProjectId();
   const workspaceId = useWorkspaceId();
 
-  const { data, isLoading, isError } = useGetProject({
+  const {data, isLoading, isError} = useGetProject({
     workspaceId,
     projectId,
   });

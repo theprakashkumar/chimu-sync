@@ -7,7 +7,6 @@ on:
 env:
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-  DISABLE_ESLINT_PLUGIN: "true"
   VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
 
 jobs:
@@ -21,7 +20,8 @@ jobs:
           node-version-file: .nvmrc # pin once, used everywhere
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm turbo run build # add `lint` and `test` when you have it
+      - run: pnpm turbo run lint
+      - run: pnpm turbo run build # add `test` when you have it
 
   deploy:
     needs: ci # only deploy if ci passed
