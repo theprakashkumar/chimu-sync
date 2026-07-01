@@ -30,7 +30,7 @@ import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import PermissionsGuard from "../resuable/permission-guard";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 import useGetProjects from "@/hooks/api/use-get-projects";
 import { PaginationType } from "@/types/api.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

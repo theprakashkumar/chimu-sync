@@ -2,9 +2,10 @@ import mongoose, { Document, Schema } from "mongoose";
 import {
   TaskPriorityEnum,
   TaskPriorityEnumType,
-} from "../enums/taskEnum";
+  TaskStatusEnum,
+  TaskStatusEnumType,
+} from "@chimu-sync/shared";
 
-import { TaskStatusEnum, TaskStatusEnumType } from "@chimu-sync/shared";
 import { generateTaskCode } from "../utils/uuid";
 
 export interface TaskDocument extends Document {

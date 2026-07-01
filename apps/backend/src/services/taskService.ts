@@ -1,4 +1,4 @@
-import { TaskPriorityEnum, TaskStatusEnum } from "../enums/taskEnum";
+import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
 import MemberModel from "../models/memberModel";
 import ProjectModel from "../models/projectModel";
 import TaskModel from "../models/taskModel";

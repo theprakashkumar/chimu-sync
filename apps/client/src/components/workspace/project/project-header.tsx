@@ -5,7 +5,7 @@ import EditProjectDialog from "./edit-project-dialog";
 import useProjectId from "@/hooks/use-project-id";
 import useGetProject from "@/hooks/api/use-get-project";
 import PermissionsGuard from "@/components/resuable/permission-guard";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 
 const ProjectHeader = () => {
   const projectId = useProjectId();

@@ -3,7 +3,7 @@ import {
   TaskPriorityEnumType,
   TaskStatusEnum,
   TaskStatusEnumType,
-} from "@/constant";
+} from "@chimu-sync/shared";
 import { parseAsString, parseAsStringEnum, useQueryStates } from "nuqs";
 
 const useTaskTableFilter = () => {

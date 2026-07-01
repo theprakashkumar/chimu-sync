@@ -19,7 +19,7 @@ import { editWorkspaceMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Loader } from "lucide-react";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 
 export default function EditWorkspaceForm() {
   const { workspace, hasPermission } = useAuthContext();

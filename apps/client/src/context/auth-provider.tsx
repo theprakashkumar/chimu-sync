@@ -6,7 +6,7 @@ import useWorkspaceId from "@/hooks/use-workspace-id";
 import useGetWorkspace from "@/hooks/api/use-get-workspace";
 import usePermissions from "@/hooks/use-permissions";
 
-import { PermissionType } from "@/constant";
+import { PermissionType } from "@chimu-sync/shared";
 
 // Define the context shape
 type AuthContextType = {

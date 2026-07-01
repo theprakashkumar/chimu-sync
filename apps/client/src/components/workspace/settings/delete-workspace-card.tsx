@@ -1,7 +1,7 @@
 import { ConfirmDialog } from "@/components/resuable/confirm-dialog";
 import PermissionsGuard from "@/components/resuable/permission-guard";
 import { Button } from "@/components/ui/button";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 import { useAuthContext } from "@/context/auth-provider";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import { toast } from "@/hooks/use-toast";

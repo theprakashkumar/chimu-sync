@@ -2,7 +2,7 @@ import {
   PermissionType,
   TaskPriorityEnumType,
   TaskStatusEnumType,
-} from "@/constant";
+} from "@chimu-sync/shared";
 
 
 export interface loginType {

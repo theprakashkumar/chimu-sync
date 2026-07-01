@@ -1,4 +1,4 @@
-import { TaskPriorityEnum, TaskStatusEnum } from "@/constant";
+import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
 import { transformOptions } from "@/lib/helper";
 import {
   ArrowDown,
@@ -27,10 +27,10 @@ const priorityIcons = {
 
 export const statuses = transformOptions(
   Object.values(TaskStatusEnum),
-  statusIcons
+  statusIcons,
 );
 
 export const priorities = transformOptions(
   Object.values(TaskPriorityEnum),
-  priorityIcons
+  priorityIcons,
 );

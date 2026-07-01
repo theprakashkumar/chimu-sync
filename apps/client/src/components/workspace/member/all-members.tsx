@@ -22,7 +22,7 @@ import useGetWorkspaceMember from "@/hooks/api/use-get-workspace-members";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { changeWorkspaceMemberRoleMutationFn } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
-import { Permissions } from "@/constant";
+import { Permissions } from "@chimu-sync/shared";
 const AllMembers = () => {
   const { user, hasPermission } = useAuthContext();
   const canChangeMemberRole = hasPermission(Permissions.CHANGE_MEMBER_ROLE);
@@ -139,7 +139,7 @@ const AllMembers = () => {
                                       onSelect={() => {
                                         handleSelect(
                                           role._id,
-                                          member.userId._id
+                                          member.userId._id,
                                         );
                                       }}
                                     >
@@ -153,7 +153,7 @@ const AllMembers = () => {
                                           "Can view,edit only task created by."}
                                       </p>
                                     </CommandItem>
-                                  )
+                                  ),
                               )}
                             </CommandGroup>
                           </>

@@ -10,7 +10,7 @@ import {
   TaskPriorityEnumType,
   TaskStatusEnum,
   TaskStatusEnumType,
-} from "@/constant";
+} from "@chimu-sync/shared";
 import {
   formatStatusToEnum,
   getAvatarColor,
@@ -139,7 +139,7 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
       ),
       cell: ({ row }) => {
         const status = statuses.find(
-          (status) => status.value === row.getValue("status")
+          (status) => status.value === row.getValue("status"),
         );
 
         if (!status) {
@@ -147,7 +147,7 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
         }
 
         const statusKey = formatStatusToEnum(
-          status.value
+          status.value,
         ) as TaskStatusEnumType;
         const Icon = status.icon;
 
@@ -175,7 +175,7 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
       ),
       cell: ({ row }) => {
         const priority = priorities.find(
-          (priority) => priority.value === row.getValue("priority")
+          (priority) => priority.value === row.getValue("priority"),
         );
 
         if (!priority) {
@@ -183,7 +183,7 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
         }
 
         const statusKey = formatStatusToEnum(
-          priority.value
+          priority.value,
         ) as TaskPriorityEnumType;
         const Icon = priority.icon;
 
