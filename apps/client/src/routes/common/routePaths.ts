@@ -19,6 +19,8 @@ const PROTECTED_ROUTES = {
 
 const BASE_ROUTE = {
   INVITE_URL: "/invite/workspace/:inviteCode/join",
+  TERMS_OF_SERVICE: "/terms-of-service",
+  PRIVACY_POLICY: "/privacy-policy",
 };
 
 const isAuthRoute = (pathname: string): boolean => {

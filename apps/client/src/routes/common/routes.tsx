@@ -7,6 +7,8 @@ import SignUp from "@/page/auth/Sign-up";
 import VerifyEmail from "@/page/auth/verify-email";
 import VerifyMFA from "@/page/auth/verify-mfa";
 import InviteUser from "@/page/invite/InviteUser";
+import PrivacyPolicy from "@/page/legal/PrivacyPolicy";
+import TermsOfService from "@/page/legal/TermsOfService";
 import WorkspaceDashboard from "@/page/workspace/Dashboard";
 import Members from "@/page/workspace/Members";
 import ProjectDetails from "@/page/workspace/ProjectDetails";
@@ -38,6 +40,8 @@ const standaloneProtectedRoutePaths = [
 
 const baseRoutePaths = [
   { path: BASE_ROUTE.INVITE_URL, element: <InviteUser /> },
+  { path: BASE_ROUTE.TERMS_OF_SERVICE, element: <TermsOfService /> },
+  { path: BASE_ROUTE.PRIVACY_POLICY, element: <PrivacyPolicy /> },
 ];
 
 export {
