@@ -1,21 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import { X } from "lucide-react";
-import { type FC, useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import type {TaskType} from "@chimu-sync/shared";
+import {useQuery} from "@tanstack/react-query";
+import {X} from "lucide-react";
+import {type FC, useState} from "react";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
 import useGetProjects from "@/hooks/api/use-get-projects";
 import useGetWorkspaceMember from "@/hooks/api/use-get-workspace-members";
 import useProjectId from "@/hooks/use-project-id";
 import useTaskTableFilter from "@/hooks/use-task-table-filter";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { getAllTasksQueryFn } from "@/lib/api";
-import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
-import type { TaskType } from "@/types/api.type";
-import { getColumns } from "./table/columns";
-import { priorities, statuses } from "./table/data";
-import { DataTable } from "./table/table";
-import { DataTableFacetedFilter } from "./table/table-faceted-filter";
+import {getAllTasksQueryFn} from "@/lib/api";
+import {getAvatarColor, getAvatarFallbackText} from "@/lib/helper";
+import {getColumns} from "./table/columns";
+import {priorities, statuses} from "./table/data";
+import {DataTable} from "./table/table";
+import {DataTableFacetedFilter} from "./table/table-faceted-filter";
 
 type Filters = ReturnType<typeof useTaskTableFilter>[0];
 type SetFilters = ReturnType<typeof useTaskTableFilter>[1];
@@ -37,7 +37,7 @@ const TaskTable = () => {
   const [filters, setFilters] = useTaskTableFilter();
   const columns = getColumns(projectId);
 
-  const { data, isLoading } = useQuery({
+  const {data, isLoading} = useQuery({
     queryKey: [
       "all-tasks",
       workspaceId,
@@ -105,11 +105,11 @@ const DataTableFilterToolbar: FC<DataTableFilterToolbarProps> = ({
 }) => {
   const workspaceId = useWorkspaceId();
 
-  const { data } = useGetProjects({
+  const {data} = useGetProjects({
     workspaceId,
   });
 
-  const { data: membersData } = useGetWorkspaceMember(workspaceId);
+  const {data: membersData} = useGetWorkspaceMember(workspaceId);
   const projects = data?.projects || [];
   const members = membersData?.members || [];
 

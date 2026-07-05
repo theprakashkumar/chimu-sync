@@ -1,11 +1,12 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { Check, Copy, Loader } from "lucide-react";
-import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import type {VerifyMFAType} from "@chimu-sync/shared";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {REGEXP_ONLY_DIGITS} from "input-otp";
+import {Check, Copy, Loader} from "lucide-react";
+import {useCallback, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {Button} from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -21,32 +22,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
-import { useAuthContext } from "@/context/auth-provider";
-import { toast } from "@/hooks/use-toast";
-import { mfaSetupQueryFn, mfaVerifyMutationFn } from "@/lib/api";
-import type { VerifyMFAType } from "@/types/api.type";
-import { Skeleton } from "../ui/skeleton";
+import {InputOTP, InputOTPGroup, InputOTPSlot} from "@/components/ui/input-otp";
+import {useAuthContext} from "@/context/auth-provider";
+import {toast} from "@/hooks/use-toast";
+import {mfaSetupQueryFn, mfaVerifyMutationFn} from "@/lib/api";
+import {Skeleton} from "../ui/skeleton";
 import RevokeMFA from "./RevokeMfs";
 
 const EnableMfa = () => {
-  const { user, refetchAuth } = useAuthContext();
+  const {user, refetchAuth} = useAuthContext();
   const [showKey, setShowKey] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
 
-  const { data: mfaData, isLoading } = useQuery({
+  const {data: mfaData, isLoading} = useQuery({
     queryKey: ["mfa-setup"],
     queryFn: mfaSetupQueryFn,
     enabled: isOpen,
     staleTime: Infinity,
   });
 
-  const { mutate, isPending } = useMutation({
+  const {mutate, isPending} = useMutation({
     mutationFn: mfaVerifyMutationFn,
   });
 
@@ -215,7 +211,7 @@ const EnableMfa = () => {
                     <FormField
                       control={form.control}
                       name="pin"
-                      render={({ field }) => (
+                      render={({field}) => (
                         <FormItem>
                           <FormLabel className="text-sm mb-1 text-slate-11 font-bold">
                             Then enter the code
@@ -226,7 +222,7 @@ const EnableMfa = () => {
                               maxLength={6}
                               pattern={REGEXP_ONLY_DIGITS}
                               {...field}
-                              style={{ justifyContent: "center" }}
+                              style={{justifyContent: "center"}}
                             >
                               <InputOTPGroup>
                                 <InputOTPSlot

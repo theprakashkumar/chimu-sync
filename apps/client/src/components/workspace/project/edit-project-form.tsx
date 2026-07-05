@@ -1,11 +1,12 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type {ProjectType} from "@chimu-sync/shared";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import EmojiPicker from "emoji-picker-react";
-import { Loader } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import {Loader} from "lucide-react";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {Button} from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,18 +15,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import {Input} from "@/components/ui/input";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import useProjectId from "@/hooks/use-project-id";
-import { toast } from "@/hooks/use-toast";
+import {toast} from "@/hooks/use-toast";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { editProjectMutationFn } from "@/lib/api";
-import type { ProjectType } from "@/types/api.type";
-import { Textarea } from "../../ui/textarea";
+import {editProjectMutationFn} from "@/lib/api";
+import {Textarea} from "../../ui/textarea";
 
 export default function EditProjectForm(props: {
   project?: ProjectType;
@@ -35,11 +31,11 @@ export default function EditProjectForm(props: {
   const workspaceId = useWorkspaceId();
   const projectId = useProjectId();
 
-  const { mutate, isPending } = useMutation({
+  const {mutate, isPending} = useMutation({
     mutationFn: editProjectMutationFn,
   });
 
-  const { onClose } = props;
+  const {onClose} = props;
   const [emoji, setEmoji] = useState(props.project?.emoji || "");
 
   const formSchema = z.object({
@@ -57,13 +53,13 @@ export default function EditProjectForm(props: {
     },
   });
 
-  const handleEmojiSelection = (selectedEmoji: { emoji: string }) => {
+  const handleEmojiSelection = (selectedEmoji: {emoji: string}) => {
     setEmoji(selectedEmoji.emoji);
   };
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     if (isPending) return;
-    const payload = { projectId, workspaceId, data: { emoji, ...values } };
+    const payload = {projectId, workspaceId, data: {emoji, ...values}};
     mutate(payload, {
       onSuccess: (data) => {
         // Invalidate single project
@@ -135,7 +131,7 @@ export default function EditProjectForm(props: {
               <FormField
                 control={form.control}
                 name="name"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem>
                     <FormLabel className="dark:text-[#f1f7feb5] text-sm">
                       Project title
@@ -152,7 +148,7 @@ export default function EditProjectForm(props: {
               <FormField
                 control={form.control}
                 name="description"
-                render={({ field }) => (
+                render={({field}) => (
                   <FormItem>
                     <FormLabel className="dark:text-[#f1f7feb5] text-sm">
                       Project description

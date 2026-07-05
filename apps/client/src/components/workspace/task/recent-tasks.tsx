@@ -1,24 +1,24 @@
-import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { Loader } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import type {TaskType} from "@chimu-sync/shared";
+import {TaskPriorityEnum, TaskStatusEnum} from "@chimu-sync/shared";
+import {useQuery} from "@tanstack/react-query";
+import {format} from "date-fns";
+import {Loader} from "lucide-react";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Badge} from "@/components/ui/badge";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import { getAllTasksQueryFn } from "@/lib/api";
+import {getAllTasksQueryFn} from "@/lib/api";
 import {
   getAvatarColor,
   getAvatarFallbackText,
   transformStatusEnum,
 } from "@/lib/helper";
-import type { TaskType } from "@/types/api.type";
 
 const RecentTasks = () => {
   const workspaceId = useWorkspaceId();
 
-  const { data, isLoading } = useQuery({
+  const {data, isLoading} = useQuery({
     queryKey: ["all-tasks", workspaceId],
-    queryFn: () => getAllTasksQueryFn({ workspaceId }),
+    queryFn: () => getAllTasksQueryFn({workspaceId}),
     staleTime: 0,
     enabled: !!workspaceId,
   });

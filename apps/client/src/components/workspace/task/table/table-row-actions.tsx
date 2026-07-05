@@ -1,8 +1,9 @@
-import type { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import { useState } from "react";
-import { ConfirmDialog } from "@/components/resuable/confirm-dialog";
-import { Button } from "@/components/ui/button";
+import type {TaskType} from "@chimu-sync/shared";
+import type {Row} from "@tanstack/react-table";
+import {MoreHorizontal} from "lucide-react";
+import {useState} from "react";
+import {ConfirmDialog} from "@/components/resuable/confirm-dialog";
+import {Button} from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,13 +12,12 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { TaskType } from "@/types/api.type";
 
 interface DataTableRowActionsProps {
   row: Row<TaskType>;
 }
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+export function DataTableRowActions({row}: DataTableRowActionsProps) {
   const [openDeleteDialog, setOpenDialog] = useState(false);
 
   const taskId = row.original._id as string;
