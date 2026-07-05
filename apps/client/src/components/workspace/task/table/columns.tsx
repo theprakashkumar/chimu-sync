@@ -1,3 +1,4 @@
+import type { TaskType } from "@chimu-sync/shared";
 import {
   TaskPriorityEnum,
   type TaskPriorityEnumType,
@@ -14,7 +15,6 @@ import {
   getAvatarColor,
   getAvatarFallbackText,
 } from "@/lib/helper";
-import type { TaskType } from "@/types/api.type";
 import { priorities, statuses } from "./data";
 import { DataTableColumnHeader } from "./table-column-header";
 import { DataTableRowActions } from "./table-row-actions";

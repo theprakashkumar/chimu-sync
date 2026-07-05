@@ -1,3 +1,4 @@
+import type { TaskType } from "@chimu-sync/shared";
 import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { type FC, useState } from "react";
@@ -11,7 +12,6 @@ import useTaskTableFilter from "@/hooks/use-task-table-filter";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { getAllTasksQueryFn } from "@/lib/api";
 import { getAvatarColor, getAvatarFallbackText } from "@/lib/helper";
-import type { TaskType } from "@/types/api.type";
 import { getColumns } from "./table/columns";
 import { priorities, statuses } from "./table/data";
 import { DataTable } from "./table/table";

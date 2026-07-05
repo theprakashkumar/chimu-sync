@@ -1,3 +1,4 @@
+import type { VerifyMFAType } from "@chimu-sync/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
@@ -29,7 +30,6 @@ import {
 import { useAuthContext } from "@/context/auth-provider";
 import { toast } from "@/hooks/use-toast";
 import { mfaSetupQueryFn, mfaVerifyMutationFn } from "@/lib/api";
-import type { VerifyMFAType } from "@/types/api.type";
 import { Skeleton } from "../ui/skeleton";
 import RevokeMFA from "./RevokeMfs";
 

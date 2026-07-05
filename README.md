@@ -66,6 +66,7 @@ A modern, full-stack project management application built with the MERN stack, d
 
 - **Turborepo monorepo** - Shared scripts to run, build, and lint all apps from the root
 - **pnpm workspaces** - Dependencies and package scripts are managed from the repository root
+- **Biome** - Linting and formatting via root `biome.json`
 - **Data Seeding** - Pre-populated test data
 - **Mongoose Transactions** - Robust data integrity
 - **Error Handling** - Comprehensive error management
@@ -102,7 +103,7 @@ A modern, full-stack project management application built with the MERN stack, d
 - **Turborepo** - Task orchestration across apps
 - **pnpm workspaces** - Package management for the monorepo
 - **Vite** - Frontend build tool
-- **ESLint** - Code linting
+- **Biome** - Linting and formatting (root `biome.json`)
 - **PostCSS** - CSS processing
 - **Docker** - Local MongoDB replica set for development
 - **Vercel** - Frontend deployment (with API proxy to backend)
@@ -111,11 +112,11 @@ A modern, full-stack project management application built with the MERN stack, d
 
 This project is a [Turborepo](https://turbo.build/) monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces).
 
-| Path           | Package   | Description                  |
-| -------------- | --------- | ---------------------------- |
-| `apps/backend` | `backend` | Express API                  |
-| `apps/client`  | `client`  | React + Vite frontend        |
-| `packages/*`   | —         | Reserved for shared packages |
+| Path              | Package              | Description            |
+| ----------------- | -------------------- | ---------------------- |
+| `apps/backend`    | `backend`            | Express API            |
+| `apps/client`     | `client`             | React + Vite frontend  |
+| `packages/shared` | `@chimu-sync/shared` | Shared types and enums |
 
 Root scripts delegate to Turbo and filter by app when needed.
 
@@ -126,6 +127,7 @@ Root scripts delegate to Turbo and filter by app when needed.
 | `pnpm dev:client`  | Start the Vite client dev server                                |
 | `pnpm build`       | Build all apps                                                  |
 | `pnpm lint`        | Lint all apps that define a `lint` script                       |
+| `pnpm lint:fix`    | Auto-fix lint and format issues across apps                     |
 | `pnpm start`       | Run production start tasks; currently starts the built backend   |
 
 Package-specific scripts can also be run with pnpm filters, for example:
@@ -229,12 +231,15 @@ chimu-sync/
 │       ├── src/
 │       │   ├── components/      # React components
 │       │   ├── hooks/           # Custom hooks
-│       │   ├── page/            # Page components
+│       │   ├── page/            # Page components (auth, legal, workspace, …)
 │       │   ├── routes/          # Routing configuration
 │       │   └── types/           # TypeScript types
 │       ├── vercel.json          # SPA + API proxy rewrites
 │       └── package.json
-├── packages/                    # Shared packages (future)
+├── packages/
+│   └── shared/                  # @chimu-sync/shared — shared types and enums
+├── .github/workflows/           # CI (lint) and deploy workflows
+├── biome.json                   # Biome lint and format config
 ├── package.json                 # Root scripts (Turbo)
 ├── pnpm-workspace.yaml
 ├── turbo.json
@@ -243,9 +248,10 @@ chimu-sync/
 
 ## Deployment
 
-- **Backend** - Intended for Render. The backend package includes `pnpm --filter backend deploy`, which calls the Render CLI for the configured service.
-- **Frontend** - Intended for Vercel. `apps/client/vercel.json` rewrites `/api/*` requests to the Render backend and falls back to `index.html` for SPA routes.
-- There is no GitHub Actions workflow checked in at the moment; deployment is driven by package scripts and platform configuration.
+- **CI** — GitHub Actions runs `pnpm lint` on every push and pull request (`.github/workflows/lint.yml`).
+- **Deploy** — On push to `main`, `.github/workflows/deploy.yml` runs lint and build, then deploys the backend to Render (deploy hook) and the client to Vercel. Requires repository secrets/vars such as `RENDER_DEPLOY_HOOK_URL`, `VERCEL_*`, `TURBO_*`, and `VITE_API_BASE_URL`.
+- **Backend** — Hosted on Render.
+- **Frontend** — Hosted on Vercel. `apps/client/vercel.json` rewrites `/api/*` requests to the Render backend and falls back to `index.html` for SPA routes.
 
 ## API Endpoints
 

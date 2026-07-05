@@ -1,3 +1,4 @@
+import type { TaskType } from "@chimu-sync/shared";
 import { TaskPriorityEnum, TaskStatusEnum } from "@chimu-sync/shared";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -11,7 +12,6 @@ import {
   getAvatarFallbackText,
   transformStatusEnum,
 } from "@/lib/helper";
-import type { TaskType } from "@/types/api.type";
 
 const RecentTasks = () => {
   const workspaceId = useWorkspaceId();

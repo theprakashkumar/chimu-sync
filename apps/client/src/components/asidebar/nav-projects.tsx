@@ -1,3 +1,4 @@
+import type { PaginationType } from "@chimu-sync/shared";
 import { Permissions } from "@chimu-sync/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -32,7 +33,6 @@ import useCreateProjectDialog from "@/hooks/use-create-project-dialog";
 import { toast } from "@/hooks/use-toast";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { deleteProjectMutationFn } from "@/lib/api";
-import type { PaginationType } from "@/types/api.type";
 import { ConfirmDialog } from "../resuable/confirm-dialog";
 import PermissionsGuard from "../resuable/permission-guard";
 import { Button } from "../ui/button";
