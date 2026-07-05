@@ -3,7 +3,7 @@ import type {
   UserType,
   WorkspaceWithMembersType,
 } from "@chimu-sync/shared";
-import {useEffect, useMemo, useState} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const usePermissions = (
   user: UserType | undefined,

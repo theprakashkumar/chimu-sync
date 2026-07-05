@@ -100,7 +100,7 @@ export interface SessionResponseType {
   sessions: SessionType[];
 }
 
-// WORKSPACE 
+// WORKSPACE
 export type WorkspaceType = {
   _id: string;
   name: string;

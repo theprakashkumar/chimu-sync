@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type {PermissionType, UserType, WorkspaceType} from "@chimu-sync/shared";
-import {createContext, useContext} from "react";
+import type {
+  PermissionType,
+  UserType,
+  WorkspaceType,
+} from "@chimu-sync/shared";
+import { createContext, useContext } from "react";
 import useAuth from "@/hooks/api/use-auth";
 import useGetWorkspace from "@/hooks/api/use-get-workspace";
 import usePermissions from "@/hooks/use-permissions";
@@ -22,7 +26,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{children: React.ReactNode}> = ({
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const workspaceId = useWorkspaceId();

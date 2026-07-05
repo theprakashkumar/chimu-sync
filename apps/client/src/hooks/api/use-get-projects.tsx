@@ -1,6 +1,6 @@
-import type {AllProjectPayloadType} from "@chimu-sync/shared";
-import {keepPreviousData, useQuery} from "@tanstack/react-query";
-import {getProjectsInWorkspaceQueryFn} from "@/lib/api";
+import type { AllProjectPayloadType } from "@chimu-sync/shared";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getProjectsInWorkspaceQueryFn } from "@/lib/api";
 
 const useGetProjects = ({
   workspaceId,

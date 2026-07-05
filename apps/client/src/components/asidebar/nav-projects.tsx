@@ -1,6 +1,6 @@
-import type {PaginationType} from "@chimu-sync/shared";
-import {Permissions} from "@chimu-sync/shared";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import type { PaginationType } from "@chimu-sync/shared";
+import { Permissions } from "@chimu-sync/shared";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   ArrowRight,
   Folder,
@@ -9,8 +9,8 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import {useState} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,12 +30,12 @@ import {
 import useGetProjects from "@/hooks/api/use-get-projects";
 import useConfirmDialog from "@/hooks/use-confirm-dialog";
 import useCreateProjectDialog from "@/hooks/use-create-project-dialog";
-import {toast} from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import {deleteProjectMutationFn} from "@/lib/api";
-import {ConfirmDialog} from "../resuable/confirm-dialog";
+import { deleteProjectMutationFn } from "@/lib/api";
+import { ConfirmDialog } from "../resuable/confirm-dialog";
 import PermissionsGuard from "../resuable/permission-guard";
-import {Button} from "../ui/button";
+import { Button } from "../ui/button";
 
 export function NavProjects() {
   const navigate = useNavigate();
@@ -43,19 +43,19 @@ export function NavProjects() {
   const pathname = location.pathname;
   const workspaceId = useWorkspaceId();
   const queryclient = useQueryClient();
-  const {isMobile} = useSidebar();
-  const {onOpen} = useCreateProjectDialog();
-  const {context, open, onOpenDialog, onCloseDialog} = useConfirmDialog();
+  const { isMobile } = useSidebar();
+  const { onOpen } = useCreateProjectDialog();
+  const { context, open, onOpenDialog, onCloseDialog } = useConfirmDialog();
 
   const [pageNumber, setPageNumber] = useState(1);
 
   const [pageSize] = useState(5);
 
-  const {mutate, isPending: deletePending} = useMutation({
+  const { mutate, isPending: deletePending } = useMutation({
     mutationFn: deleteProjectMutationFn,
   });
 
-  const {data, isPending, isFetching, isError} = useGetProjects({
+  const { data, isPending, isFetching, isError } = useGetProjects({
     workspaceId,
     pageSize,
     pageNumber,

@@ -1,29 +1,29 @@
-import type {TaskType} from "@chimu-sync/shared";
+import type { TaskType } from "@chimu-sync/shared";
 import {
   TaskPriorityEnum,
   type TaskPriorityEnumType,
   TaskStatusEnum,
   type TaskStatusEnumType,
 } from "@chimu-sync/shared";
-import type {Column, ColumnDef, Row} from "@tanstack/react-table";
-import {format} from "date-fns";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Badge} from "@/components/ui/badge";
-import {Checkbox} from "@/components/ui/checkbox";
+import type { Column, ColumnDef, Row } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   formatStatusToEnum,
   getAvatarColor,
   getAvatarFallbackText,
 } from "@/lib/helper";
-import {priorities, statuses} from "./data";
-import {DataTableColumnHeader} from "./table-column-header";
-import {DataTableRowActions} from "./table-row-actions";
+import { priorities, statuses } from "./data";
+import { DataTableColumnHeader } from "./table-column-header";
+import { DataTableRowActions } from "./table-row-actions";
 
 export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
   const columns: ColumnDef<TaskType>[] = [
     {
       id: "_id",
-      header: ({table}) => (
+      header: ({ table }) => (
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
@@ -34,7 +34,7 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
           className="translate-y-[2px]"
         />
       ),
-      cell: ({row}) => (
+      cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -47,10 +47,10 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
     },
     {
       accessorKey: "title",
-      header: ({column}) => (
+      header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Title" />
       ),
-      cell: ({row}) => {
+      cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
             <Badge variant="outline" className="capitalize shrink-0 h-[25px]">
@@ -68,10 +68,10 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
       : [
           {
             accessorKey: "project",
-            header: ({column}: {column: Column<TaskType, unknown>}) => (
+            header: ({ column }: { column: Column<TaskType, unknown> }) => (
               <DataTableColumnHeader column={column} title="Project" />
             ),
-            cell: ({row}: {row: Row<TaskType>}) => {
+            cell: ({ row }: { row: Row<TaskType> }) => {
               const project = row.original.project;
 
               if (!project) {
@@ -91,10 +91,10 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
         ]),
     {
       accessorKey: "assignedTo",
-      header: ({column}) => (
+      header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Assigned To" />
       ),
-      cell: ({row}) => {
+      cell: ({ row }) => {
         const assignee = row.original.assignedTo || null;
         const name = assignee?.name || "";
 
@@ -120,10 +120,10 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
     },
     {
       accessorKey: "dueDate",
-      header: ({column}) => (
+      header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Due Date" />
       ),
-      cell: ({row}) => {
+      cell: ({ row }) => {
         return (
           <span className="lg:max-w-[100px] text-sm">
             {row.original.dueDate ? format(row.original.dueDate, "PPP") : null}
@@ -133,10 +133,10 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
     },
     {
       accessorKey: "status",
-      header: ({column}) => (
+      header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Status" />
       ),
-      cell: ({row}) => {
+      cell: ({ row }) => {
         const status = statuses.find(
           (status) => status.value === row.getValue("status"),
         );
@@ -169,10 +169,10 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
     },
     {
       accessorKey: "priority",
-      header: ({column}) => (
+      header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Priority" />
       ),
-      cell: ({row}) => {
+      cell: ({ row }) => {
         const priority = priorities.find(
           (priority) => priority.value === row.getValue("priority"),
         );
@@ -205,7 +205,7 @@ export const getColumns = (projectId?: string): ColumnDef<TaskType>[] => {
     },
     {
       id: "actions",
-      cell: ({row}) => {
+      cell: ({ row }) => {
         return <DataTableRowActions row={row} />;
       },
     },
