@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { PermissionType } from "@chimu-sync/shared";
+import type {
+  PermissionType,
+  UserType,
+  WorkspaceType,
+} from "@chimu-sync/shared";
 import { createContext, useContext } from "react";
 import useAuth from "@/hooks/api/use-auth";
 import useGetWorkspace from "@/hooks/api/use-get-workspace";
 import usePermissions from "@/hooks/use-permissions";
 import useWorkspaceId from "@/hooks/use-workspace-id";
-import type { UserType, WorkspaceType } from "@/types/api.type";
 
 // Define the context shape
 type AuthContextType = {

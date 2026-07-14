@@ -1,3 +1,4 @@
+import type { ProjectType } from "@chimu-sync/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import EmojiPicker from "emoji-picker-react";
@@ -24,7 +25,6 @@ import useProjectId from "@/hooks/use-project-id";
 import { toast } from "@/hooks/use-toast";
 import useWorkspaceId from "@/hooks/use-workspace-id";
 import { editProjectMutationFn } from "@/lib/api";
-import type { ProjectType } from "@/types/api.type";
 import { Textarea } from "../../ui/textarea";
 
 export default function EditProjectForm(props: {

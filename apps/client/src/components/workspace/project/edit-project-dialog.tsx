@@ -1,7 +1,7 @@
+import type { ProjectType } from "@chimu-sync/shared";
 import { Edit3 } from "lucide-react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import type { ProjectType } from "@/types/api.type";
 import EditProjectForm from "./edit-project-form";
 
 const EditProjectDialog = (props: { project?: ProjectType }) => {

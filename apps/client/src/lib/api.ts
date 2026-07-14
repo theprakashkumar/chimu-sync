@@ -1,4 +1,3 @@
-import type { LoginResponseType } from "@chimu-sync/shared";
 import type {
   AllMembersInWorkspaceResponseType,
   AllProjectPayloadType,
@@ -16,6 +15,7 @@ import type {
   EditProjectPayloadType,
   EditWorkspaceType,
   forgotPasswordType,
+  LoginResponseType,
   loginType,
   MFALoginType,
   MFASetupType,
@@ -28,7 +28,7 @@ import type {
   VerifyMFAType,
   verifyEmail,
   WorkspaceByIdResponseType,
-} from "@/types/api.type";
+} from "@chimu-sync/shared";
 import API from "./axios-client";
 
 export const loginMutationFn = async (
