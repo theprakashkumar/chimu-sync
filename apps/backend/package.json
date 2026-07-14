@@ -1,13 +1,15 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "seed": "ts-node src/seeders/roleSeeder.ts",
+    "seed": "tsx src/seeders/roleSeeder.ts",
     "dev": "bash src/scripts/dev.sh",
-    "dev:server": "ts-node-dev --files src/index.ts",
-    "build": "tsc && cp package.json ./dist",
+    "dev:server": "tsx watch src/index.ts",
+    "build": "tsup",
     "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
   },
@@ -40,8 +42,8 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/qrcode": "^1.5.6",
     "@types/speakeasy": "^2.0.10",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.1",
     "typescript": "^5.8.3"
   }
 }

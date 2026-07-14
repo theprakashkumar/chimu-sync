@@ -2,20 +2,20 @@
   "name": "@chimu-sync/shared",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "description": "Shared utilities, types, constants and Zod schemas for Chimu Sync packages.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.json && tsc -p tsconfig.esm.json",
-    "dev": "tsc -w -p tsconfig.json & tsc -w -p tsconfig.esm.json & wait",
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -w -p tsconfig.json",
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
   },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/esm/index.js",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js"
     }
   },
   "devDependencies": {
