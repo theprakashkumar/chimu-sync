@@ -63,6 +63,9 @@ importers:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
+      '@chimu-sync/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@types/bcrypt':
         specifier: ^5.0.2
         version: 5.0.2
@@ -205,6 +208,9 @@ importers:
         specifier: ^3.24.1
         version: 3.25.76
     devDependencies:
+      '@chimu-sync/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^22.10.2
         version: 22.19.20
@@ -230,8 +236,8 @@ importers:
         specifier: ^3.4.17
         version: 3.4.19(tsx@4.23.1)
       typescript:
-        specifier: ~5.6.2
-        version: 5.6.3
+        specifier: ~5.8.3
+        version: 5.8.3
       vercel:
         specifier: ^54.12.2
         version: 54.12.2(@emnapi/core@1.11.0)(@emnapi/runtime@1.11.0)(rollup@4.61.1)
@@ -241,9 +247,14 @@ importers:
 
   packages/shared:
     devDependencies:
+      '@chimu-sync/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       typescript:
         specifier: ~5.6.2
         version: 5.6.3
+
+  packages/typescript-config: {}
 
 packages:
 
@@ -3954,6 +3965,11 @@ packages:
 
   typescript@5.6.3:
     resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  typescript@5.8.3:
+    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -7742,6 +7758,8 @@ snapshots:
       mime-types: 3.0.2
 
   typescript@5.6.3: {}
+
+  typescript@5.8.3: {}
 
   typescript@5.9.3: {}
 
